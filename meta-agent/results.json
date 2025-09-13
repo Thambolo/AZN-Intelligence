@@ -1,1040 +1,1214 @@
 {
-  "https://www.wikipedia.org/": {
-    "analyses": [
-      {
-        "timestamp": "2025-09-13T12:35:02.829863Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T12:35:03.655987Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T12:38:10.664746Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T12:39:14.083670Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T12:39:14.911959Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T12:57:04.594501Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T12:57:05.377462Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:00:00.574055Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:00:02.031660Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:04:47.602323Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:04:51.639083Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:18:32.564013Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:18:49.361036Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:55:03.833752Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:57:15.923523Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T13:59:54.582154Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:01:02.879218Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:04:01.893017Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:05:23.357435Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:08:03.793803Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:14:52.117831Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:19:07.035742Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:22:00.997693Z",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:23:39.480964+00:00",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:27:20.299204+00:00",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:37:12.152438+00:00",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      },
-      {
-        "timestamp": "2025-09-13T14:47:19.012854+00:00",
-        "grade": "A",
-        "score": 62,
-        "issues": [
-          {
-            "component": "Images with alt text",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have alt text."
-          },
-          {
-            "component": "Decorative images with empty alt",
-            "passed": 1,
-            "total": 2,
-            "message": "1/2 images have empty alt for decorative."
-          },
-          {
-            "component": "Inputs with label or placeholder",
-            "passed": 0,
-            "total": 13,
-            "message": "0/13 inputs have label or placeholder."
-          },
-          {
-            "component": "Buttons with text",
-            "passed": 3,
-            "total": 4,
-            "message": "3/4 buttons have text."
-          }
-        ]
-      }
-    ]
-  },
   "https://www.example.com/": {
     "analyses": [
       {
-        "timestamp": "2025-09-13T12:35:04.042124Z",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:38:49.670803+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
       },
       {
-        "timestamp": "2025-09-13T12:39:15.284441Z",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:42:29.508851+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
       },
       {
-        "timestamp": "2025-09-13T12:57:05.776774Z",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:43:01.153622+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
       },
       {
-        "timestamp": "2025-09-13T13:00:03.130297Z",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:52:28.452113+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
       },
       {
-        "timestamp": "2025-09-13T13:04:54.475287Z",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:55:57.252970+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
       },
       {
-        "timestamp": "2025-09-13T13:19:01.313784Z",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:56:30.967936+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
       },
       {
-        "timestamp": "2025-09-13T14:51:12.790350+00:00",
-        "grade": "AAA",
-        "score": 100,
-        "issues": []
+        "timestamp": "2025-09-13T15:59:05.801317+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T15:59:35.065276+00:00",
+        "grade": "AA",
+        "score": 91,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists with proper structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:06:11.053535+00:00",
+        "grade": "AA",
+        "score": 94,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element (WCAG 3.1.1)."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 1,
+            "total": 1,
+            "message": "No landmark elements found - this is acceptable."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 1,
+            "total": 1,
+            "message": "Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:06:56.421146+00:00",
+        "grade": "AA",
+        "score": 94,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element (WCAG 3.1.1)."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 1,
+            "total": 1,
+            "message": "No landmark elements found - this is acceptable."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 1,
+            "total": 1,
+            "message": "Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:10:20.917268+00:00",
+        "grade": "AA",
+        "score": 94,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element (WCAG 3.1.1)."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 1,
+            "total": 1,
+            "message": "No landmark elements found - this is acceptable."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 1,
+            "total": 1,
+            "message": "Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:14:30.676457+00:00",
+        "grade": "AA",
+        "score": 94,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element (WCAG 3.1.1)."
+          },
+          {
+            "component": "Page title",
+            "passed": 1,
+            "total": 1,
+            "message": "Page title is present and not empty."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Links with descriptive text",
+            "passed": 1,
+            "total": 1,
+            "message": "All 1 links have descriptive text."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Single H1 per page",
+            "passed": 1,
+            "total": 1,
+            "message": "Exactly 1 H1 tag found on the page."
+          },
+          {
+            "component": "Proper heading hierarchy",
+            "passed": 1,
+            "total": 1,
+            "message": "Heading hierarchy is properly structured."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          },
+          {
+            "component": "Focus management",
+            "passed": 1,
+            "total": 1,
+            "message": "Found 1 focusable elements for keyboard navigation."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 1,
+            "total": 1,
+            "message": "No landmark elements found - this is acceptable."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 1,
+            "total": 1,
+            "message": "Skip to main content link found."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 1,
+            "total": 1,
+            "message": "Found 1 interactive elements. Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:15:30.173719+00:00",
+        "grade": "AA",
+        "score": 94,
+        "issues": [
+          {
+            "component": "HTML lang attribute",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing lang attribute on <html> element (WCAG 3.1.1)."
+          },
+          {
+            "component": "Page title",
+            "passed": 1,
+            "total": 1,
+            "message": "Page title is present and not empty."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 1,
+            "total": 1,
+            "message": "No images found - this is acceptable."
+          },
+          {
+            "component": "Links with descriptive text",
+            "passed": 1,
+            "total": 1,
+            "message": "All 1 links have descriptive text."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 1,
+            "message": "No form inputs found - this is acceptable."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 1,
+            "total": 1,
+            "message": "No buttons found - this is acceptable."
+          },
+          {
+            "component": "Single H1 per page",
+            "passed": 1,
+            "total": 1,
+            "message": "Exactly 1 H1 tag found on the page."
+          },
+          {
+            "component": "Proper heading hierarchy",
+            "passed": 1,
+            "total": 1,
+            "message": "Heading hierarchy is properly structured."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 1,
+            "total": 1,
+            "message": "No lists found - this is acceptable."
+          },
+          {
+            "component": "Focus management",
+            "passed": 1,
+            "total": 1,
+            "message": "Found 1 focusable elements for keyboard navigation."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 1,
+            "total": 1,
+            "message": "No landmark elements found - this is acceptable."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 1,
+            "total": 1,
+            "message": "Skip to main content link found."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 1,
+            "total": 1,
+            "message": "Found 1 interactive elements. Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
       }
     ]
   },
-  "https://www.apple.com/": {
+  "https://www.wikipedia.org/": {
     "analyses": [
       {
-        "timestamp": "2025-09-13T12:35:04.525082Z",
-        "grade": "A",
-        "score": 68,
+        "timestamp": "2025-09-13T15:42:51.828696+00:00",
+        "grade": "AA",
+        "score": 92,
         "issues": [
           {
-            "component": "Links with text",
-            "passed": 106,
-            "total": 117,
-            "message": "106/117 links have text."
-          },
-          {
-            "component": "Inputs with label or placeholder",
+            "component": "Form inputs with labels",
             "passed": 1,
-            "total": 5,
-            "message": "1/5 inputs have label or placeholder."
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
           },
           {
-            "component": "Buttons with text",
-            "passed": 11,
-            "total": 18,
-            "message": "11/18 buttons have text."
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
           }
         ]
       },
       {
-        "timestamp": "2025-09-13T12:39:15.737069Z",
-        "grade": "A",
-        "score": 68,
+        "timestamp": "2025-09-13T15:52:21.709118+00:00",
+        "grade": "AA",
+        "score": 92,
         "issues": [
           {
-            "component": "Links with text",
-            "passed": 106,
-            "total": 117,
-            "message": "106/117 links have text."
-          },
-          {
-            "component": "Inputs with label or placeholder",
+            "component": "Form inputs with labels",
             "passed": 1,
-            "total": 5,
-            "message": "1/5 inputs have label or placeholder."
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
           },
           {
-            "component": "Buttons with text",
-            "passed": 11,
-            "total": 18,
-            "message": "11/18 buttons have text."
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
           }
         ]
       },
       {
-        "timestamp": "2025-09-13T12:57:06.260776Z",
-        "grade": "A",
-        "score": 68,
+        "timestamp": "2025-09-13T15:55:51.481020+00:00",
+        "grade": "AA",
+        "score": 92,
         "issues": [
           {
-            "component": "Links with text",
-            "passed": 106,
-            "total": 117,
-            "message": "106/117 links have text."
-          },
-          {
-            "component": "Inputs with label or placeholder",
+            "component": "Form inputs with labels",
             "passed": 1,
-            "total": 5,
-            "message": "1/5 inputs have label or placeholder."
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
           },
           {
-            "component": "Buttons with text",
-            "passed": 11,
-            "total": 18,
-            "message": "11/18 buttons have text."
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
           }
         ]
       },
       {
-        "timestamp": "2025-09-13T13:00:04.264996Z",
-        "grade": "A",
-        "score": 68,
+        "timestamp": "2025-09-13T15:56:23.469018+00:00",
+        "grade": "AA",
+        "score": 92,
         "issues": [
           {
-            "component": "Links with text",
-            "passed": 106,
-            "total": 117,
-            "message": "106/117 links have text."
-          },
-          {
-            "component": "Inputs with label or placeholder",
+            "component": "Form inputs with labels",
             "passed": 1,
-            "total": 5,
-            "message": "1/5 inputs have label or placeholder."
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
           },
           {
-            "component": "Buttons with text",
-            "passed": 11,
-            "total": 18,
-            "message": "11/18 buttons have text."
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
           }
         ]
       },
       {
-        "timestamp": "2025-09-13T13:04:57.531200Z",
-        "grade": "A",
-        "score": 68,
+        "timestamp": "2025-09-13T15:58:40.595735+00:00",
+        "grade": "AA",
+        "score": 92,
         "issues": [
           {
-            "component": "Links with text",
-            "passed": 106,
-            "total": 117,
-            "message": "106/117 links have text."
-          },
-          {
-            "component": "Inputs with label or placeholder",
+            "component": "Form inputs with labels",
             "passed": 1,
-            "total": 5,
-            "message": "1/5 inputs have label or placeholder."
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
           },
           {
-            "component": "Buttons with text",
-            "passed": 11,
-            "total": 18,
-            "message": "11/18 buttons have text."
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
           }
         ]
       },
       {
-        "timestamp": "2025-09-13T13:19:26.504961Z",
-        "grade": "A",
-        "score": 68,
+        "timestamp": "2025-09-13T15:58:58.924344+00:00",
+        "grade": "AA",
+        "score": 92,
         "issues": [
           {
-            "component": "Links with text",
-            "passed": 106,
-            "total": 117,
-            "message": "106/117 links have text."
-          },
-          {
-            "component": "Inputs with label or placeholder",
+            "component": "Form inputs with labels",
             "passed": 1,
-            "total": 5,
-            "message": "1/5 inputs have label or placeholder."
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
           },
           {
-            "component": "Buttons with text",
-            "passed": 11,
-            "total": 18,
-            "message": "11/18 buttons have text."
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T15:59:28.745450+00:00",
+        "grade": "AA",
+        "score": 92,
+        "issues": [
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 13,
+            "message": "1/13 form inputs have proper labels."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:06:00.199369+00:00",
+        "grade": "AA",
+        "score": 88,
+        "issues": [
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 14,
+            "message": "13/14 form inputs missing labels (WCAG 3.2.2)."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing 'Skip to main content' link (WCAG 2.4.1)."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 393,
+            "total": 393,
+            "message": "Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:06:47.420826+00:00",
+        "grade": "AA",
+        "score": 88,
+        "issues": [
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 14,
+            "message": "13/14 form inputs missing labels (WCAG 3.2.2)."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing 'Skip to main content' link (WCAG 2.4.1)."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 393,
+            "total": 393,
+            "message": "Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:10:13.639943+00:00",
+        "grade": "AA",
+        "score": 88,
+        "issues": [
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 14,
+            "message": "13/14 form inputs missing labels (WCAG 3.2.2)."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing 'Skip to main content' link (WCAG 2.4.1)."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 393,
+            "total": 393,
+            "message": "Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:14:22.802148+00:00",
+        "grade": "AA",
+        "score": 88,
+        "issues": [
+          {
+            "component": "Page title",
+            "passed": 1,
+            "total": 1,
+            "message": "Page title is present and not empty."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 2,
+            "total": 2,
+            "message": "All 2 images have alt attribute."
+          },
+          {
+            "component": "Links with descriptive text",
+            "passed": 375,
+            "total": 375,
+            "message": "All 375 links have descriptive text."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 14,
+            "message": "13/14 form inputs missing labels (WCAG 3.2.2)."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 4,
+            "total": 4,
+            "message": "All 4 buttons have accessible text."
+          },
+          {
+            "component": "Single H1 per page",
+            "passed": 1,
+            "total": 1,
+            "message": "Exactly 1 H1 tag found on the page."
+          },
+          {
+            "component": "Proper heading hierarchy",
+            "passed": 1,
+            "total": 1,
+            "message": "Heading hierarchy is properly structured."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 7,
+            "total": 7,
+            "message": "Found 7 properly structured lists."
+          },
+          {
+            "component": "Focus management",
+            "passed": 393,
+            "total": 393,
+            "message": "Found 393 focusable elements for keyboard navigation."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 5,
+            "total": 5,
+            "message": "Found 5 landmark elements for page structure."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing 'Skip to main content' link (WCAG 2.4.1)."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 393,
+            "total": 393,
+            "message": "Found 393 interactive elements. Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T16:15:21.482420+00:00",
+        "grade": "AA",
+        "score": 88,
+        "issues": [
+          {
+            "component": "Page title",
+            "passed": 1,
+            "total": 1,
+            "message": "Page title is present and not empty."
+          },
+          {
+            "component": "Images with alt attribute",
+            "passed": 2,
+            "total": 2,
+            "message": "All 2 images have alt attribute."
+          },
+          {
+            "component": "Links with descriptive text",
+            "passed": 375,
+            "total": 375,
+            "message": "All 375 links have descriptive text."
+          },
+          {
+            "component": "Form inputs with labels",
+            "passed": 1,
+            "total": 14,
+            "message": "13/14 form inputs missing labels (WCAG 3.2.2)."
+          },
+          {
+            "component": "Buttons with accessible text",
+            "passed": 4,
+            "total": 4,
+            "message": "All 4 buttons have accessible text."
+          },
+          {
+            "component": "Single H1 per page",
+            "passed": 1,
+            "total": 1,
+            "message": "Exactly 1 H1 tag found on the page."
+          },
+          {
+            "component": "Proper heading hierarchy",
+            "passed": 1,
+            "total": 1,
+            "message": "Heading hierarchy is properly structured."
+          },
+          {
+            "component": "Tables with headers",
+            "passed": 1,
+            "total": 1,
+            "message": "No tables found - this is acceptable."
+          },
+          {
+            "component": "Lists semantic structure",
+            "passed": 7,
+            "total": 7,
+            "message": "Found 7 properly structured lists."
+          },
+          {
+            "component": "Focus management",
+            "passed": 393,
+            "total": 393,
+            "message": "Found 393 focusable elements for keyboard navigation."
+          },
+          {
+            "component": "Landmark elements",
+            "passed": 5,
+            "total": 5,
+            "message": "Found 5 landmark elements for page structure."
+          },
+          {
+            "component": "Skip to main content link",
+            "passed": 0,
+            "total": 1,
+            "message": "Missing 'Skip to main content' link (WCAG 2.4.1)."
+          },
+          {
+            "component": "Color contrast",
+            "passed": 1,
+            "total": 1,
+            "message": "Color contrast analysis requires CSS inspection (WCAG 1.4.3)."
+          },
+          {
+            "component": "Touch targets",
+            "passed": 393,
+            "total": 393,
+            "message": "Found 393 interactive elements. Touch target size analysis requires CSS inspection (WCAG 2.5.8)."
+          },
+          {
+            "component": "Media controls",
+            "passed": 1,
+            "total": 1,
+            "message": "No media elements found - this is acceptable."
           }
         ]
       }
