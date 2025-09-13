@@ -155,6 +155,688 @@
             "message": "3/4 buttons have text."
           }
         ]
+      },
+      {
+        "timestamp": "2025-09-13T12:57:04.594501Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:57:05.377462Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:00:00.574055Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:00:02.031660Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:04:47.602323Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:04:51.639083Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:18:32.564013Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:18:49.361036Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:55:03.833752Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:57:15.923523Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:59:54.582154Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:01:02.879218Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:04:01.893017Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:05:23.357435Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:08:03.793803Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:14:52.117831Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:19:07.035742Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:22:00.997693Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:23:39.480964+00:00",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:27:20.299204+00:00",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:37:12.152438+00:00",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T14:47:19.012854+00:00",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
       }
     ]
   },
@@ -168,6 +850,36 @@
       },
       {
         "timestamp": "2025-09-13T12:39:15.284441Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      },
+      {
+        "timestamp": "2025-09-13T12:57:05.776774Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      },
+      {
+        "timestamp": "2025-09-13T13:00:03.130297Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      },
+      {
+        "timestamp": "2025-09-13T13:04:54.475287Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      },
+      {
+        "timestamp": "2025-09-13T13:19:01.313784Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      },
+      {
+        "timestamp": "2025-09-13T14:51:12.790350+00:00",
         "grade": "AAA",
         "score": 100,
         "issues": []
@@ -203,6 +915,106 @@
       },
       {
         "timestamp": "2025-09-13T12:39:15.737069Z",
+        "grade": "A",
+        "score": 68,
+        "issues": [
+          {
+            "component": "Links with text",
+            "passed": 106,
+            "total": 117,
+            "message": "106/117 links have text."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 1,
+            "total": 5,
+            "message": "1/5 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 11,
+            "total": 18,
+            "message": "11/18 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:57:06.260776Z",
+        "grade": "A",
+        "score": 68,
+        "issues": [
+          {
+            "component": "Links with text",
+            "passed": 106,
+            "total": 117,
+            "message": "106/117 links have text."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 1,
+            "total": 5,
+            "message": "1/5 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 11,
+            "total": 18,
+            "message": "11/18 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:00:04.264996Z",
+        "grade": "A",
+        "score": 68,
+        "issues": [
+          {
+            "component": "Links with text",
+            "passed": 106,
+            "total": 117,
+            "message": "106/117 links have text."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 1,
+            "total": 5,
+            "message": "1/5 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 11,
+            "total": 18,
+            "message": "11/18 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:04:57.531200Z",
+        "grade": "A",
+        "score": 68,
+        "issues": [
+          {
+            "component": "Links with text",
+            "passed": 106,
+            "total": 117,
+            "message": "106/117 links have text."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 1,
+            "total": 5,
+            "message": "1/5 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 11,
+            "total": 18,
+            "message": "11/18 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T13:19:26.504961Z",
         "grade": "A",
         "score": 68,
         "issues": [
