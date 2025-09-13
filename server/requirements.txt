@@ -1,2 +1,7 @@
 fastapi
 uvicorn[standard]
+openai
+fpdf
+beautifulsoup4
+python-dotenv
+connectonion
