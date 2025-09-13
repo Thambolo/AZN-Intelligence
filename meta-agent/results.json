@@ -1,86 +1,231 @@
-[
-  {
-    "url": "https://www.wikipedia.org/",
-    "grade": "Not WCAG compliant",
-    "issues": [
-      "Potential low-contrast text detected",
-      "Image missing alt text",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Empty button found"
-    ],
-    "score": 13
+{
+  "https://www.wikipedia.org/": {
+    "analyses": [
+      {
+        "timestamp": "2025-09-13T12:35:02.829863Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:35:03.655987Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:38:10.664746Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:39:14.083670Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:39:14.911959Z",
+        "grade": "A",
+        "score": 62,
+        "issues": [
+          {
+            "component": "Images with alt text",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have alt text."
+          },
+          {
+            "component": "Decorative images with empty alt",
+            "passed": 1,
+            "total": 2,
+            "message": "1/2 images have empty alt for decorative."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 0,
+            "total": 13,
+            "message": "0/13 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 3,
+            "total": 4,
+            "message": "3/4 buttons have text."
+          }
+        ]
+      }
+    ]
   },
-  {
-    "url": "https://www.wikipedia.org/",
-    "grade": "Not WCAG compliant",
-    "issues": [
-      "Potential low-contrast text detected",
-      "Image missing alt text",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Empty button found"
-    ],
-    "score": 13
+  "https://www.example.com/": {
+    "analyses": [
+      {
+        "timestamp": "2025-09-13T12:35:04.042124Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      },
+      {
+        "timestamp": "2025-09-13T12:39:15.284441Z",
+        "grade": "AAA",
+        "score": 100,
+        "issues": []
+      }
+    ]
   },
-  {
-    "url": "https://www.example.com/",
-    "grade": "AAA",
-    "issues": [
-      "Potential low-contrast text detected"
-    ],
-    "score": 90
-  },
-  {
-    "url": "https://www.apple.com/",
-    "grade": "Not WCAG compliant",
-    "issues": [
-      "Potential low-contrast text detected",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Empty link found",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Form input missing label or placeholder",
-      "Empty button found",
-      "Empty button found",
-      "Empty button found",
-      "Empty button found",
-      "Empty button found",
-      "Empty button found",
-      "Empty button found"
-    ],
-    "score": -20
+  "https://www.apple.com/": {
+    "analyses": [
+      {
+        "timestamp": "2025-09-13T12:35:04.525082Z",
+        "grade": "A",
+        "score": 68,
+        "issues": [
+          {
+            "component": "Links with text",
+            "passed": 106,
+            "total": 117,
+            "message": "106/117 links have text."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 1,
+            "total": 5,
+            "message": "1/5 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 11,
+            "total": 18,
+            "message": "11/18 buttons have text."
+          }
+        ]
+      },
+      {
+        "timestamp": "2025-09-13T12:39:15.737069Z",
+        "grade": "A",
+        "score": 68,
+        "issues": [
+          {
+            "component": "Links with text",
+            "passed": 106,
+            "total": 117,
+            "message": "106/117 links have text."
+          },
+          {
+            "component": "Inputs with label or placeholder",
+            "passed": 1,
+            "total": 5,
+            "message": "1/5 inputs have label or placeholder."
+          },
+          {
+            "component": "Buttons with text",
+            "passed": 11,
+            "total": 18,
+            "message": "11/18 buttons have text."
+          }
+        ]
+      }
+    ]
   }
-]
+}
