@@ -1,0 +1,86 @@
+[
+  {
+    "url": "https://www.wikipedia.org/",
+    "grade": "Not WCAG compliant",
+    "issues": [
+      "Potential low-contrast text detected",
+      "Image missing alt text",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Empty button found"
+    ],
+    "score": 13
+  },
+  {
+    "url": "https://www.wikipedia.org/",
+    "grade": "Not WCAG compliant",
+    "issues": [
+      "Potential low-contrast text detected",
+      "Image missing alt text",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Empty button found"
+    ],
+    "score": 13
+  },
+  {
+    "url": "https://www.example.com/",
+    "grade": "AAA",
+    "issues": [
+      "Potential low-contrast text detected"
+    ],
+    "score": 90
+  },
+  {
+    "url": "https://www.apple.com/",
+    "grade": "Not WCAG compliant",
+    "issues": [
+      "Potential low-contrast text detected",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Empty link found",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Form input missing label or placeholder",
+      "Empty button found",
+      "Empty button found",
+      "Empty button found",
+      "Empty button found",
+      "Empty button found",
+      "Empty button found",
+      "Empty button found"
+    ],
+    "score": -20
+  }
+]

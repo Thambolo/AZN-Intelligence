@@ -1,0 +1,42 @@
+# Python virtual environment
+.venv/
+
+# Environment variables
+.env
+.env.*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code settings
+.vscode/
+
+# ConnectOnion metadata
+.co/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Playwright browser cache
+playwright/.cache/
+
+# Logs
+*.log
+
+# Test and coverage outputs
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# Misc
+*.swp
+*.bak
+*.tmp
