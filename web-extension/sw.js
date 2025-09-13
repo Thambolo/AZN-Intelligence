@@ -22,22 +22,86 @@ api.runtime.onMessage.addListener((msg, sender) => {
     //   data: dummy,
     // });
 
-    // Example backend integration (disabled by default):
+    // Example backend integration with retry mechanism:
     (async () => {
-      try {
-        const urls = (msg.results || []).map((r) => r.url);
-        const res = await fetch("http://localhost:8000/audit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ urls }),
-        });
-        const data = await res.json();
-        api.tabs.sendMessage(sender.tab.id, {
-          type: "GA_RESULTS",
-          data: data.results,
-        });
-      } catch (err) {
-        console.error("[A11ySearchRanker][SW] Backend error", err);
+      const maxRetries = 3;
+      const retryDelay = 2000; // 2 seconds
+
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const urls = (msg.results || []).map((r) => r.url);
+          console.debug("[A11ySearchRanker][SW] Sending to backend", {
+            attempt,
+            urlCount: urls.length,
+            urls: urls.slice(0, 3),
+          });
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
+          const res = await fetch("http://localhost:8000/audit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ urls }),
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!res.ok) {
+            throw new Error(
+              `Server responded with ${res.status}: ${res.statusText}`
+            );
+          }
+
+          const data = await res.json();
+          console.debug("[A11ySearchRanker][SW] Backend response", {
+            attempt,
+            resultCount: data.results?.length || 0,
+          });
+
+          api.tabs.sendMessage(sender.tab.id, {
+            type: "A11Y_RESULTS",
+            data: data.results || [],
+          });
+          return; // Success, exit retry loop
+        } catch (err) {
+          console.error(
+            `[A11ySearchRanker][SW] Attempt ${attempt} failed:`,
+            err
+          );
+
+          if (attempt === maxRetries) {
+            // All retries exhausted, send error response
+            console.error("[A11ySearchRanker][SW] All retries exhausted");
+
+            const fallbackResults = (msg.results || []).map((r, i) => ({
+              url: r.url,
+              grade: "Error",
+              score: 0,
+              issues: [
+                {
+                  component: "Connection",
+                  message: `Failed to analyze after ${maxRetries} attempts: ${err.message}`,
+                  passed: 0,
+                  total: 1,
+                },
+              ],
+            }));
+
+            api.tabs.sendMessage(sender.tab.id, {
+              type: "A11Y_RESULTS",
+              data: fallbackResults,
+              error: `Failed after ${maxRetries} attempts: ${err.message}`,
+            });
+          } else {
+            // Wait before retrying
+            console.debug(
+              `[A11ySearchRanker][SW] Retrying in ${retryDelay}ms...`
+            );
+            await new Promise((resolve) => setTimeout(resolve, retryDelay));
+          }
+        }
       }
     })();
   }
