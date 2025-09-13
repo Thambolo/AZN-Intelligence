@@ -52,6 +52,10 @@
     return null;
   }
 
+  function findContainer(h3) {
+    return h3.closest(".A6K0A");
+  }
+
   function getResultHeadings() {
     const allHeadings = Array.from(document.querySelectorAll("#search h3"));
     const seen = new Set();
@@ -72,7 +76,7 @@
   function extractResults() {
     const headings = getResultHeadings();
     const results = [];
-    headings.slice(0, 10).forEach((h3, i) => {
+    headings.slice(0, 20).forEach((h3, i) => {
       h3.setAttribute("data-a11y-index", String(i));
       const a = findAnchorForHeading(h3);
       if (a && a.href)
@@ -130,10 +134,12 @@
   }
 
   api.runtime.onMessage.addListener((msg) => {
-    if (msg?.type !== "A11Y_RESULTS") return;
+    if (msg?.type !== "GA_RESULTS") return;
     const data = msg.data || [];
     inFlight = false;
     console.debug(LOG_PREFIX, "Received A11Y_RESULTS", data);
+    const urlToResult = new Map(data.map((r) => [r.url, r]));
+    const containers = new Map();
     data.forEach((r, idx) => {
       let h3 = document.querySelector(`h3[data-a11y-index="${idx}"]`);
       if (!h3) h3 = getResultHeadings()[idx] || null;
@@ -253,6 +259,51 @@
 
       badge.appendChild(document.createTextNode(` ${r.grade} (${r.score})`));
       h3.appendChild(badge);
+
+      // Find container and assign score
+      const container = findContainer(h3);
+      if (container) {
+        if (!container.id) {
+          container.id = `a11y-result-${idx}`;
+        }
+        // Use the score for this url, but for main, it's the first
+        if (!containers.has(container)) {
+          containers.set(container, r.score);
+        }
+      }
+    });
+
+    // Reorder containers by score descending
+    const sortedContainers = Array.from(containers.entries()).sort(
+      (a, b) => b[1] - a[1]
+    );
+    const parent =
+      document.querySelector("#rso .MjjYud") || document.querySelector("#rso");
+    sortedContainers.forEach(([container]) => {
+      parent.appendChild(container);
+    });
+
+    // Sort sub-URLs (sitelinks) within each container
+    containers.forEach((score, container) => {
+      const table = container.querySelector("table");
+      if (table) {
+        const tbody = table.querySelector("tbody");
+        if (tbody) {
+          const rows = Array.from(tbody.querySelectorAll("tr"));
+          rows.sort((a, b) => {
+            const h3a = a.querySelector("h3");
+            const h3b = b.querySelector("h3");
+            const sa = h3a
+              ? urlToResult.get(findAnchorForHeading(h3a)?.href)?.score || 0
+              : 0;
+            const sb = h3b
+              ? urlToResult.get(findAnchorForHeading(h3b)?.href)?.score || 0
+              : 0;
+            return sb - sa;
+          });
+          rows.forEach((row) => tbody.appendChild(row));
+        }
+      }
     });
   });
 
