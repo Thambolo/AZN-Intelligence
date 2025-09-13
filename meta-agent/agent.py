@@ -1,3 +1,97 @@
+from fpdf import FPDF
+# --- PDF REPORT GENERATION ---
+def save_pdf_report(url: str, analysis: dict, ai_feedback: str, filename: str = None):
+    def to_ascii(text):
+        # Replace curly quotes and other common Unicode with ASCII equivalents
+        replacements = {
+            '\u201c': '"', '\u201d': '"',  # left/right double quote
+            '\u2018': "'", '\u2019': "'",  # left/right single quote
+            '\u2013': '-', '\u2014': '-',    # en dash, em dash
+            '\u2026': '...',                  # ellipsis
+            '\u00a0': ' ',                    # non-breaking space
+        }
+        for uni, asc in replacements.items():
+            text = text.replace(uni, asc)
+        # Remove any other non-ASCII chars
+        return text.encode('ascii', errors='ignore').decode('ascii')
+    """Save a nicely formatted PDF report for the accessibility analysis."""
+    if filename is None:
+        safe_url = url.replace('https://', '').replace('http://', '').replace('/', '_').replace(':', '_')
+        filename = f"accessibility_report_{safe_url}.pdf"
+    from fpdf import XPos, YPos
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Times", 'B', 16)
+    pdf.cell(0, 10, "Accessibility Report", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
+    pdf.set_font("Times", '', 12)
+    pdf.cell(0, 10, f"URL: {url}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 10, f"Score: {analysis['score']}/100", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(0, 10, f"Grade: {analysis['grade']}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(5)
+    pdf.set_font("Times", 'B', 12)
+    pdf.cell(0, 10, "Accessibility Issues:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Times", '', 11)
+    issues = analysis.get('issues', [])
+    filtered = [i for i in issues if i.get('passed', 0) != i.get('total', 1)]
+    if filtered:
+        pdf.set_fill_color(230, 230, 230)
+        pdf.set_font("Times", 'B', 11)
+        pdf.cell(60, 8, to_ascii("Component"), border=1, fill=True)
+        pdf.cell(80, 8, to_ascii("Issue"), border=1, fill=True)
+        pdf.cell(30, 8, to_ascii("Pass/Total"), border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT, fill=True)
+        pdf.set_font("Times", '', 11)
+        for i in filtered:
+            comp = to_ascii(i.get('component', '')[:28])
+            msg = to_ascii(i.get('message', '')[:38])
+            pt = to_ascii(f"{i.get('passed', 0)}/{i.get('total', 1)}")
+            pdf.cell(60, 8, comp, border=1)
+            pdf.cell(80, 8, msg, border=1)
+            pdf.cell(30, 8, pt, border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    else:
+        pdf.cell(0, 8, to_ascii("All accessibility checks passed!"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.ln(5)
+    pdf.set_font("Times", 'B', 12)
+    pdf.cell(0, 10, to_ascii("AI Accessibility Feedback:"), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.set_font("Times", '', 11)
+    pdf.multi_cell(0, 8, to_ascii(ai_feedback))
+    pdf.output(filename)
+    print(f"PDF report saved to {filename}")
+import openai
+# --- AI TOOL: Analyze accessibility with OpenAI ---
+def ai_accessibility_analysis(html: str, url: str = "") -> dict:
+    """Use OpenAI to analyze HTML for accessibility issues and grade the page."""
+    import os
+    prompt = f"""
+You are an expert in web accessibility and WCAG compliance. Analyze the following HTML for accessibility issues. List specific problems, suggest improvements, and assign a grade (A, AA, AAA) based on WCAG. If possible, provide a short summary for developers and users.
+
+URL: {url}
+HTML:
+{html[:6000]}
+"""
+    # Read from environment or use defaults
+    try:
+        max_tokens = int(os.getenv("max_completion_tokens", 600))
+    except Exception:
+        max_tokens = 600
+    # try:
+    #     temperature = float(os.getenv("TEMPERATURE", 0.2))
+    # except Exception:
+    #     temperature = 0.2
+    model = os.getenv("MODEL", "gpt-5-nano")
+    try:
+        client = openai.OpenAI()
+        response = client.chat.completions.create(
+            model=model,
+            messages=[{"role": "system", "content": "You are a helpful accessibility auditor."},
+                      {"role": "user", "content": prompt}],
+            max_completion_tokens=max_tokens,
+            # temperature=temperature
+        )
+        content = response.choices[0].message.content.strip()
+        print("\nAI Accessibility Feedback (from ai_accessibility_analysis):\n" + content)
+        return {"ai_feedback": content}
+    except Exception as e:
+        return {"ai_feedback": f"AI analysis failed: {e}"}
 from connectonion import Agent
 import requests
 from bs4 import BeautifulSoup
@@ -10,7 +104,7 @@ load_dotenv()
 def store_result_json(url: str, grade: str, issues: List[str], score: int, filename: str = "results.json") -> str:
     """Store the accessibility result for a URL in a JSON file."""
     import datetime
-    timestamp = datetime.datetime.utcnow().isoformat() + 'Z'
+    timestamp = datetime.datetime.now(datetime.UTC).isoformat()
     new_entry = {
         "timestamp": timestamp,
         "grade": grade,
@@ -181,39 +275,41 @@ def rerank_results(results: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
 agent = Agent(
     name="webpage_accessibility_grader",
     system_prompt="prompts/accessibility_grader.md",
-    tools=[scrape_page, analyze_accessibility, format_grade, rerank_results, store_result_json],
+    tools=[scrape_page, analyze_accessibility, ai_accessibility_analysis, format_grade, rerank_results, store_result_json],
     max_iterations=15
 )
 
 # --- 7. EXAMPLE USAGE FOR BACKEND ---
 if __name__ == "__main__":
 
-    # Example: Grade a single webpage
-    url = "https://www.wikipedia.org/"
-    html = scrape_page(url)
-    analysis = analyze_accessibility(html)
 
-    # Store result in JSON
-    store_result_json(url, analysis['grade'], analysis['issues'], analysis['score'])
-    print(f"\n{'*'*60}\nAccessibility Report for {url}\n{'*'*60}")
-    print(f"Score: {analysis['score']}/100 | Grade: {analysis['grade']}")
-    print(format_grade(analysis['grade'], analysis['issues'], url))
+    # Example: Grade a single webpage
+    # url = "https://www.wikipedia.org/"
+    # html = scrape_page(url)
+    # analysis = analyze_accessibility(html)
+    # ai_result = ai_accessibility_analysis(html, url)
+
+    # Store result in JSON (now includes AI feedback)
+    # store_result_json(url, analysis['grade'], analysis['issues'], analysis['score'])
+    # ai_feedback = ai_result.get("ai_feedback", "No AI feedback.")
+    # save_pdf_report(url, analysis, ai_feedback)
 
     # Example: Grade and re-rank multiple search results
     urls = [
-        "https://www.wikipedia.org/",
+        # "https://www.wikipedia.org/",
         "https://www.example.com/",
-        "https://www.apple.com/"
+        # "https://www.apple.com/"
     ]
     grades = []
     for u in urls:
         h = scrape_page(u)
         a = analyze_accessibility(h)
+        ai_result = ai_accessibility_analysis(h, u)
         store_result_json(u, a['grade'], a['issues'], a['score'])
         grades.append((u, a['grade']))
-        print(f"\n{'*'*60}\nAccessibility Report for {u}\n{'*'*60}")
-        print(f"Score: {a['score']}/100 | Grade: {a['grade']}")
-        print(format_grade(a['grade'], a['issues'], u))
+    ai_feedback = ai_result.get("ai_feedback", "No AI feedback.")
+    print(f"\nAI Accessibility Feedback for {u}:\n" + ai_feedback)
+    save_pdf_report(u, a, ai_feedback)
     ranked = rerank_results(grades)
     print("\nRe-ranked by accessibility:")
     for url, grade in ranked:
