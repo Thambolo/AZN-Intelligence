@@ -1,6 +1,6 @@
 /*
   Modern pill badge that blends with Google Search UI
-  - Uses data-grade attribute for color theming: A, AA, AAA, Fail
+  - Uses data-grade attribute for color theming: A, AA, AAA, Not Compliant
   - Respects dark mode via prefers-color-scheme
 */
 
@@ -59,7 +59,7 @@
   color: #9a3412;
   border-color: #f97316; /* orange-500 */
 }
-.a11y-badge[data-grade="Fail"] {
+.a11y-badge[data-grade="Not Compliant"] {
   /* Red (alert) — stronger light theme */
   background: #fecaca; /* red-200 */
   color: #7f1d1d;
@@ -85,7 +85,7 @@
     color: #fed7aa;
     border-color: rgba(249, 115, 22, 0.35);
   }
-  .a11y-badge[data-grade="Fail"] {
+  .a11y-badge[data-grade="Not Compliant"] {
     /* Red */
     background: rgba(239, 68, 68, 0.22);
     color: #fca5a5;
@@ -165,7 +165,7 @@
   );
   background-blend-mode: multiply;
 }
-:root[data-a11y-cb-patterns="1"] .a11y-badge[data-grade="Fail"] {
+:root[data-a11y-cb-patterns="1"] .a11y-badge[data-grade="Not Compliant"] {
   background-image: repeating-linear-gradient(
     -45deg,
     rgba(127, 29, 29, 0.18) 0,
@@ -193,7 +193,7 @@
   color: #ffffff;
   border-color: #c2410c;
 }
-:root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="Fail"] {
+:root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="Not Compliant"] {
   background: #dc2626; /* red-600 */
   color: #ffffff;
   border-color: #b91c1c;
@@ -215,7 +215,7 @@
     color: #111827;
     border-color: #fb923c;
   }
-  :root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="Fail"] {
+  :root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="Not Compliant"] {
     background: #ef4444;
     color: #111827;
     border-color: #f87171;
