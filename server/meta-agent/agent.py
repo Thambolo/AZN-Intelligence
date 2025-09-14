@@ -1,188 +1,227 @@
+import fitz  # PyMuPDF
+from datetime import datetime
+
 def save_pdf_report(url: str, analysis: dict, ai_result: dict, filename: str = None):
-    def to_ascii(text):
-        # Replace curly quotes and other common Unicode with ASCII equivalents
-        replacements = {
-            '\u201c': '"', '\u201d': '"',  # left/right double quote
-            '\u2018': "'", '\u2019': "'",  # left/right single quote
-            '\u2013': '-', '\u2014': '-',    # en dash, em dash
-            '\u2026': '...',                  # ellipsis
-            '\u00a0': ' ',                    # non-breaking space
-        }
-        for uni, asc in replacements.items():
-            text = text.replace(uni, asc)
-        # Remove any other non-ASCII chars
-        return text.encode('ascii', errors='ignore').decode('ascii')
-    
     """Save a comprehensive PDF report for developers with AI analysis and improvement suggestions."""
     if filename is None:
         safe_url = url.replace('https://', '').replace('http://', '').replace('/', '_').replace(':', '_')
         filename = f"accessibility_report_{safe_url}.pdf"
     
-    from fpdf import XPos, YPos
-    pdf = FPDF()
-    pdf.add_page()
+    print(f"🔍 DEBUG: save_pdf_report called with URL: {url}")
+    print(f"🔍 DEBUG: Generated filename: {filename}")
+    print(f"🔍 DEBUG: analysis keys: {list(analysis.keys()) if analysis else 'None'}")
+    print(f"🔍 DEBUG: ai_result keys: {list(ai_result.keys()) if ai_result else 'None'}")
     
-    # Header
-    pdf.set_font("Times", 'B', 18)
-    pdf.cell(0, 12, "WCAG Compliance Report", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
-    pdf.set_font("Times", 'B', 14)
-    pdf.cell(0, 8, "Developer Accessibility Analysis", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
-    pdf.ln(10)
-    
-    # URL and basic info
-    pdf.set_font("Times", 'B', 12)
-    pdf.cell(0, 8, f"Website: {url}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.cell(0, 8, f"Analysis Date: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.ln(5)
-    
-    
-    # Get AI analysis if available
-    ai_analysis = ai_result.get('ai_analysis', {}) if ai_result else {}
-    
-    # WCAG Compliance Score
-    pdf.set_font("Times", 'B', 12)
-    pdf.cell(0, 8, "WCAG Compliance Score", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Times", '', 11)
-    
-    # Use AI score if available, otherwise use automated score
-    if ai_analysis and 'overall_score' in ai_analysis:
-        score = ai_analysis['overall_score']
-        grade = ai_analysis.get('wcag_grade', analysis['grade'])
-        pdf.cell(0, 6, f"Grade: {grade}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.cell(0, 6, f"Score: {score}/100", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    else:
-        pdf.cell(0, 6, f"Grade: {analysis['grade']}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.cell(0, 6, f"Score: {analysis['score']}/100", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    
-    pdf.ln(5)
-    
-    # Automated Analysis Results
-    pdf.set_font("Times", 'B', 12)
-    pdf.cell(0, 8, "Automated Analysis Results", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    pdf.set_font("Times", '', 11)
-    
-    issues = analysis.get('issues', [])
-    if issues:
-        pdf.set_fill_color(240, 240, 240)
-        pdf.set_font("Times", 'B', 10)
-        pdf.cell(50, 6, "Component", border=1, fill=True)
-        pdf.cell(100, 6, "Status", border=1, fill=True)
-        pdf.cell(30, 6, "Pass/Total", border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT, fill=True)
-        pdf.set_font("Times", '', 9)
+    try:
+        # Create a new PDF document
+        doc = fitz.open()
+        page = doc.new_page()
         
-        for issue in issues:
-            comp = to_ascii(issue.get('component', '')[:45])
-            msg = to_ascii(issue.get('message', '')[:95])
-            pt = to_ascii(f"{issue.get('passed', 0)}/{issue.get('total', 1)}")
-            pdf.cell(50, 6, comp, border=1)
-            pdf.cell(100, 6, msg, border=1)
-            pdf.cell(30, 6, pt, border=1, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    else:
-        pdf.cell(0, 6, "No issues detected in automated analysis.", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-    
-    pdf.ln(8)
-    
-    # AI Analysis Section
-    if ai_analysis:
-        # Critical Issues
-        critical_issues = ai_analysis.get('critical_issues', [])
-        if critical_issues:
-            pdf.set_font("Times", 'B', 12)
-            pdf.cell(0, 8, "Critical Issues (AI Analysis)", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_font("Times", '', 10)
+        # Set up initial position and font
+        y_position = 72  # Start 1 inch from top
+        margin = 72  # 1 inch margins
+        line_height = 20
+        page_width = page.rect.width - 2 * margin
+        
+        def add_text(page, text, x, y, font_size=12, bold=False, color=(0, 0, 0)):
+            """Add text to the page and return new y position"""
+            fontname = "helv" if not bold else "helv"  # Use same font for now
             
-            for i, issue in enumerate(critical_issues[:5], 1):  # Limit to top 5
-                pdf.set_font("Times", 'B', 10)
-                pdf.cell(0, 6, f"{i}. {to_ascii(issue.get('issue', 'Unknown issue'))}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                pdf.set_font("Times", '', 9)
-                pdf.cell(0, 4, f"WCAG: {to_ascii(issue.get('wcag_guideline', 'N/A'))} | Impact: {to_ascii(issue.get('impact', 'Unknown'))} | Priority: {to_ascii(issue.get('fix_priority', 'Unknown'))}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                pdf.multi_cell(0, 4, to_ascii(issue.get('developer_guidance', 'No guidance provided')[:200]))
-                pdf.ln(2)
-        
-        # Improvement Suggestions
-        improvements = ai_analysis.get('improvement_suggestions', [])
-        if improvements:
-            pdf.set_font("Times", 'B', 12)
-            pdf.cell(0, 8, "Improvement Suggestions", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_font("Times", '', 10)
+            # Split text into lines that fit within page width
+            words = text.split(' ')
+            lines = []
+            current_line = ""
             
-            for i, improvement in enumerate(improvements[:4], 1):  # Limit to top 4
-                pdf.set_font("Times", 'B', 10)
-                pdf.cell(0, 6, f"{i}. {to_ascii(improvement.get('area', 'General improvement'))}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                pdf.set_font("Times", '', 9)
-                pdf.multi_cell(0, 4, to_ascii(improvement.get('suggestion', 'No suggestion provided')[:150]))
-                if improvement.get('code_example'):
-                    pdf.set_font("Times", 'I', 8)
-                    pdf.multi_cell(0, 3, f"Code: {to_ascii(improvement.get('code_example', '')[:100])}")
-                pdf.ln(2)
-        
-        # Developer Checklist
-        checklist = ai_analysis.get('developer_checklist', [])
-        if checklist:
-            pdf.set_font("Times", 'B', 12)
-            pdf.cell(0, 8, "Developer Action Items", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_font("Times", '', 9)
-            for i, item in enumerate(checklist[:8], 1):  # Limit to top 8
-                pdf.cell(0, 4, f"□ {to_ascii(item)}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        
-        # Next Steps
-        next_steps = ai_analysis.get('next_steps', '')
-        if next_steps:
-            pdf.ln(3)
-            pdf.set_font("Times", 'B', 12)
-            pdf.cell(0, 8, "Recommended Next Steps", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-            pdf.set_font("Times", '', 10)
-            pdf.multi_cell(0, 5, to_ascii(next_steps))
-    
-    else:
-        # Fallback to formatted raw AI feedback
-        pdf.set_font("Times", 'B', 12)
-        pdf.cell(0, 8, "AI Analysis", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        pdf.set_font("Times", '', 10)
-        raw_feedback = ai_result.get('raw_feedback', 'No AI analysis available') if ai_result else 'No AI analysis available'
-        
-        if raw_feedback.startswith('```json'):
-            try:
-                import json
-                import re
-                json_match = re.search(r'```json\s*(\{.*?\})\s*```', raw_feedback, re.DOTALL)
-                if json_match:
-                    json_str = json_match.group(1)
-                    ai_data = json.loads(json_str)
-                    if 'compliance_summary' in ai_data:
-                        pdf.set_font("Times", 'B', 10)
-                        pdf.cell(0, 6, "Summary:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                        pdf.set_font("Times", '', 9)
-                        pdf.multi_cell(0, 4, to_ascii(ai_data['compliance_summary']))
-                        pdf.ln(2)
-                    
-                    if 'critical_issues' in ai_data and ai_data['critical_issues']:
-                        pdf.set_font("Times", 'B', 10)
-                        pdf.cell(0, 6, "Critical Issues:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                        pdf.set_font("Times", '', 9)
-                        for i, issue in enumerate(ai_data['critical_issues'][:3], 1):
-                            pdf.cell(0, 4, f"{i}. {to_ascii(issue.get('issue', 'Unknown issue')[:80])}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                        pdf.ln(2)
-                    
-                    if 'improvement_suggestions' in ai_data and ai_data['improvement_suggestions']:
-                        pdf.set_font("Times", 'B', 10)
-                        pdf.cell(0, 6, "Improvements:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                        pdf.set_font("Times", '', 9)
-                        for i, suggestion in enumerate(ai_data['improvement_suggestions'][:3], 1):
-                            pdf.cell(0, 4, f"{i}. {to_ascii(suggestion.get('suggestion', 'No suggestion')[:80])}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                        pdf.ln(2)
-                    
-                    if 'next_steps' in ai_data and ai_data['next_steps']:
-                        pdf.set_font("Times", 'B', 10)
-                        pdf.cell(0, 6, "Next Steps:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-                        pdf.set_font("Times", '', 9)
-                        pdf.multi_cell(0, 4, to_ascii(ai_data['next_steps'][:200]))
+            for word in words:
+                test_line = current_line + (" " if current_line else "") + word
+                text_width = fitz.get_text_length(test_line, fontsize=font_size)
+                
+                if text_width <= page_width:
+                    current_line = test_line
                 else:
-                    pdf.multi_cell(0, 5, to_ascii(raw_feedback[:800]))
-            except:
-                pdf.multi_cell(0, 5, to_ascii(raw_feedback[:800]))
-        else:
-            pdf.multi_cell(0, 5, to_ascii(raw_feedback[:800]))
+                    if current_line:
+                        lines.append(current_line)
+                        current_line = word
+                    else:
+                        lines.append(word)  # Word is too long but we need to include it
+            
+            if current_line:
+                lines.append(current_line)
+            
+            # Add each line to the page
+            for line in lines:
+                if y > page.rect.height - margin:  # Check if we need a new page
+                    page = doc.new_page()
+                    y = margin
+                
+                # Simple text insertion
+                page.insert_text((x, y), line, fontsize=font_size, color=color)
+                y += line_height
+            
+            return page, y
+        
+        # Title
+        page, y_position = add_text(page, "WCAG Compliance Report", margin, y_position, 18, bold=True)
+        page, y_position = add_text(page, "Developer Accessibility Analysis", margin, y_position + 5, 14, bold=True)
+        y_position += 20
+        
+        # URL and timestamp
+        page, y_position = add_text(page, f"Website: {url}", margin, y_position, 10)
+        page, y_position = add_text(page, f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", margin, y_position, 10)
+        y_position += 20
+        
+        # Executive Summary from AI
+        if ai_result and 'summary' in ai_result:
+            page, y_position = add_text(page, "EXECUTIVE SUMMARY", margin, y_position, 14, bold=True)
+            y_position += 5
+            page, y_position = add_text(page, ai_result['summary'], margin, y_position, 10)
+            y_position += 15
+        
+        # Accessibility Issues - handle both 'violations' and 'issues' formats
+        issues_to_display = []
+        if analysis and 'violations' in analysis:
+            # New format with violations
+            violations = analysis['violations']
+            page, y_position = add_text(page, f"ACCESSIBILITY VIOLATIONS ({len(violations)} found)", margin, y_position, 14, bold=True)
+            y_position += 10
+            
+            for i, violation in enumerate(violations[:20], 1):  # Limit to 20 violations
+                rule_id = violation.get('id', 'Unknown')
+                description = violation.get('description', 'No description')
+                impact = violation.get('impact', 'Unknown')
+                
+                page, y_position = add_text(page, f"{i}. {rule_id} (Impact: {impact})", margin, y_position, 11, bold=True)
+                page, y_position = add_text(page, description, margin + 20, y_position, 10)
+                
+                # Add affected elements
+                nodes = violation.get('nodes', [])
+                if nodes:
+                    page, y_position = add_text(page, f"Affected elements: {len(nodes)}", margin + 20, y_position, 9)
+                    
+                    # Show first few examples
+                    for j, node in enumerate(nodes[:3]):
+                        target = ', '.join(node.get('target', ['Unknown']))
+                        page, y_position = add_text(page, f"- {target}", margin + 40, y_position, 9)
+                
+                y_position += 10
+        elif analysis and 'issues' in analysis:
+            # Current format with issues
+            issues = analysis['issues']
+            failed_issues = [issue for issue in issues if issue.get('passed', 0) < issue.get('total', 1)]
+            page, y_position = add_text(page, f"ACCESSIBILITY ISSUES ({len(failed_issues)} found)", margin, y_position, 14, bold=True)
+            y_position += 10
+            
+            if failed_issues:
+                for i, issue in enumerate(failed_issues[:20], 1):  # Limit to 20 issues
+                    component = issue.get('component', 'Unknown')
+                    message = issue.get('message', 'No description')
+                    passed = issue.get('passed', 0)
+                    total = issue.get('total', 1)
+                    
+                    page, y_position = add_text(page, f"{i}. {component}", margin, y_position, 11, bold=True)
+                    page, y_position = add_text(page, f"Issue: {message}", margin + 20, y_position, 10)
+                    page, y_position = add_text(page, f"Status: {passed}/{total} passed", margin + 20, y_position, 9)
+                    y_position += 10
+            else:
+                page, y_position = add_text(page, "No accessibility issues found!", margin, y_position, 10)
+                y_position += 10
+        
+        # AI Recommendations - handle different AI result formats
+        ai_recommendations = []
+        if ai_result and 'ai_analysis' in ai_result and ai_result['ai_analysis']:
+            ai_data = ai_result['ai_analysis']
+            # Check for recommendations
+            if 'recommendations' in ai_data:
+                ai_recommendations = ai_data['recommendations']
+            elif 'improvement_suggestions' in ai_data:
+                ai_recommendations = ai_data['improvement_suggestions']
+            elif 'critical_issues' in ai_data:
+                ai_recommendations = ai_data['critical_issues']
+        elif ai_result and 'recommendations' in ai_result:
+            ai_recommendations = ai_result['recommendations']
+        
+        if ai_recommendations and isinstance(ai_recommendations, list):
+            page, y_position = add_text(page, "AI RECOMMENDATIONS", margin, y_position, 14, bold=True)
+            y_position += 10
+            
+            for i, rec in enumerate(ai_recommendations[:10], 1):  # Limit to 10 recommendations
+                if isinstance(rec, dict):
+                    title = rec.get('title', rec.get('issue', f'Recommendation {i}'))
+                    description = rec.get('description', rec.get('developer_guidance', 'No description'))
+                    priority = rec.get('priority', rec.get('fix_priority', 'Medium'))
+                    
+                    page, y_position = add_text(page, f"{i}. {title} (Priority: {priority})", margin, y_position, 11, bold=True)
+                    page, y_position = add_text(page, description, margin + 20, y_position, 10)
+                    y_position += 10
+        elif ai_result and 'raw_feedback' in ai_result and ai_result['raw_feedback']:
+            # Show raw AI feedback if structured data is not available
+            page, y_position = add_text(page, "AI ANALYSIS", margin, y_position, 14, bold=True)
+            y_position += 10
+            feedback = ai_result['raw_feedback']
+            if len(feedback) > 500:
+                feedback = feedback[:500] + "..."
+            page, y_position = add_text(page, feedback, margin, y_position, 10)
+            y_position += 15
+        
+        # Performance Summary - handle both data formats
+        if analysis:
+            page, y_position = add_text(page, "SUMMARY STATISTICS", margin, y_position, 14, bold=True)
+            y_position += 10
+            
+            # Handle new format with violations/passes/incomplete
+            if 'violations' in analysis or 'passes' in analysis or 'incomplete' in analysis:
+                total_violations = len(analysis.get('violations', []))
+                total_passes = len(analysis.get('passes', []))
+                total_incomplete = len(analysis.get('incomplete', []))
+                
+                page, y_position = add_text(page, f"Total Violations: {total_violations}", margin, y_position, 10)
+                page, y_position = add_text(page, f"Passed Tests: {total_passes}", margin, y_position, 10)
+                page, y_position = add_text(page, f"Incomplete Tests: {total_incomplete}", margin, y_position, 10)
+            
+            # Handle current format with grade/score/issues
+            if 'grade' in analysis and 'score' in analysis:
+                grade = analysis.get('grade', 'Unknown')
+                score = analysis.get('score', 0)
+                page, y_position = add_text(page, f"WCAG Grade: {grade}", margin, y_position, 10)
+                page, y_position = add_text(page, f"Compliance Score: {score}/100", margin, y_position, 10)
+            
+            if 'issues' in analysis:
+                issues = analysis['issues']
+                total_issues = len(issues)
+                failed_issues = len([issue for issue in issues if issue.get('passed', 0) < issue.get('total', 1)])
+                passed_issues = total_issues - failed_issues
+                
+                page, y_position = add_text(page, f"Total Components Tested: {total_issues}", margin, y_position, 10)
+                page, y_position = add_text(page, f"Components Passed: {passed_issues}", margin, y_position, 10)
+                page, y_position = add_text(page, f"Components Failed: {failed_issues}", margin, y_position, 10)
+        
+        # Save the PDF
+        doc.save(filename)
+        doc.close()
+        
+        print(f"✅ PDF successfully generated: {filename}")
+        return filename
+        
+    except Exception as e:
+        print(f"❌ ERROR in PDF generation: {str(e)}")
+        print(f"📄 Falling back to JSON report")
+        
+        # Fallback to JSON
+        import json
+        json_filename = filename.replace('.pdf', '.json') if filename.endswith('.pdf') else f"{filename}.json"
+        
+        report_data = {
+            "url": url,
+            "timestamp": datetime.now().isoformat(),
+            "analysis": analysis,
+            "ai_result": ai_result
+        }
+        
+        with open(json_filename, 'w', encoding='utf-8') as f:
+            json.dump(report_data, f, indent=2, ensure_ascii=False)
+        
+        print(f"📄 JSON report saved: {json_filename}")
+        return json_filename
     
     # Footer
     pdf.ln(10)
