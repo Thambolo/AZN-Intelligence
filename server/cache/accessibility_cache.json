@@ -1,7 +1,7 @@
 {
   "https://www.example.com": {
     "url": "https://www.example.com",
-    "grade": "AA",
+    "grade": "AAA",
     "score": 94,
     "issues": [],
     "ai_analysis": {},
@@ -22,7 +22,7 @@
   "https://goulartnogueira.github.io/BadUI/": {
     "url": "https://goulartnogueira.github.io/BadUI/",
     "grade": "A",
-    "score": 81,
+    "score": 71,
     "issues": [],
     "ai_analysis": {},
     "agent_response": "Here is the structured accessibility analysis for https://goulartnogueira.github.io/BadUI/:\n\nURL: https://goulartnogueira.github.io/BadUI/\n\nAutomated WCAG Analysis  \n• Grade: A  \n• Score: 81/100  \n• Key Issues:  \n  – Missing or empty <title> element (WCAG 2.4.2)  \n  – No <h1> on the page; should have exactly one (WCAG 2.4.6)  \n  – Missing “Skip to main content” link (WCAG 2.4.1)\n\nAI-Powered Accessibility Analysis  \n• AI Grade: AA  \n• Overall Score: 75/100  \n• Critical Issues:  \n  1. Insufficient color contrast between text and background (WCAG 1.4.3) – fix priority: critical.  \n• Improvement Suggestions:  \n  – Keyboard Navigation: ensure all interactive elements are keyboard focusable (use tabindex where needed).  \n  – Image Alt Text: provide descriptive alt attributes for all <img> tags.  \n• Developer Checklist:  \n  1. Update color contrast ratios to meet 4.5:1 (normal text) / 3:1 (large text).  \n  2. Add missing alt text on images.  \n• Testing Recommendations:  \n  – Run Axe or Lighthouse for automated checks.  \n  – Manual keyboard navigation testing.  \n• Next Steps:  \n  1. Address color contrast issues immediately.  \n  2. Add and review <alt> text on images.  \n  3. Verify keyboard accessibility and focus management.\n\nStored Results  \nThe findings have been saved in JSON format (results.json).",
@@ -167,7 +167,7 @@
     "ai_analysis": {},
     "agent_response": "Here is the structured accessibility analysis for https://www.unsw.edu.au/:\n\n1. Automated WCAG Analysis  \n   • WCAG Grade: AA  \n   • Compliance Score: 88/100  \n   • Issues:  \n     – Single H1 per page: Found 0 H1 tags, but exactly 1 is required.  \n     – Skip-to-main-content link missing (WCAG 2.4.1).  \n     – All other checks (images alt, links text, labels, color contrast, ARIA landmarks, etc.) passed or not applicable.\n\n2. AI-Powered Accessibility Insights  \n```json\n{\n  \"wcag_grade\": \"AA\",\n  \"overall_score\": 85,\n  \"compliance_summary\": \"Good baseline, but critical fixes needed for contrast and missing alt text.\",\n  \"critical_issues\": [\n    {\n      \"issue\": \"Insufficient color contrast\",\n      \"guideline\": \"WCAG 1.4.3\",\n      \"impact\": \"High\",\n      \"fix\": \"Ensure text contrast ≥ 4.5:1. Adjust CSS colors.\"\n    },\n    {\n      \"issue\": \"Missing alt text\",\n      \"guideline\": \"WCAG 1.1.1\",\n      \"impact\": \"High\",\n      \"fix\": \"Add meaningful alt attributes to all <img> elements.\"\n    }\n  ],\n  \"improvement_suggestions\": [\n    {\n      \"area\": \"Keyboard navigation\",\n      \"suggestion\": \"Ensure all interactive items are reachable via Tab; add tabindex as needed.\"\n    },\n    {\n      \"area\": \"Form labels\",\n      \"suggestion\": \"Associate every input with a <label for> element.\"\n    }\n  ],\n  \"next_steps\": [\n    \"Add a single <h1> on the page.\",\n    \"Insert a ‘Skip to main content’ link at the top.\",\n    \"Audit and fix color contrast throughout.\",\n    \"Review all images for proper alt text.\"\n  ]\n}\n```\n\n3. Stored Results  \n  • Filename: results.json  \n  • Entry:  \n```json\n{\n  \"url\": \"https://www.unsw.edu.au/\",\n  \"grade\": \"AA\",\n  \"issues\": [\n    {\"component\":\"Single H1 per page\",\"passed\":0,\"message\":\"Found 0 H1 tags, should be exactly 1.\"},\n    {\"component\":\"Skip-to main content link\",\"passed\":0,\"message\":\"Missing 'Skip to main content' link.\"},\n    …other checks passed…\n  ],\n  \"score\": 88\n}\n```\n\nLet me know if you need a PDF report or further deep-dive on specific issues.",
     "timestamp": "2025-09-14T08:30:28.439750",
-    "last_accessed": "2025-09-14T08:57:55.960399"
+    "last_accessed": "2025-09-14T10:50:30.037703"
   },
   "https://www.unsw.edu.au/study/find-a-degree-or-course": {
     "url": "https://www.unsw.edu.au/study/find-a-degree-or-course",
@@ -177,7 +177,7 @@
     "ai_analysis": {},
     "agent_response": "Here’s the structured accessibility analysis for the requested page:\n\n  \nURL: https://www.unsw.edu.au/study/find-a-degree-or-course  \n\nWCAG grade: A  \nCompliance score: 81/100  \n\nList of automated issues found:  \n- Missing or empty <title> element (WCAG 2.4.2)  \n- Found 0 H1 tags; exactly one required (WCAG 2.4.6)  \n- Missing “Skip to main content” link (WCAG 2.4.1)  \n\n(Other checks—images, links, form inputs, buttons, headings, tables, lists, landmarks, focus management—returned “no elements found,” which under the tool’s rules are treated as acceptable.)\n\nAI-powered insights & recommendations (WCAG AA, score 85):  \n1. Insufficient color contrast  \n   • Guideline: 1.4.3 Contrast (Minimum)  \n   • Fix: Ensure text/background ratios meet 4.5:1 (normal text) or 3:1 (large text).  \n   • Example:  \n     CSS:  \n       .text { color: #333; background-color: #fff; }  \n\n2. Missing alt attributes on images  \n   • Guideline: 1.1.1 Non-text Content  \n   • Fix: Add descriptive alt=\"\" on decorative images or alt=\"…\" on content images.  \n   • Example:  \n     <img src=\"image.jpg\" alt=\"Description of the image\">  \n\nAdditional improvement suggestions:  \n- Keyboard navigation: ensure all interactive controls (links/buttons/forms) are keyboard-focusable; use tabindex if needed.  \n- Form labels: associate <label> elements with each form control for screen readers.  \n\nDeveloper checklist:  \n- [ ] Verify and add alt text to all images.  \n- [ ] Check and adjust color contrast ratios.  \n- [ ] Add a meaningful <title>.  \n- [ ] Include exactly one H1 at the top of the main content.  \n- [ ] Insert a “Skip to main content” link.  \n\nRecommended testing:  \n- Automated audits (e.g., Axe, Lighthouse).  \n- Manual testing with screen readers (NVDA, JAWS) and keyboard-only navigation.",
     "timestamp": "2025-09-14T08:31:05.320775",
-    "last_accessed": "2025-09-14T08:57:55.963169"
+    "last_accessed": "2025-09-14T10:50:30.040918"
   },
   "https://my.unsw.edu.au/": {
     "url": "https://my.unsw.edu.au/",
@@ -187,17 +187,17 @@
     "ai_analysis": {},
     "agent_response": "Here is the structured accessibility audit for https://my.unsw.edu.au/:\n\nURL  \nhttps://my.unsw.edu.au/\n\nWCAG Grade  \nA\n\nCompliance Score  \n78/100\n\nAutomated Issues Found  \n1. HTML lang attribute: Missing lang attribute on <html> element (WCAG 3.1.1)  \n2. Links with descriptive text: 1/2 links have vague text (WCAG 1.3.1)  \n3. Form inputs with labels: All 4 inputs missing explicit <label> associations (WCAG 3.2.2)  \n4. Skip link: Missing “Skip to main content” link for keyboard users (WCAG 2.4.1)\n\nAI Analysis Insights & Recommendations  \n• The overall WCAG Grade would be AA after addressing critical issues.  \n• Prioritize: Color contrast improvements, meaningful alt text, and keyboard navigation fixes.  \n• Add descriptive alt attributes to all images (or empty alt for decorative ones).  \n• Ensure every form control has a properly associated <label>.  \n• Insert a “Skip to main content” link at the top of the page.  \n• Test keyboard navigation to confirm all interactive elements are reachable and focus styles are visible.  \n• Use tools like Axe, Lighthouse, and manual screen-reader testing (NVDA/VoiceOver).\n\nNext Steps  \n1. Implement missing lang attribute on the <html> tag.  \n2. Add <label> elements for form inputs and revise vague link text.  \n3. Insert a skip-nav link.  \n4. Review CSS for color contrast and touch target sizing.  \n5. Re-run automated and manual tests after updates.",
     "timestamp": "2025-09-14T08:31:54.566177",
-    "last_accessed": "2025-09-14T08:57:55.964626"
+    "last_accessed": "2025-09-14T10:50:30.043592"
   },
   "https://www.student.unsw.edu.au/login": {
     "url": "https://www.student.unsw.edu.au/login",
-    "grade": "AA",
-    "score": 94,
+    "grade": "AAA",
+    "score": 95,
     "issues": [],
     "ai_analysis": {},
     "agent_response": "Here is the consolidated accessibility assessment for https://www.student.unsw.edu.au/login:\n\n1. Automated WCAG Analysis  \n   • WCAG Grade: AA  \n   • Compliance Score: 94/100  \n   • Key Issues:  \n     – Single H1 per page: 0 found; exactly 1 required (WCAG 2.4.6)  \n\n2. AI-Powered Analysis & Recommendations  \n   • Overall AI Score: 85/100  \n   • Critical Issues:  \n     1. Insufficient color contrast (WCAG 1.4.3) – ensure text/background contrast ≥ 4.5:1  \n     2. Missing focus indicators (WCAG 2.4.7) – add visible outlines on focus  \n   • Improvement Suggestions:  \n     – Keyboard navigation: verify all controls accessible via Tab, add tabindex where needed  \n     – Form labels: associate every input with a <label>  \n   • Developer Checklist:  \n     • Verify contrast ratios for all text  \n     • Add focus styles for links/buttons  \n     • Ensure form inputs have labels  \n     • Test keyboard-only navigation  \n   • Testing Recommendations:  \n     – Use Axe or Lighthouse for automated checks  \n     – Perform manual testing with NVDA/JAWS  \n     – Conduct keyboard-only navigation tests  \n\n3. Accessibility Issues (Automated Tool)  \n   • Page title present  \n   • Skip-to-main link present  \n   • All links have descriptive text  \n   • No missing alt attributes  \n   • No tables/lists/forms requiring labels  \n   • Focusable elements detected  \n\nAll details have been stored in JSON (filename: unsw_login_accessibility.json). Let me know if you need further assistance!",
     "timestamp": "2025-09-14T08:32:44.017914",
-    "last_accessed": "2025-09-14T08:57:55.967546"
+    "last_accessed": "2025-09-14T10:50:30.046121"
   },
   "https://www.unsw.edu.au/student/managing-your-studies/key-dates/academic-calendar": {
     "url": "https://www.unsw.edu.au/student/managing-your-studies/key-dates/academic-calendar",
@@ -207,7 +207,7 @@
     "ai_analysis": {},
     "agent_response": "Here’s the comprehensive accessibility report for https://www.unsw.edu.au/student/managing-your-studies/key-dates/academic-calendar:\n\n1. WCAG Automated Analysis  \n   • Grade: AA  \n   • Score: 88/100  \n   • Key Failures:  \n     – Missing H1 heading (WCAG 2.4.6)  \n     – Missing “Skip to main content” link (WCAG 2.4.1)  \n   • All other automated checks passed (images alt, color contrast, form labels, landmarks, etc.)\n\n2. AI-Powered Analysis  \n   • Overall Grade: Not Compliant  \n   • Overall Score: 35/100  \n   • Critical Issues (High Priority):  \n     – Missing `<html lang=\"\">` attribute (WCAG 3.1.1)  \n     – Non–descriptive page `<title>` (WCAG 2.4.2)  \n     – Missing `alt` text on images (WCAG 1.1.1)  \n   • Improvement Suggestions:  \n     – Use semantic elements (`<header>`, `<nav>`, `<main>`, `<footer>`).  \n     – Verify color contrast ratios ≥ 4.5:1.  \n   • Next Steps:  \n     1. Add `lang=\"en\"` to the `<html>` tag.  \n     2. Ensure a single, descriptive `<h1>Academic calendar | Current Students – UNSW Sydney</h1>`.  \n     3. Add all missing `alt` attributes on images.  \n     4. Insert a “Skip to main content” link at page top.  \n     5. Re-test using automated tools (Axe, Lighthouse) and screen readers.\n\n3. Stored JSON Report  \n   The detailed results—including per-component pass/fail and messages—have been saved to `results.json`.\n\nLet me know if you need the raw JSON, a PDF summary, or further assistance!",
     "timestamp": "2025-09-14T08:33:41.684249",
-    "last_accessed": "2025-09-14T08:57:55.969698"
+    "last_accessed": "2025-09-14T10:50:30.048310"
   },
   "https://www.jobs.unsw.edu.au/": {
     "url": "https://www.jobs.unsw.edu.au/",
@@ -217,17 +217,17 @@
     "ai_analysis": {},
     "agent_response": "Here’s the consolidated accessibility report for https://www.jobs.unsw.edu.au/:\n\n1. Automated WCAG Compliance Analysis  \n   • Grade: AA  \n   • Score: 88/100  \n   • Key issues:  \n     – Missing H1 element (WCAG 2.4.6)  \n     – Missing “Skip to main content” link (WCAG 2.4.1)\n\n2. AI-Powered Accessibility Analysis  \n   Overall Grade: AA  \n   Overall Score: 75/100  \n   Critical Issues:\n     • Insufficient color contrast (WCAG 1.4.3) — Ensure a minimum 4.5:1 ratio (e.g. switch #B0B0B0 → #333333).  \n     • Missing alt text for images (WCAG 1.1.1) — Add descriptive alt attributes.  \n   Improvement Suggestions:\n     • Keyboard navigation testing — ensure all links, buttons, forms are focusable and operable by keyboard.  \n     • Proper form labels — use `<label>` elements tied to inputs.  \n   Next Steps:\n     1. Fix critical color-contrast and alt-text issues.  \n     2. Add a single H1, a “Skip to main content” link, and correct heading hierarchy.  \n     3. Run manual screen-reader walkthroughs and automated scans (e.g., Axe, Lighthouse).\n\n3. Stored JSON Result  \n   Filename: jobs_unsw_accessibility.json  \n   Contains: URL, grade, score, issue list, detailed messages.\n\nFeel free to review the detailed JSON report for developer guidance and tracking.",
     "timestamp": "2025-09-14T08:34:31.547445",
-    "last_accessed": "2025-09-14T08:57:55.974187"
+    "last_accessed": "2025-09-14T10:50:30.050481"
   },
   "https://en.wikipedia.org/wiki/University_of_New_South_Wales": {
     "url": "https://en.wikipedia.org/wiki/University_of_New_South_Wales",
     "grade": "A",
-    "score": 81,
+    "score": 70,
     "issues": [],
     "ai_analysis": {},
     "agent_response": "Here’s a summary of the accessibility analysis for the UNSW page:\n\n1. Automated WCAG Analysis  \n   • Grade: A  \n   • Score: 81/100  \n   • Key issues:  \n     – Missing or empty <title> element (WCAG 2.4.2)  \n     – No H1 element found (WCAG 2.4.6)  \n     – Missing “Skip to content” link (WCAG 2.4.1)\n\n2. AI-powered Accessibility Insights  \n   • WCAG Grade: AA  \n   • Compliance score: 85/100  \n   • Critical fixes:  \n     – Ensure sufficient color contrast (at least 4.5:1)  \n     – Add descriptive alt text to images  \n   • Other recommendations:  \n     – Improve keyboard navigation (Tab order, focus styles)  \n     – Use a proper heading hierarchy (H1→H2→H3…)  \n\n3. Next Steps  \n   1. Add a proper <title> and H1 element.  \n   2. Insert a “Skip to main content” link at the top.  \n   3. Adjust color contrasts, add missing alt attributes.  \n   4. Test keyboard navigation (Tab, Shift+Tab) and landmark roles.  \n   5. Run automated (Lighthouse, Axe) and manual checks (screen reader).\n\nFull details (WCAG grade, score, issues, AI insights) have been stored in “unsw_accessibility_result.json.” Let me know if you’d like a PDF report or further drill-down on any item!",
     "timestamp": "2025-09-14T08:36:59.851666",
-    "last_accessed": "2025-09-14T08:57:55.976471"
+    "last_accessed": "2025-09-14T10:50:30.065877"
   },
   "https://kisacademics.com/blog/unsw-vs-usyd-vs-uts/": {
     "url": "https://kisacademics.com/blog/unsw-vs-usyd-vs-uts/",
@@ -237,7 +237,7 @@
     "ai_analysis": {},
     "agent_response": "Here’s the comprehensive accessibility analysis for the page:\n\nURL: https://kisacademics.com/blog/unsw-vs-usyd-vs-uts/  \nWCAG Grade: AA  \nCompliance Score: 85/100  \n\nAccessibility Issues (Critical):  \n1. Insufficient color contrast between text and background  \n   • WCAG 1.4.3 – Contrast (Minimum)  \n2. Missing alternative text for images  \n   • WCAG 1.1.1 – Non-text Content  \n\nAI Analysis Insights & Recommendations:  \n• Improve color contrast (target 4.5:1 for normal text).  \n• Add descriptive alt attributes to all images.  \n• Ensure all interactive elements (links, buttons, forms) are keyboard-accessible (tabindex, focus states).  \n• Use a proper heading hierarchy (H1 → H2 → H3) to structure content semantically.  \n\nDeveloper Checklist:  \n• Review and fix all text/background color pairs.  \n• Add meaningful alt text to every `<img>`.  \n• Test keyboard navigation; add `tabindex` as needed.  \n• Audit and correct heading levels.  \n\nNext Steps:  \n1. Address contrast and alt-text issues immediately.  \n2. Enhance keyboard accessibility and focus management.  \n3. Refine the heading structure for screen-reader users.  \n\nResults have been saved in results.json.",
     "timestamp": "2025-09-14T08:37:53.671410",
-    "last_accessed": "2025-09-14T08:57:55.978079"
+    "last_accessed": "2025-09-14T10:50:30.052867"
   },
   "https://www.unsw.edu.au/study/how-to-apply/undergraduate/entry-requirements#:~:text=Whilst%20places%20at%20UNSW%20are,that%20are%20considered%20under%20SCATS.": {
     "url": "https://www.unsw.edu.au/study/how-to-apply/undergraduate/entry-requirements#:~:text=Whilst%20places%20at%20UNSW%20are,that%20are%20considered%20under%20SCATS.",
@@ -257,7 +257,7 @@
     "ai_analysis": {},
     "agent_response": "Here’s the consolidated accessibility assessment for https://www.unswcollege.edu.au/:\n\n1. Automated WCAG Analysis  \n   • WCAG Grade: AA  \n   • Compliance Score: 88/100  \n   • Key issues:  \n     – Missing H1: no <h1> on the page (WCAG 2.4.6)  \n     – Missing “Skip to main content” link (WCAG 2.4.1)  \n\n2. AI-Powered Accessibility Feedback  \n   Overall Score: 75/100 (detailed below)  \n   Critical Issues:  \n   • Missing alt text for images (WCAG 2.1.1)  \n   • Insufficient color contrast (WCAG 1.4.3)  \n   Recommendations:  \n   – Add descriptive alt attributes to all meaningful images; use alt=\"\" for decorative images.  \n   – Ensure text/background contrast ratios meet at least 4.5:1 (normal text) or 3:1 (large text).  \n   – Verify keyboard navigation (tab order, focus styles) covers all interactive elements.  \n   – Label all form fields properly (<label for=\"…\">).  \n   Developer Checklist:  \n   [ ] Add alt attributes to images  \n   [ ] Fix color contrast issues  \n   [ ] Associate labels with all form inputs  \n   [ ] Enable full keyboard operability and visible focus indicators  \n   Testing:  \n   – Run automated tools (Axe, Lighthouse)  \n   – Manual screen reader testing (NVDA, JAWS)  \n   – Color contrast checks (WebAIM Contrast Checker)  \n\n3. Stored Results  \n   Filename: results.json  \n   Contains URL, grade, score, and list of individual issue checks.\n\nLet me know if you’d like me to generate a formatted PDF report or further refine the findings.",
     "timestamp": "2025-09-14T08:39:09.998092",
-    "last_accessed": "2025-09-14T08:57:55.982785"
+    "last_accessed": "2025-09-14T10:50:30.058159"
   },
   "https://unswfounders.com/": {
     "url": "https://unswfounders.com/",
@@ -267,7 +267,7 @@
     "ai_analysis": {},
     "agent_response": "Here’s the structured accessibility evaluation for https://unswfounders.com/:\n\n1. Basic Automated Analysis  \n   • WCAG Grade: AA  \n   • Compliance Score: 88/100  \n   • Key Issues:  \n     – Insufficient color contrast (WCAG 1.4.3)  \n     – Missing keyboard focus indicators (WCAG 2.4.7)  \n     – No “Skip to Content” link (WCAG 2.4.1)  \n     – Missing H1: exactly one H1 is required (WCAG 2.4.6)\n\n2. AI-Powered Insights & Recommendations  \n   Critical Fixes (High Priority):  \n   • Color Contrast: ensure a minimum 4.5:1 ratio for normal text.  \n     Example:  \n       <style>  \n         .text { color: #333333; background-color: #FFFFFF; }  \n       </style>  \n   • Focus Indicators: add visible outlines on focus for all interactive elements.  \n     Example:  \n       <style>  \n         a:focus, button:focus { outline: 3px solid #FF0000; }  \n       </style>\n\n   Additional Improvements:  \n   • Skip Link: add a “Skip to Main Content” link at the top of the page.  \n   • H1 Tag: ensure exactly one H1 on the page (e.g., wrap your main heading in <h1>…</h1>).  \n   • Image Alt Text: provide descriptive alt=\"\" values for images.  \n   • Form Labels: associate each input with a <label> for better screen reader support.\n\n3. Developer Checklist  \n   [ ] Fix color contrast across all text/bg combinations  \n   [ ] Define focus styles on all links, buttons, form controls  \n   [ ] Add skip link (<a href=\"#page\" class=\"skip-link\">Skip to content</a>)  \n   [ ] Ensure a single <h1> on the page  \n   [ ] Audit images for descriptive alt text  \n   [ ] Label all form controls\n\n4. Next Steps & Testing  \n   • Re-run automated audits (e.g., Axe, Lighthouse) after changes.  \n   • Conduct manual testing with keyboard-only navigation and screen readers (NVDA, VoiceOver).\n\nResults have been stored in JSON: unswfounders_accessibility.json. Let me know if you’d like the PDF report or further assistance!",
     "timestamp": "2025-09-14T08:41:44.212742",
-    "last_accessed": "2025-09-14T08:58:10.251546"
+    "last_accessed": "2025-09-14T10:50:30.063565"
   },
   "https://www.unsw.edu.au/newsroom/news/2025/06/unsw-sydney-maintains-top-20-spot-in-qs-world-university-rankings#:~:text=It's%20the%20third%20consecutive%20year,for%20the%20third%20consecutive%20year.": {
     "url": "https://www.unsw.edu.au/newsroom/news/2025/06/unsw-sydney-maintains-top-20-spot-in-qs-world-university-rankings#:~:text=It's%20the%20third%20consecutive%20year,for%20the%20third%20consecutive%20year.",
@@ -277,26 +277,36 @@
     "ai_analysis": {},
     "agent_response": "Here is the structured accessibility analysis for the requested page:\n\nURL  \nhttps://www.unsw.edu.au/newsroom/news/2025/06/unsw-sydney-maintains-top-20-spot-in-qs-world-university-rankings#:~:text=It’s%20the%20third%20consecutive%20year,for%20the%20third%20consecutive%20year.\n\nWCAG Grade  \nAA\n\nCompliance Score  \n85 / 100\n\nAccessibility Issues  \n1. Missing alternative text for images (WCAG 1.1.1)  \n2. Insufficient color contrast (WCAG 1.4.3)  \n3. Keyboard navigation issues (WCAG 2.1.1)\n\nAI Analysis Insights & Recommendations  \n• Ensure every <img> has a meaningful alt attribute.  \n• Adjust text/background color pairs to meet at least 4.5:1 contrast.  \n• Verify all interactive controls (links, buttons, form fields) can be reached and operated with the keyboard; add visible focus states.\n\nDeveloper Checklist  \n• Audit and add alt text to all images.  \n• Use a contrast-checking tool (e.g. WebAIM) to validate and fix color contrast.  \n• Perform keyboard-only navigation testing; add tabindex/focus styles as needed.\n\nNext Steps  \n1. Resolve critical issues (alt text, contrast, keyboard support).  \n2. Run automated scans (e.g. Axe, Lighthouse) and manual screen-reader tests (NVDA/JAWS).  \n3. Retest after fixes to confirm full WCAG AA compliance.",
     "timestamp": "2025-09-14T08:53:33.419865",
-    "last_accessed": "2025-09-14T08:57:55.979789"
-  },
-  "https://platform.openai.com/docs/models/gpt-4o-mini": {
-    "url": "https://platform.openai.com/docs/models/gpt-4o-mini",
-    "grade": "AA",
-    "score": 85,
-    "issues": [],
-    "ai_analysis": {},
-    "agent_response": "I attempted to scrape the page at https://platform.openai.com/docs/models/gpt-4o-mini but received a “403 Forbidden” error. I’m unable to proceed with the automated WCAG analysis without the HTML content. \n\nCould you please provide one of the following so I can continue?\n\n• The raw HTML source of the page  \n• Access credentials or a session cookie that allows scraping  \n• An exported PDF or offline copy of the page’s content  \n\nOnce I have the page’s HTML (or equivalent), I can run the compliance checks, AI-powered analysis, generate the full report, and store the results in JSON.",
-    "timestamp": "2025-09-14T10:23:16.905230",
-    "last_accessed": "2025-09-14T10:23:16.905254"
+    "last_accessed": "2025-09-14T10:50:30.055950"
   },
   "https://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney": {
     "url": "https://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney",
+    "grade": "Not Compliant",
+    "score": 40,
+    "issues": [],
+    "ai_analysis": {},
+    "agent_response": "Here is the comprehensive accessibility analysis for the UNSW Sydney page:\n\nURL  \nhttps://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney\n\nWCAG Grade: A  \nCompliance Score: 75/100\n\nAccessibility Issues (automated findings):  \n1. HTML lang attribute  \n   • Missing lang attribute on the `<html>` element (WCAG 3.1.1)  \n2. Page title  \n   • Missing or empty `<title>` element (WCAG 2.4.2)  \n3. Single H1  \n   • Found 0 H1 tags, should be exactly 1 (WCAG 2.4.6)  \n4. Skip link  \n   • Missing “Skip to main content” link (WCAG 2.4.1)  \n\n(All other components—images, links, forms, buttons, headings, tables, lists, focus, landmarks, contrast, touch targets, media controls—were vacuously acceptable or not detected.)\n\nAI-powered Analysis & Recommendations:  \n• Overall WCAG Grade: AA, Score ~85/100  \n• Critical Issues & Fixes:  \n  – Insufficient text contrast: ensure a contrast ratio ≥4.5:1 (e.g. dark text on white background).  \n  – Missing `alt` text on decorative and content images: add meaningful `alt=\"...\"`.  \n  – Keyboard navigation gaps: make all controls focusable (`tabindex=\"0\"`) and visible on focus.  \n• Improvements: color schemes, alt text audit, keyboard testing.  \n• Checklist: use tools like Axe/Lighthouse, manual keyboard tests, contrast checkers.  \n\nStored JSON: unsw_sydney_accessibility.json\n\nLet me know if you need further detail or remediation code snippets!",
+    "timestamp": "2025-09-14T10:28:59.551311",
+    "last_accessed": "2025-09-14T10:50:30.060995"
+  },
+  "https://www.facebook.com/unsw/": {
+    "url": "https://www.facebook.com/unsw/",
+    "grade": "A",
+    "score": 81,
+    "issues": [],
+    "ai_analysis": {},
+    "agent_response": "Here’s the structured accessibility report for https://www.facebook.com/unsw/:\n\nURL: https://www.facebook.com/unsw/  \nWCAG Grade: A  \nCompliance Score: 81/100  \n\nAccessibility Issues:  \n1. Page title  \n   • Missing or empty `<title>` element (WCAG 2.4.2)  \n2. Single H1 per page  \n   • Found 0 H1 tags, should be exactly 1 (WCAG 2.4.6)  \n3. Skip link  \n   • Missing “Skip to main content” link (WCAG 2.4.1)  \n4. Images (alt text)  \n   • No images found—OK if purely decorative  \n5. Links (descriptive text)  \n   • No links found—OK if none  \n6. Form inputs (labels)  \n   • No inputs found—OK if none  \n7. Buttons (accessible text)  \n   • No buttons found—OK if none  \n8. Proper heading hierarchy  \n   • No headings—OK if none are used  \n9. Tables (headers)  \n   • No tables—OK if none are used  \n10. Lists (semantic)  \n    • No lists—OK if none are used  \n11. Focus management  \n    • No focusable elements—OK if none are used  \n12. Landmark elements  \n    • No landmarks—OK if none are used  \n13. Color contrast  \n    • No text found—review if text is added later  \n14. Touch targets  \n    • No interactive elements—OK if none are used  \n15. Media controls  \n    • No media—OK if none are used  \n\nAI Insights & Recommendations:  \n- Upgrade to WCAG AA by:  \n  • Adding meaningful page title and single H1.  \n  • Inserting a skip-link at top of page.  \n- Run contrast checks once text is added.  \n- Label any future form fields and images with appropriate alt text.  \n- Automate testing with Lighthouse or Axe and conduct manual screen-reader walkthroughs (NVDA, VoiceOver).\n\nNext Steps:  \n1. Insert `<title>UNSW | Sydney NSW</title>` and update to include a single H1.  \n2. Add `<a href=\"#main-content\" class=\"skip-link\">Skip to main content</a>` at the top.  \n3. Re-run automated tests and perform manual checks.  \n\nFull JSON and detailed data are saved in results.json. Let me know if you need further breakdowns or other pages graded!",
+    "timestamp": "2025-09-14T10:30:08.361920",
+    "last_accessed": "2025-09-14T10:50:30.068184"
+  },
+  "https://www.timeshighereducation.com/world-university-rankings/unsw-sydney": {
+    "url": "https://www.timeshighereducation.com/world-university-rankings/unsw-sydney",
     "grade": "AA",
     "score": 85,
     "issues": [],
     "ai_analysis": {},
-    "agent_response": "Here’s the structured accessibility assessment for the requested page:\n\nURL  \nhttps://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney\n\nWCAG Grade  \nA\n\nCompliance Score  \n75 / 100\n\nAutomated Issues Found  \n1. Missing lang attribute on the <html> element (WCAG 3.1.1)  \n2. Missing or empty <title> element (WCAG 2.4.2)  \n3. No H1 heading found (WCAG 2.4.6 requires exactly one H1)  \n4. Missing “Skip to main content” link (WCAG 2.4.1)\n\nAI Analysis Insights & Recommendations\n\n• Document Language  \n  Insight: A lang attribute is not set on the <html> tag, so screen readers can’t determine page language.  \n  Recommendation: Add <html lang=\"en\"> (or appropriate code) to define the document’s primary language.\n\n• Page Title  \n  Insight: The page’s <title> element is missing or empty. Users navigating multiple tabs lose context.  \n  Recommendation: Provide a descriptive <title> (e.g., “UNSW Sydney | Top Universities Profile”).\n\n• Heading Structure  \n  Insight: No <h1> found, which is critical for screen reader navigation and SEO.  \n  Recommendation: Ensure exactly one <h1> on the page (e.g., the page’s main heading).\n\n• Skip Link  \n  Insight: Keyboard users must tab through repetitive navigation before reaching main content.  \n  Recommendation: Add a “Skip to main content” link as the first focusable element to allow bypassing menus.\n\nNext Steps  \n• Implement the above fixes.  \n• Re-run automated tests to confirm resolution.  \n• Conduct manual keyboard and screen-reader testing (e.g., NVDA, VoiceOver) to catch any remaining issues.",
-    "timestamp": "2025-09-14T10:26:15.228069",
-    "last_accessed": "2025-09-14T10:26:15.228102"
+    "agent_response": "Here is the structured accessibility analysis for UNSW Sydney’s profile page:\n\nURL  \nhttps://www.timeshighereducation.com/world-university-rankings/unsw-sydney\n\nWCAG Grade  \nAA\n\nCompliance Score  \n88/100\n\nAutomated Issues Found  \n1. Single H1 per page: Found 0 H1 tags, should be exactly 1 (WCAG 2.4.6).  \n2. Skip link missing: No “Skip to main content” link detected (WCAG 2.4.1).\n\nAI Analysis Insights  \n• Overall compliance is good, but key navigational and structural deficits hinder screen-reader and keyboard users.  \n• The lack of an H1 prevents clear page landmarking.  \n• Missing skip link requires users to tab through lengthy nav before reaching main content.\n\nRecommendations  \n• Add a single, meaningful <h1> to the page header.  \n• Implement a “Skip to main content” link as the first focusable element.  \n• Verify and adjust text/background color combinations for adequate contrast.  \n• Confirm all interactive elements (tabs, buttons) are reachable and operable via keyboard.  \n• Ensure images and media include descriptive alt text.\n\nNext Steps  \n1. Update the template to include a single H1 and skip link.  \n2. Run a color-contrast audit with a tool like WebAIM.  \n3. Perform manual keyboard navigation tests on page controls.  \n4. Re-run automated scans to verify fixes.",
+    "timestamp": "2025-09-14T10:30:59.140706",
+    "last_accessed": "2025-09-14T10:50:30.070194"
   }
 }
