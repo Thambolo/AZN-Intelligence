@@ -1,14 +1,12 @@
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List
 import sys
 import os
-import random
-import json
 import time
 
-# Add meta-agent to path for future import
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'meta-agent'))
+# Import from meta-agent subdirectory
+sys.path.append(os.path.join(os.path.dirname(__file__), 'meta-agent'))
 
 from agent import analyze_urls_with_agent
 from cache_manager import cache
