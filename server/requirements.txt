@@ -1,7 +1,7 @@
 fastapi
 uvicorn[standard]
 openai
-fpdf
+fpdf2==2.8.4
 beautifulsoup4
 python-dotenv
 connectonion

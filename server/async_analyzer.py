@@ -6,12 +6,11 @@ Handles multiple URLs concurrently and provides progressive updates.
 import asyncio
 import sys
 import os
-from typing import List, Dict, Optional
+from typing import List, Dict
 from concurrent.futures import ThreadPoolExecutor
-import time
 
-# Add meta-agent to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'meta-agent'))
+# Import from meta-agent subdirectory
+sys.path.append(os.path.join(os.path.dirname(__file__), 'meta-agent'))
 
 from agent import analyze_urls_with_agent
 from cache_manager import cache

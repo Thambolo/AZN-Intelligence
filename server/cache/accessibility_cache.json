@@ -278,5 +278,25 @@
     "agent_response": "Here is the structured accessibility analysis for the requested page:\n\nURL  \nhttps://www.unsw.edu.au/newsroom/news/2025/06/unsw-sydney-maintains-top-20-spot-in-qs-world-university-rankings#:~:text=It’s%20the%20third%20consecutive%20year,for%20the%20third%20consecutive%20year.\n\nWCAG Grade  \nAA\n\nCompliance Score  \n85 / 100\n\nAccessibility Issues  \n1. Missing alternative text for images (WCAG 1.1.1)  \n2. Insufficient color contrast (WCAG 1.4.3)  \n3. Keyboard navigation issues (WCAG 2.1.1)\n\nAI Analysis Insights & Recommendations  \n• Ensure every <img> has a meaningful alt attribute.  \n• Adjust text/background color pairs to meet at least 4.5:1 contrast.  \n• Verify all interactive controls (links, buttons, form fields) can be reached and operated with the keyboard; add visible focus states.\n\nDeveloper Checklist  \n• Audit and add alt text to all images.  \n• Use a contrast-checking tool (e.g. WebAIM) to validate and fix color contrast.  \n• Perform keyboard-only navigation testing; add tabindex/focus styles as needed.\n\nNext Steps  \n1. Resolve critical issues (alt text, contrast, keyboard support).  \n2. Run automated scans (e.g. Axe, Lighthouse) and manual screen-reader tests (NVDA/JAWS).  \n3. Retest after fixes to confirm full WCAG AA compliance.",
     "timestamp": "2025-09-14T08:53:33.419865",
     "last_accessed": "2025-09-14T08:57:55.979789"
+  },
+  "https://platform.openai.com/docs/models/gpt-4o-mini": {
+    "url": "https://platform.openai.com/docs/models/gpt-4o-mini",
+    "grade": "AA",
+    "score": 85,
+    "issues": [],
+    "ai_analysis": {},
+    "agent_response": "I attempted to scrape the page at https://platform.openai.com/docs/models/gpt-4o-mini but received a “403 Forbidden” error. I’m unable to proceed with the automated WCAG analysis without the HTML content. \n\nCould you please provide one of the following so I can continue?\n\n• The raw HTML source of the page  \n• Access credentials or a session cookie that allows scraping  \n• An exported PDF or offline copy of the page’s content  \n\nOnce I have the page’s HTML (or equivalent), I can run the compliance checks, AI-powered analysis, generate the full report, and store the results in JSON.",
+    "timestamp": "2025-09-14T10:23:16.905230",
+    "last_accessed": "2025-09-14T10:23:16.905254"
+  },
+  "https://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney": {
+    "url": "https://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney",
+    "grade": "AA",
+    "score": 85,
+    "issues": [],
+    "ai_analysis": {},
+    "agent_response": "Here’s the structured accessibility assessment for the requested page:\n\nURL  \nhttps://www.topuniversities.com/universities/university-new-south-wales-unsw-sydney\n\nWCAG Grade  \nA\n\nCompliance Score  \n75 / 100\n\nAutomated Issues Found  \n1. Missing lang attribute on the <html> element (WCAG 3.1.1)  \n2. Missing or empty <title> element (WCAG 2.4.2)  \n3. No H1 heading found (WCAG 2.4.6 requires exactly one H1)  \n4. Missing “Skip to main content” link (WCAG 2.4.1)\n\nAI Analysis Insights & Recommendations\n\n• Document Language  \n  Insight: A lang attribute is not set on the <html> tag, so screen readers can’t determine page language.  \n  Recommendation: Add <html lang=\"en\"> (or appropriate code) to define the document’s primary language.\n\n• Page Title  \n  Insight: The page’s <title> element is missing or empty. Users navigating multiple tabs lose context.  \n  Recommendation: Provide a descriptive <title> (e.g., “UNSW Sydney | Top Universities Profile”).\n\n• Heading Structure  \n  Insight: No <h1> found, which is critical for screen reader navigation and SEO.  \n  Recommendation: Ensure exactly one <h1> on the page (e.g., the page’s main heading).\n\n• Skip Link  \n  Insight: Keyboard users must tab through repetitive navigation before reaching main content.  \n  Recommendation: Add a “Skip to main content” link as the first focusable element to allow bypassing menus.\n\nNext Steps  \n• Implement the above fixes.  \n• Re-run automated tests to confirm resolution.  \n• Conduct manual keyboard and screen-reader testing (e.g., NVDA, VoiceOver) to catch any remaining issues.",
+    "timestamp": "2025-09-14T10:26:15.228069",
+    "last_accessed": "2025-09-14T10:26:15.228102"
   }
 }

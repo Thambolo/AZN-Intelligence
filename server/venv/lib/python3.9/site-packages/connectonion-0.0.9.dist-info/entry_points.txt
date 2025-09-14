@@ -1,0 +1,4 @@
+[console_scripts]
+co = connectonion.cli.main:cli
+connectonion = connectonion.cli.main:cli
+
