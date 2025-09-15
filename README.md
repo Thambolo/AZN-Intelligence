@@ -71,13 +71,7 @@ A comprehensive web accessibility analysis system that evaluates websites agains
    - Custom user-agent headers for website compatibility
    - Session management for consistent access
 
-2. **UK English Standards**
-
-   - "analyse" vs "analyze" terminology
-   - "colour" vs "color" specifications
-   - "labelled" vs "labeled" conventions
-
-3. **Detailed Scoring**
+2. **Detailed Scoring**
    - Individual principle scores (0-100)
    - Weighted overall accessibility score
    - Specific violation identification
@@ -88,7 +82,7 @@ A comprehensive web accessibility analysis system that evaluates websites agains
 ### Web API Endpoints
 
 - `GET /analyse/{url}`: Basic accessibility analysis
-- `GET /comprehensive-analysis/{url}`: Detailed AI-powered report
+- `POST /send-report`: Send AI-powered accessibility report
 - `GET /health`: System health check
 
 ### Browser Extension
@@ -96,7 +90,6 @@ A comprehensive web accessibility analysis system that evaluates websites agains
 - One-click accessibility analysis
 - Visual score display with colour-coded results
 - Direct link to detailed reports
-- Cross-browser compatibility
 
 ### Caching System
 
