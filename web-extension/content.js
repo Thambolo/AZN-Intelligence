@@ -194,6 +194,15 @@
 
   api.runtime.onMessage.addListener((msg) => {
     // Handle different message types for progressive updates
+    if (msg?.type === "GRADEABLE_DEBUG_LOG") {
+      console.debug(LOG_PREFIX, "Debug log from background:", msg.data || {});
+      return;
+    }
+    if (msg?.type === "GRADEABLE_ERROR_LOG") {
+      console.error(LOG_PREFIX, "Error log from background:", msg.data || {});
+      return;
+    }
+
     if (msg?.type === "GRADEABLE_ANALYSIS_STARTED") {
       inFlight = true;
       console.debug(LOG_PREFIX, "Analysis started", {

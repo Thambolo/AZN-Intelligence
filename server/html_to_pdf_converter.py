@@ -440,8 +440,79 @@ def convert_with_pdfkit(html_content, output_path):
         print(f"❌ pdfkit conversion failed: {e}")
         return False
 
+def get_ai_feedback_and_recommendations(analysis_result):
+    """
+    Get AI-generated feedback and recommendations from the meta-agent.
+    
+    Args:
+        analysis_result: Dictionary containing analysis data
+        
+    Returns:
+        dict: Contains feedback and recommendations from AI agent
+    """
+    try:
+        # Import the agent function
+        import sys
+        import os
+        meta_agent_path = os.path.join(os.path.dirname(__file__), 'meta-agent')
+        if meta_agent_path not in sys.path:
+            sys.path.append(meta_agent_path)
+        
+        from agent import generate_feedback_and_recommendations
+        
+        print("🤖 Generating AI feedback and recommendations...")
+        ai_content = generate_feedback_and_recommendations(analysis_result)
+        print(f"✅ AI content generated successfully")
+        
+        return ai_content
+        
+    except Exception as e:
+        print(f"❌ Error generating AI content: {e}")
+        return {
+            'feedback': f"Error generating AI feedback: {str(e)}",
+            'recommendations': ['Unable to generate AI recommendations at this time.']
+        }
+
+def format_recommendations_as_html(recommendations):
+    """
+    Format AI recommendations as HTML list items.
+    
+    Args:
+        recommendations: List of recommendation strings or single string
+        
+    Returns:
+        str: HTML formatted recommendations
+    """
+    try:
+        if isinstance(recommendations, str):
+            # If it's a single string, try to split by common delimiters
+            if '\n' in recommendations:
+                recommendations = [r.strip() for r in recommendations.split('\n') if r.strip()]
+            elif '. ' in recommendations:
+                recommendations = [r.strip() + '.' for r in recommendations.split('. ') if r.strip()]
+            else:
+                recommendations = [recommendations]
+        
+        if not recommendations:
+            return '<li>No specific recommendations available.</li>'
+        
+        html_items = []
+        for rec in recommendations:
+            if rec.strip():
+                # Escape HTML and clean up the recommendation
+                clean_rec = escape_html(rec.strip())
+                # Remove bullet points or numbers if they exist
+                clean_rec = clean_rec.lstrip('•-*123456789. ')
+                html_items.append(f'<li>{clean_rec}</li>')
+        
+        return '\n          '.join(html_items) if html_items else '<li>No specific recommendations available.</li>'
+        
+    except Exception as e:
+        print(f"❌ Error formatting recommendations: {e}")
+        return f'<li>Error formatting recommendations: {str(e)}</li>'
+
 def prepare_template_data(analysis_result):
-    """Prepare data dictionary for template substitution."""
+    """Prepare data dictionary for template substitution with AI-generated content."""
     
     # Extract basic info
     url = analysis_result.get('url', 'Unknown URL')
@@ -461,6 +532,9 @@ def prepare_template_data(analysis_result):
     principle_grades = analysis_result.get('principle_grades', {})
     detailed_results = analysis_result.get('detailed_results', {})
     
+    # Generate AI feedback and recommendations
+    ai_content = get_ai_feedback_and_recommendations(analysis_result)
+    
     # Prepare template data dictionary
     template_data = {
         'URL': url,
@@ -470,6 +544,10 @@ def prepare_template_data(analysis_result):
         'GRADE_CLASS': grade_class,
         'SCORE_CLASS': score_class,
         'COMPLIANCE_LEVEL': compliance_level,
+        
+        # AI-generated content
+        'AI_FEEDBACK': ai_content.get('feedback', 'AI feedback unavailable'),
+        'AI_RECOMMENDATIONS_HTML': format_recommendations_as_html(ai_content.get('recommendations', [])),
         
         # Principle 1 data
         'P1_GRADE': principle_grades.get('principle1_perceivable', 'Unknown'),

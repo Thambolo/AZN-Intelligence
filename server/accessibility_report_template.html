@@ -9,7 +9,9 @@
 
       * {
         margin: 0;
-        padding: 0;
+            <p class="ai-feedback">
+          {{AI_FEEDBACK}}
+        </p>0;
         box-sizing: border-box;
       }
 
@@ -379,21 +381,7 @@
       <h2 class="section-title">💡 AI-Generated Recommendations</h2>
       <div class="content-section">
         <ul class="recommendations">
-          <li>
-            Enhance color contrast ratios to meet WCAG AA standards for better
-            text readability
-          </li>
-          <li>
-            Implement proper heading hierarchy (H1-H6) to improve content
-            structure and navigation
-          </li>
-          <li>
-            Add descriptive alt text to all images for screen reader
-            compatibility
-          </li>
-          <li>
-            Validate HTML markup and fix semantic errors to improve robustness
-          </li>
+          {{AI_RECOMMENDATIONS_HTML}}
         </ul>
       </div>
 

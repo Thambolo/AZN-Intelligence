@@ -10,7 +10,12 @@
   "version": "0.1.0",
   "description": "Grade search results by WCAG and show accessibility badges on Google results.",
   "permissions": ["storage", "activeTab", "tabs"],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "<all_urls>",
+    "https://azn-intelligence-grade-abled.onrender.com/*",
+    "*://www.google.com/*",
+    "*://google.com/*"
+  ],
   "background": { "service_worker": "sw.js" },
   "content_scripts": [
     {
