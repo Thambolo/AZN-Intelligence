@@ -1,7 +1,6 @@
-(function() {
+﻿(function() {
 // Cross-browser API shim
 const api = typeof browser !== 'undefined' ? browser : chrome;
-const LOG_PREFIX = '[Grade-Able]';
 
 // Guard: only run on Google Search result pages
 const {hostname, pathname, search} = window.location;
@@ -9,33 +8,10 @@ const isGoogle = /(^|\.)google\./i.test(hostname);
 const isSearchPath =
     pathname.startsWith('/search') || pathname === '/';  // includes SPA loads
 if (!isGoogle || !isSearchPath) {
-  console.debug(LOG_PREFIX, 'No-op: not a Google results page', {
-    hostname,
-    pathname,
-    href: location.href,
-  });
   return;
 }
 
 const query = new URLSearchParams(search).get('q') || '';
-console.debug(LOG_PREFIX, 'Init on Google page', {
-  hostname,
-  pathname,
-  query,
-});
-
-// Debug helper message
-console.log(`
-🐛 Grade-Able Debugging Available:
-📝 Press Ctrl+Shift+D to toggle visual debug overlay
-🎯 Available console commands:
-   • toggleDebugOverlay() - Show/hide debug panel
-   • gradeableDebugLog() - Quick debug info
-   • gradeableInspectContainers() - Inspect all containers  
-   • gradeableTestSorting() - Test sorting with mock data
-   • gradeableDebugContainerSearch() - Debug container finding
-   • gradeableCompareDomToServer(serverData) - Compare DOM vs server data
-`);
 
 async function applyDisplaySettings() {
   try {
@@ -102,10 +78,6 @@ function extractResults() {
     if (a && a.href)
       results.push({url: a.href, title: h3.innerText || '', nodeIndex: i});
   });
-  console.debug(LOG_PREFIX, 'extractResults:', {
-    headingCount: headings.length,
-    resultCount: results.length,
-  });
   return results;
 }
 
@@ -121,34 +93,24 @@ function scheduleScan(delay = 400) {
 
 function sendScan() {
   if (sent || inFlight) {
-    console.debug(LOG_PREFIX, 'sendScan: skipped', {sent, inFlight});
     return;
   }
   applyDisplaySettings();
   const results = extractResults();
   if (!results.length) {
-    console.debug(LOG_PREFIX, 'sendScan: no results yet — retrying in 1s');
     if (retryTimer) clearTimeout(retryTimer);
     retryTimer = setTimeout(sendScan, 1000);
     return;
   }
   inFlight = true;
   sent = true;
-  console.debug(LOG_PREFIX, 'Sending GRADEABLE_SCAN', {
-    count: results.length,
-    query,
-  });
   try {
     const maybePromise = api.runtime.sendMessage({
       type: 'GRADEABLE_SCAN',
       results,
     });
-    if (maybePromise && typeof maybePromise.catch === 'function') {
-      maybePromise.catch(
-          (e) => console.debug(LOG_PREFIX, 'sendMessage error', e?.message));
-    }
   } catch (e) {
-    console.debug(LOG_PREFIX, 'sendMessage threw', e?.message);
+    // Silently handle errors
   }
 }
 
@@ -178,7 +140,7 @@ function showTempErrorIndicator(error) {
     `;
 
   indicator.innerHTML = `
-      <div style="font-weight: bold; margin-bottom: 4px;">⚠️ Accessibility Analysis Failed</div>
+      <div style="font-weight: bold; margin-bottom: 4px;">âš ï¸ Accessibility Analysis Failed</div>
       <div style="font-size: 12px; opacity: 0.9;">${error}</div>
       <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">Click to dismiss</div>
     `;
@@ -200,22 +162,12 @@ api.runtime.onMessage.addListener((msg) => {
   // Handle different message types for progressive updates
   if (msg?.type === 'GRADEABLE_ANALYSIS_STARTED') {
     inFlight = true;
-    console.debug(LOG_PREFIX, 'Analysis started', {
-      totalUrls: msg.data?.totalUrls || 0,
-      message: msg.data?.message,
-    });
     showAnalysisProgress(0, msg.data?.totalUrls || 0, 'Starting analysis...');
     return;
   }
 
   if (msg?.type === 'GRADEABLE_PROGRESS_UPDATE') {
     const {completed, total, results, isComplete} = msg.data || {};
-    console.debug(LOG_PREFIX, 'Progress update', {
-      completed,
-      total,
-      resultCount: results?.length || 0,
-      isComplete,
-    });
 
     // Update progress indicator
     showAnalysisProgress(
@@ -242,67 +194,10 @@ api.runtime.onMessage.addListener((msg) => {
   const summary = msg.summary;
   inFlight = false;
 
-  console.debug(LOG_PREFIX, 'Received GRADEABLE_RESULTS', {
-    resultCount: data.length,
-    hasError: !!error,
-    error: error,
-    summary: summary,
-  });
-
-  // Validate server response data
-  console.group(LOG_PREFIX + ' Server Response Validation');
-  const validationErrors = [];
-
-  if (!Array.isArray(data)) {
-    validationErrors.push('Data is not an array');
-  } else {
-    data.forEach((result, index) => {
-      if (!result.url) validationErrors.push(`[${index}] Missing URL`);
-      if (!result.grade) validationErrors.push(`[${index}] Missing grade`);
-      if (typeof result.score !== 'number')
-        validationErrors.push(
-            `[${index}] Invalid score type: ${typeof result.score}`);
-      if (!result.url || !result.url.startsWith('http')) {
-        validationErrors.push(`[${index}] Invalid URL format: ${result.url}`);
-      }
-    });
-  }
-
-  if (validationErrors.length > 0) {
-    console.error('❌ Server response validation failed:', validationErrors);
-  } else {
-    console.log('✅ Server response validation passed');
-  }
-
-  // Log detailed comparison
-  console.log('📤 URLs sent to server vs 📥 URLs received:');
-  const receivedUrls = new Set(data.map(r => r.url));
-  const currentDomUrls = getResultHeadings()
-                             .map(h3 => findAnchorForHeading(h3)?.href)
-                             .filter(Boolean);
-
-  console.table({
-    'Sent to server (approx)': currentDomUrls.length,
-    'Received from server': receivedUrls.size,
-    'Missing from response':
-        currentDomUrls.filter(url => !receivedUrls.has(url)).length
-  });
-
-  const missingUrls = currentDomUrls.filter(url => !receivedUrls.has(url));
-  if (missingUrls.length > 0) {
-    console.warn('🔍 URLs in DOM but missing from server response:');
-    missingUrls.forEach((url, index) => {
-      console.log(`[${index}] ${url}`);
-    });
-  }
-
-  console.groupEnd();
-
   // Hide any progress indicators
   hideAnalysisProgress();
 
   if (error) {
-    console.warn(LOG_PREFIX, 'Analysis failed:', error);
     showErrorIndicator(error);
     return;
   }
@@ -320,26 +215,23 @@ api.runtime.onMessage.addListener((msg) => {
 // Function to update result badges
 function updateResultBadges(data) {
   if (!data || data.length === 0) {
-    console.warn(LOG_PREFIX, 'updateResultBadges: No data received');
     return;
   }
 
-  console.group(LOG_PREFIX + ' Badge Update Debug');
-  console.log('🔍 Server data received:', data.map(r => ({
-                                                     url: r.url,
-                                                     grade: r.grade,
-                                                     score: r.score,
-                                                     urlLength: r.url.length
-                                                   })));
+  // Create URL to result mapping
+  const urlToResult = new Map();
+  data.forEach(result => {
+    if (result.url) {
+      urlToResult.set(result.url, result);
+    }
+  });
 
-  const urlToResult = new Map(data.map((r) => [r.url, r]));
+  // Track containers and their scores for sorting
   const containers = new Map();
 
-  // Get all current headings and match them by URL instead of index
   const headings = getResultHeadings();
-  console.log('📋 DOM headings found:', headings.length);
 
-  // Debug: Show what URLs we extract vs what server sent
+  // Show what URLs we extract vs what server sent
   const domUrls = [];
   headings.forEach((h3, domIndex) => {
     const anchor = findAnchorForHeading(h3);
@@ -353,18 +245,8 @@ function updateResultBadges(data) {
     }
   });
 
-  console.table(domUrls);
-  console.log('🔗 URL matching status:');
   domUrls.forEach(({domIndex, url, hasExistingBadge}) => {
     const serverResult = urlToResult.get(url);
-    console.log(`[${domIndex}] ${hasExistingBadge ? '🏷️ ' : '❌ '}${
-        serverResult ?
-            '✅' :
-            '❌'} ${url.substring(0, 80)}${url.length > 80 ? '...' : ''}`);
-    if (serverResult) {
-      console.log(
-          `     └─ Grade: ${serverResult.grade}, Score: ${serverResult.score}`);
-    }
   });
 
   let badgesCreated = 0;
@@ -374,29 +256,20 @@ function updateResultBadges(data) {
     // Skip if badge already exists
     if (h3.querySelector('.gradeable-badge')) {
       badgesSkipped++;
-      console.log(`⏭️ [${domIndex}] Badge already exists, skipping`);
       return;
     }
 
     // Find the URL for this heading
     const anchor = findAnchorForHeading(h3);
     if (!anchor || !anchor.href) {
-      console.warn(
-          `🔗 [${domIndex}] No anchor found for heading:`,
-          h3.textContent?.substring(0, 50));
       return;
     }
 
     // Look up the result by URL
     const result = urlToResult.get(anchor.href);
     if (!result) {
-      console.warn(`📊 [${domIndex}] No server result for URL:`, anchor.href);
       return;  // No analysis result for this URL
     }
-
-    console.log(
-        `✅ [${domIndex}] Creating badge - Grade: ${result.grade}, Score: ${
-            result.score}, URL: ${anchor.href.substring(0, 60)}...`);
 
     const badge = document.createElement('span');
     badge.className = 'gradeable-badge has-icon';
@@ -515,28 +388,9 @@ function updateResultBadges(data) {
       if (!containers.has(container) ||
           result.score > containers.get(container)) {
         containers.set(container, result.score);
-        console.log(`📦 [${domIndex}] Container score updated: ${
-            currentScore || 'none'} → ${newScore}`);
-      } else {
-        console.log(`📦 [${domIndex}] Container score kept: ${
-            currentScore} (new: ${newScore})`);
       }
-    } else {
-      console.warn(`📦 [${domIndex}] No container found for heading`);
     }
   });
-
-  console.log(
-      `🏷️ Badge Summary: ${badgesCreated} created, ${badgesSkipped} skipped`);
-  console.log(
-      '📦 Container scores:',
-      Array.from(containers.entries()).map(([container, score]) => ({
-                                             containerId:
-                                                 container.id || 'no-id',
-                                             score: score,
-                                             className: container.className
-                                           })));
-  console.groupEnd();
 
   // Reorder containers by score descending
   const sortedContainers =
@@ -569,6 +423,13 @@ function updateResultBadges(data) {
       }
     }
   });
+}
+
+// Function to sort results by score
+function sortResultsByScore(data) {
+  // This function is called but the sorting logic is already handled in
+  // updateResultBadges Keep this as a stub for compatibility
+  return;
 }
 
 // Function to show analysis progress - Epic Modern Design (Top-Right)
@@ -780,12 +641,8 @@ function hideAnalysisProgress() {
 // Function to sort results by score
 function sortResultsByScore(data) {
   if (!data || data.length === 0) {
-    console.warn(LOG_PREFIX, 'sortResultsByScore: No data received');
     return;
   }
-
-  console.group(LOG_PREFIX + ' Sorting Debug');
-  console.log('🎯 Sorting data received:', data.length, 'results');
 
   const urlToResult = new Map(data.map((r) => [r.url, r]));
   const containers = new Map();
@@ -793,19 +650,17 @@ function sortResultsByScore(data) {
   // Build container map with scores - iterate through DOM headings and match by
   // URL
   const headings = getResultHeadings();
-  console.log('📋 DOM headings for sorting:', headings.length);
 
   headings.forEach((h3, index) => {
     const anchor = findAnchorForHeading(h3);
     if (!anchor || !anchor.href) {
-      console.warn(`🔗 [${index}] No anchor for sorting`);
       return;
     }
 
     const result = urlToResult.get(anchor.href);
     if (!result) {
       console.warn(
-          `📊 [${index}] No result for URL in sorting:`,
+          `ðŸ“Š [${index}] No result for URL in sorting:`,
           anchor.href.substring(0, 60));
       return;
     }
@@ -819,39 +674,19 @@ function sortResultsByScore(data) {
       // This ensures the main result determines the container's ranking
       if (!containers.has(container)) {
         containers.set(container, result.score);
-        console.log(`📦 [${index}] Sorting container score: ${
-            currentScore || 'none'} → ${newScore} (main result)`);
+        console.log(`ðŸ“¦ [${index}] Sorting container score: ${
+            currentScore || 'none'} â†’ ${newScore} (main result)`);
       } else {
-        console.log(`📦 [${index}] Container score kept: ${
+        console.log(`ðŸ“¦ [${index}] Container score kept: ${
             currentScore} (skipping sub-result: ${newScore})`);
       }
     } else {
-      console.warn(`📦 [${index}] No container found for sorting`);
     }
   });
 
   // Reorder containers by score descending
   const sortedContainers =
       Array.from(containers.entries()).sort((a, b) => b[1] - a[1]);
-
-  console.log(
-      '📊 Containers before sorting:',
-      Array.from(containers.entries())
-          .map(([container, score]) => ({
-                 containerId: container.id || container.className || 'unknown',
-                 score: score,
-                 currentOrder: Array.from(container.parentNode?.children || [])
-                                   .indexOf(container)
-               })));
-
-  console.log(
-      '📊 Sorted order (highest to lowest):',
-      sortedContainers.map(
-          ([container, score], index) => ({
-            newPosition: index,
-            containerId: container.id || container.className || 'unknown',
-            score: score
-          })));
 
   // Find the appropriate parent container for reordering
   let parent = null;
@@ -877,7 +712,6 @@ function sortResultsByScore(data) {
       });
 
       if (hasMatchingChildren) {
-        console.log(`🏗️ Found valid parent: ${selector}`);
         break;
       }
     }
@@ -896,11 +730,6 @@ function sortResultsByScore(data) {
           ([container]) => container.parentNode === testParent);
       if (childContainers.length > 1) {
         parent = testParent;
-        console.log(
-            `🏗️ Found common parent via traversal: ${testParent.tagName}${
-                testParent.className ?
-                    '.' + testParent.className.split(' ')[0] :
-                    ''}${testParent.id ? '#' + testParent.id : ''}`);
         break;
       }
       testParent = testParent.parentNode;
@@ -908,16 +737,7 @@ function sortResultsByScore(data) {
     }
   }
 
-  console.log(
-      '🏗️ Parent container found:',
-      parent ? parent.tagName + (parent.id ? '#' + parent.id : '') +
-              (parent.className ? '.' + parent.className.split(' ')[0] : '') :
-               'NONE');
-
   if (parent && sortedContainers.length > 0) {
-    console.log(
-        LOG_PREFIX,
-        `🔄 Sorting ${sortedContainers.length} containers by score`);
     let reorderedCount = 0;
 
     sortedContainers.forEach(([container, score], index) => {
@@ -946,26 +766,11 @@ function sortResultsByScore(data) {
 
         parent.appendChild(elementToMove);
         reorderedCount++;
-        console.log(`🔄 [${index}] Moved container (score: ${
-            score}) to position ${index}`);
-      } else {
-        console.warn(`🔄 [${
-            index}] Cannot move container - not a valid child of parent (score: ${
-            score})`);
-        console.warn(`    Container parent: ${container?.parentNode?.tagName}.${
-            container?.parentNode?.className?.split(' ')[0] || 'none'}`);
-        console.warn(`    Target parent: ${parent?.tagName}.${
-            parent?.className?.split(' ')[0] || 'none'}`);
       }
     });
-    console.log(`✅ Reordered ${reorderedCount} containers`);
-  } else {
-    console.warn(
-        '❌ Cannot sort - no parent container or no containers to sort');
   }
 
   // Sort sub-URLs within containers
-  console.log('🔍 Checking for sub-URL sorting...');
   let subUrlsProcessed = 0;
   containers.forEach((score, container) => {
     const table = container.querySelector('table');
@@ -973,8 +778,6 @@ function sortResultsByScore(data) {
       const tbody = table.querySelector('tbody');
       if (tbody) {
         const rows = Array.from(tbody.querySelectorAll('tr'));
-        console.log(`📋 Container ${container.id || 'unknown'} has ${
-            rows.length} sub-rows to sort`);
 
         rows.sort((a, b) => {
           const h3a = a.querySelector('h3');
@@ -994,31 +797,13 @@ function sortResultsByScore(data) {
       }
     }
   });
-  console.log(`📋 Processed ${subUrlsProcessed} sub-URLs`);
-  console.groupEnd();
 }
 
 // Function to show analysis summary
 function showAnalysisSummary(summary) {
   const {total, successful, averageScore} = summary;
 
-  console.debug(LOG_PREFIX, 'Analysis Summary', {
-    total,
-    successful,
-    averageScore,
-    failureRate: total > 0 ? Math.round(((total - successful) / total) * 100) :
-                             0,
-  });
-
   // Could add a temporary summary notification here if desired
-  if (total > 0) {
-    const successRate = Math.round((successful / total) * 100);
-    console.info(
-        LOG_PREFIX,
-        `Analysis completed: ${successful}/${
-            total} URLs analyzed successfully (${
-            successRate}%), Average score: ${averageScore}`);
-  }
 }
 
 function showErrorIndicator(error) {
@@ -1083,696 +868,6 @@ if (document.readyState === 'complete' ||
   window.addEventListener(
       'DOMContentLoaded',
       () => applyDisplaySettings().finally(() => setTimeout(sendScan, 500)));
-}
-
-// ==== DEBUG UTILITIES ====
-
-// Global debug state
-let debugOverlayEnabled = false;
-
-// Make debug functions globally available immediately
-window.toggleDebugOverlay = function() {
-  debugOverlayEnabled = !debugOverlayEnabled;
-  if (debugOverlayEnabled) {
-    showDebugOverlay();
-  } else {
-    hideDebugOverlay();
-  }
-  console.log(
-      LOG_PREFIX,
-      `Debug overlay ${debugOverlayEnabled ? 'ENABLED' : 'DISABLED'}`);
-};
-
-window.gradeableDebugLog = function() {
-  console.group('🐛 Grade-Able Manual Debug');
-  console.log('Current headings:', getResultHeadings().length);
-  console.log(
-      'Badges found:', document.querySelectorAll('.gradeable-badge').length);
-  console.log('Containers found:', document.querySelectorAll('.A6K0A').length);
-  console.log(
-      'All container classes:',
-      Array
-          .from(document.querySelectorAll(
-              '[class*="container"], [class*="result"], [class*="MjjYud"], [class*="tF2Cxc"], [class*="g"]'))
-          .map(el => el.className));
-  console.groupEnd();
-};
-
-window.gradeableInspectContainers = function() {
-  const containers = document.querySelectorAll('.A6K0A');
-  console.group('📦 Container Inspection');
-  containers.forEach((container, index) => {
-    const h3 = container.querySelector('h3');
-    const badge = h3?.querySelector('.gradeable-badge');
-    console.log(`[${index}] Container:`, {
-      id: container.id,
-      className: container.className,
-      title: h3?.textContent?.substring(0, 50) || 'No title',
-      hasBadge: !!badge,
-      grade: badge?.getAttribute('data-grade') || 'none',
-      score: badge?.getAttribute('aria-label')?.match(/score (\d+)/)?.[1] ||
-          'unknown',
-      position: Array.from(container.parentNode.children).indexOf(container),
-      url: findAnchorForHeading(h3)?.href?.substring(0, 80) || 'No URL',
-      parentId: container.parentNode?.id || 'no-parent-id',
-      parentClass: container.parentNode?.className || 'no-parent-class'
-    });
-  });
-  console.groupEnd();
-};
-
-window.gradeableTestSorting = function() {
-  console.group('🧪 Sorting Algorithm Test');
-  const headings = getResultHeadings();
-  const mockData = headings.map((h3, index) => {
-    const anchor = findAnchorForHeading(h3);
-    return {
-      url: anchor?.href || `https://example.com/${index}`,
-      grade: ['AAA', 'AA', 'A', 'B', 'C'][Math.floor(Math.random() * 5)],
-      score: Math.floor(Math.random() * 100)
-    };
-  });
-
-  console.log('🎲 Generated mock data for sorting test:', mockData);
-  console.log('🔄 Running sortResultsByScore with mock data...');
-  sortResultsByScore(mockData);
-  console.groupEnd();
-};
-
-window.gradeableDebugContainerSearch = function() {
-  console.group('🔎 Container Search Debug');
-
-  // Test different selectors
-  const selectors = [
-    '.A6K0A', '.tF2Cxc', '.g', '.rc', '[data-ved]', '.MjjYud', '.MjjYud > *'
-  ];
-
-  selectors.forEach(selector => {
-    const elements = document.querySelectorAll(selector);
-    console.log(`${selector}: ${elements.length} found`);
-    if (elements.length > 0 && elements.length < 20) {
-      Array.from(elements).slice(0, 3).forEach((el, i) => {
-        console.log(`  [${i}] ${el.tagName}.${
-            el.className.split(' ')[0]} parent: ${el.parentNode?.tagName}.${
-            el.parentNode?.className?.split(' ')[0] || 'none'}`);
-      });
-    }
-  });
-
-  console.groupEnd();
-};
-
-window.gradeableCompareDomToServer = function(serverData) {
-  console.group('🔍 DOM vs Server Data Comparison');
-  const headings = getResultHeadings();
-  const serverUrls = new Map(serverData.map(r => [r.url, r]));
-
-  console.log('📊 Comparison Results:');
-  headings.forEach((h3, index) => {
-    const anchor = findAnchorForHeading(h3);
-    const url = anchor?.href;
-    const serverResult = url ? serverUrls.get(url) : null;
-    const badge = h3.querySelector('.gradeable-badge');
-
-    console.log(`[${index}]`, {
-      domUrl: url?.substring(0, 60) || 'No URL',
-      hasServerData: !!serverResult,
-      serverGrade: serverResult?.grade || 'none',
-      serverScore: serverResult?.score || 'none',
-      hasBadge: !!badge,
-      badgeGrade: badge?.getAttribute('data-grade') || 'none',
-      badgeScore:
-          badge?.getAttribute('aria-label')?.match(/score (\d+)/)?.[1] ||
-          'none',
-      match: serverResult && badge ?
-          (serverResult.grade === badge.getAttribute('data-grade') &&
-           serverResult.score.toString() ===
-               badge.getAttribute('aria-label')?.match(/score (\d+)/)?.[1]) :
-          false
-    });
-  });
-  console.groupEnd();
-};
-
-// Toggle debug overlay
-function toggleDebugOverlay() {
-  debugOverlayEnabled = !debugOverlayEnabled;
-  if (debugOverlayEnabled) {
-    showDebugOverlay();
-  } else {
-    hideDebugOverlay();
-  }
-  console.log(
-      LOG_PREFIX,
-      `Debug overlay ${debugOverlayEnabled ? 'ENABLED' : 'DISABLED'}`);
-}
-
-// Show visual debug overlay
-function showDebugOverlay() {
-  hideDebugOverlay();  // Remove existing overlay first
-
-  const headings = getResultHeadings();
-  const overlay = document.createElement('div');
-  overlay.id = 'gradeable-debug-overlay';
-  overlay.style.cssText = `
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    width: 350px;
-    max-height: 80vh;
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    font-family: monospace;
-    font-size: 12px;
-    border-radius: 8px;
-    padding: 15px;
-    z-index: 10001;
-    overflow-y: auto;
-    border: 2px solid #14b8a6;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  `;
-
-  let html = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px;">
-      <strong>🐛 Grade-Able Debug Panel</strong>
-      <button onclick="toggleDebugOverlay()" style="background: #ff4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
-    </div>
-    <div style="margin-bottom: 10px;">
-      <strong>📋 Found ${headings.length} headings</strong>
-    </div>
-  `;
-
-  headings.forEach((h3, index) => {
-    const anchor = findAnchorForHeading(h3);
-    const badge = h3.querySelector('.gradeable-badge');
-    const container = findContainer(h3);
-
-    html += `
-      <div style="margin-bottom: 8px; padding: 8px; border-left: 3px solid ${
-        badge ? '#22c55e' : '#ef4444'}; background: rgba(255,255,255,0.05);">
-        <div><strong>[${index}]</strong> ${
-        h3.textContent?.substring(0, 40) || 'No title'}...</div>
-        <div style="font-size: 10px; color: #ccc;">
-          ${
-        anchor ? '🔗 ' + anchor.href.substring(0, 50) + '...' : '❌ No anchor'}
-        </div>
-        ${
-        badge ?
-            `<div style="color: #22c55e;">🏷️ ${
-                badge.getAttribute('data-grade')} (${
-                badge.getAttribute('aria-label')?.match(/score (\d+)/)?.[1] ||
-                '?'})</div>` :
-            '<div style="color: #ef4444;">❌ No badge</div>'}
-        ${
-        container ? `<div style="color: #3b82f6;">📦 Container: ${
-                        container.className.split(' ')[0] || 'unknown'}</div>` :
-                    '<div style="color: #f59e0b;">⚠️ No container</div>'}
-      </div>
-    `;
-  });
-
-  html += `
-    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #333;">
-      <button onclick="window.gradeableDebugLog()" style="background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">📊 Console Log</button>
-      <button onclick="window.gradeableInspectContainers()" style="background: #8b45c6; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">🔍 Containers</button>
-      <button onclick="window.gradeableTestSorting()" style="background: #f59e0b; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">🧪 Test Sort</button>
-      <button onclick="window.gradeableDebugContainerSearch()" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">🔎 Find Containers</button>
-    </div>
-  `;
-
-  overlay.innerHTML = html;
-  document.body.appendChild(overlay);
-}
-
-function hideDebugOverlay() {
-  const existing = document.getElementById('gradeable-debug-overlay');
-  if (existing) existing.remove();
-}
-
-// Add keyboard shortcut to toggle debug overlay (Ctrl+Shift+D)
-document.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-    e.preventDefault();
-    toggleDebugOverlay();
-  }
-});
-
-// ==== EMAIL MODAL FUNCTIONALITY ====
-
-// Server configuration
-const SERVER_URL = 'http://localhost:8000';
-
-// Create and show email modal
-function showEmailModal(url, grade, score) {
-  // Remove any existing modal
-  const existing = document.getElementById('gradeable-email-modal');
-  if (existing) existing.remove();
-
-  // Create modal HTML
-  const modal = document.createElement('div');
-  modal.id = 'gradeable-email-modal';
-  modal.innerHTML = `
-      <div class="gradeable-modal-backdrop">
-        <div class="gradeable-modal-container">
-          <div class="gradeable-modal-header">
-            <h3>Email Accessibility Report</h3>
-            <button class="gradeable-modal-close">&times;</button>
-          </div>
-          <div class="gradeable-modal-body">
-            <div class="gradeable-report-info">
-              <div class="gradeable-report-url">${
-      new URL(url).hostname.replace(/^www\./, '')}</div>
-              <div class="gradeable-report-grade">
-                <span class="gradeable-grade-badge grade-${
-      grade.toLowerCase()}">${grade}</span>
-                <span class="gradeable-score">${score}/100</span>
-              </div>
-            </div>
-            <div class="gradeable-form-group">
-              <label for="gradeable-email-input">Email Address</label>
-              <input type="email" id="gradeable-email-input" placeholder="your.email@example.com" required>
-            </div>
-            <div class="gradeable-modal-actions">
-              <button id="gradeable-send-btn" class="gradeable-btn-primary">Send Report</button>
-              <button id="gradeable-cancel-btn" class="gradeable-btn-secondary">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-  // Add CSS styles
-  const style = document.createElement('style');
-  style.textContent = `
-      #gradeable-email-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 10000;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      }
-      
-      .gradeable-modal-backdrop {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(8px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: gradeable-fade-in 0.3s ease-out;
-      }
-      
-      .gradeable-modal-container {
-        background: 
-          linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)) padding-box,
-          linear-gradient(135deg, #8b45c6 0%, #14b8a6 100%) border-box;
-        border: 2px solid transparent;
-        border-radius: 20px;
-        backdrop-filter: blur(20px);
-        box-shadow: 
-          0 25px 50px rgba(0, 0, 0, 0.5),
-          0 0 0 1px rgba(255, 255, 255, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        max-width: 480px;
-        width: 90%;
-        max-height: 90vh;
-        overflow: hidden;
-        animation: gradeable-slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        position: relative;
-      }
-      
-      .gradeable-modal-header {
-        padding: 24px;
-        background: transparent;
-        color: #f1f5f9;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      
-      .gradeable-modal-header h3 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 600;
-        color: #f1f5f9;
-      }
-      
-      .gradeable-modal-close {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #f1f5f9;
-        font-size: 20px;
-        cursor: pointer;
-        padding: 0;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        transition: all 0.2s;
-      }
-      
-      .gradeable-modal-close:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(168, 85, 247, 0.5);
-        transform: scale(1.05);
-      }
-      
-      .gradeable-modal-body {
-        padding: 24px;
-        color: #f1f5f9;
-      }
-      
-      .gradeable-report-info {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 24px;
-        border-left: 4px solid transparent;
-        border-image: linear-gradient(135deg, #14b8a6 0%, #a855f7 100%) 1;
-        border-image-slice: 1;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .gradeable-report-info::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
-        pointer-events: none;
-      }
-      
-      .gradeable-report-url {
-        font-weight: 600;
-        color: #f1f5f9;
-        margin-bottom: 12px;
-        word-break: break-all;
-        position: relative;
-        z-index: 1;
-      }
-      
-      .gradeable-report-grade {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        position: relative;
-        z-index: 1;
-      }
-      
-      .gradeable-grade-badge {
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 13px;
-        text-transform: uppercase;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-      }
-      
-      .gradeable-grade-badge.grade-aaa { 
-        background: rgba(34, 197, 94, 0.2); 
-        color: #22c55e; 
-        border-color: rgba(34, 197, 94, 0.3);
-      }
-      .gradeable-grade-badge.grade-aa { 
-        background: rgba(59, 130, 246, 0.2); 
-        color: #3b82f6; 
-        border-color: rgba(59, 130, 246, 0.3);
-      }
-      .gradeable-grade-badge.grade-a { 
-        background: rgba(245, 158, 11, 0.2); 
-        color: #f59e0b; 
-        border-color: rgba(245, 158, 11, 0.3);
-      }
-      .gradeable-grade-badge.grade-b { 
-        background: rgba(239, 68, 68, 0.2); 
-        color: #ef4444; 
-        border-color: rgba(239, 68, 68, 0.3);
-      }
-      .gradeable-grade-badge.grade-c { 
-        background: rgba(124, 45, 18, 0.3); 
-        color: #f87171; 
-        border-color: rgba(124, 45, 18, 0.4);
-      }
-      
-      .gradeable-score {
-        font-weight: 600;
-        color: #cbd5e1;
-        font-size: 16px;
-      }
-      
-      .gradeable-form-group {
-        margin-bottom: 24px;
-      }
-      
-      .gradeable-form-group label {
-        display: block;
-        font-weight: 600;
-        color: #f1f5f9;
-        margin-bottom: 10px;
-        font-size: 15px;
-      }
-      
-      #gradeable-email-input {
-        width: 100%;
-        padding: 14px 16px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        font-size: 16px;
-        color: #f1f5f9;
-        transition: all 0.2s;
-        box-sizing: border-box;
-      }
-      
-      #gradeable-email-input::placeholder {
-        color: #94a3b8;
-      }
-      
-      #gradeable-email-input:focus {
-        outline: none;
-        border-color: #14b8a6;
-        box-shadow: 
-          0 0 0 3px rgba(20, 184, 166, 0.2),
-          0 0 20px rgba(20, 184, 166, 0.1);
-        background: rgba(255, 255, 255, 0.08);
-      }
-      
-      .gradeable-modal-actions {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-      }
-      
-      .gradeable-btn-primary, .gradeable-btn-secondary {
-        padding: 14px 28px;
-        border-radius: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 2px solid transparent;
-        font-size: 15px;
-        transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .gradeable-btn-primary {
-        background: 
-          linear-gradient(rgba(20, 184, 166, 1), rgba(20, 184, 166, 1)) padding-box,
-          linear-gradient(135deg, #14b8a6 0%, #a855f7 100%) border-box;
-        color: white;
-        border: 2px solid transparent;
-      }
-      
-      .gradeable-btn-primary:hover:not(:disabled) {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 
-          0 10px 25px rgba(20, 184, 166, 0.3),
-          0 0 20px rgba(20, 184, 166, 0.2);
-        background: 
-          linear-gradient(rgba(16, 163, 150, 1), rgba(16, 163, 150, 1)) padding-box,
-          linear-gradient(135deg, #14b8a6 0%, #a855f7 100%) border-box;
-      }
-      
-      .gradeable-btn-secondary {
-        background: rgba(255, 255, 255, 0.05);
-        color: #cbd5e1;
-        border: 2px solid rgba(255, 255, 255, 0.1);
-      }
-      
-      .gradeable-btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-        transform: translateY(-1px);
-        color: #f1f5f9;
-      }
-      
-      @keyframes gradeable-fade-in {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      
-      @keyframes gradeable-slide-up {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-    `;
-
-  document.head.appendChild(style);
-  document.body.appendChild(modal);
-
-  // Add event listeners
-  const emailInput = document.getElementById('gradeable-email-input');
-  const sendBtn = document.getElementById('gradeable-send-btn');
-  const cancelBtn = document.getElementById('gradeable-cancel-btn');
-  const closeBtn = modal.querySelector('.gradeable-modal-close');
-  const backdrop = modal.querySelector('.gradeable-modal-backdrop');
-
-  // Close modal functions
-  const closeModal = () => {
-    modal.remove();
-    style.remove();
-  };
-
-  // Close on backdrop click
-  backdrop.addEventListener('click', (e) => {
-    if (e.target === backdrop) closeModal();
-  });
-
-  // Close button
-  closeBtn.addEventListener('click', closeModal);
-  cancelBtn.addEventListener('click', closeModal);
-
-  // Send button
-  sendBtn.addEventListener('click', async () => {
-    const email = emailInput.value.trim();
-    if (!email || !email.includes('@')) {
-      showNotification('Please enter a valid email address', 'error');
-      emailInput.focus();
-      return;
-    }
-
-    sendBtn.textContent = 'Sending...';
-    sendBtn.disabled = true;
-
-    try {
-      const response = await fetch(`${SERVER_URL}/send-report`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({email: email, url: url})
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        showNotification('Report sent successfully! 📧', 'success');
-        closeModal();
-      } else {
-        const error = await response.text();
-        showNotification(`Failed to send report: ${error}`, 'error');
-      }
-    } catch (error) {
-      console.error('Send report error:', error);
-      showNotification(
-          'Network error. Please check if the server is running.', 'error');
-    }
-
-    sendBtn.textContent = 'Send Report';
-    sendBtn.disabled = false;
-  });
-
-  // Focus email input
-  setTimeout(() => emailInput.focus(), 100);
-
-  // Enter key to send
-  emailInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      sendBtn.click();
-    }
-  });
-}
-
-// Show notification at top right
-function showNotification(message, type = 'info') {
-  const notification = document.createElement('div');
-  notification.className =
-      `gradeable-notification gradeable-notification-${type}`;
-  notification.textContent = message;
-
-  // Add notification CSS if not exists
-  if (!document.getElementById('gradeable-notification-styles')) {
-    const style = document.createElement('style');
-    style.id = 'gradeable-notification-styles';
-    style.textContent = `
-        .gradeable-notification {
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          z-index: 10001;
-          padding: 12px 16px;
-          border-radius: 8px;
-          color: white;
-          font-weight: 500;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          animation: gradeable-notification-slide-in 0.3s ease-out;
-          max-width: 300px;
-        }
-        
-        .gradeable-notification-success {
-          background: #22c55e;
-        }
-        
-        .gradeable-notification-error {
-          background: #ef4444;
-        }
-        
-        .gradeable-notification-info {
-          background: #3b82f6;
-        }
-        
-        @keyframes gradeable-notification-slide-in {
-          from {
-            opacity: 0;
-            transform: translateX(100px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `;
-    document.head.appendChild(style);
-  }
-
-  document.body.appendChild(notification);
-
-  // Auto remove after 4 seconds
-  setTimeout(() => {
-    notification.style.animation =
-        'gradeable-notification-slide-in 0.3s ease-out reverse';
-    setTimeout(() => notification.remove(), 300);
-  }, 4000);
 }
 
 // Add click handlers to existing badges
