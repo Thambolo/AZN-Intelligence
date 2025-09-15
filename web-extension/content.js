@@ -24,6 +24,19 @@ console.debug(LOG_PREFIX, 'Init on Google page', {
   query,
 });
 
+// Debug helper message
+console.log(`
+🐛 Grade-Able Debugging Available:
+📝 Press Ctrl+Shift+D to toggle visual debug overlay
+🎯 Available console commands:
+   • toggleDebugOverlay() - Show/hide debug panel
+   • gradeableDebugLog() - Quick debug info
+   • gradeableInspectContainers() - Inspect all containers  
+   • gradeableTestSorting() - Test sorting with mock data
+   • gradeableDebugContainerSearch() - Debug container finding
+   • gradeableCompareDomToServer(serverData) - Compare DOM vs server data
+`);
+
 async function applyDisplaySettings() {
   try {
     const data = (await api.storage?.sync?.get?.([
@@ -166,7 +179,7 @@ function showTempErrorIndicator(error) {
 
   indicator.innerHTML = `
       <div style="font-weight: bold; margin-bottom: 4px;">⚠️ Accessibility Analysis Failed</div>
-      <div style="font-size: 12px; opacity: 0.9;">${errorMessage}</div>
+      <div style="font-size: 12px; opacity: 0.9;">${error}</div>
       <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">Click to dismiss</div>
     `;
 
@@ -236,6 +249,55 @@ api.runtime.onMessage.addListener((msg) => {
     summary: summary,
   });
 
+  // Validate server response data
+  console.group(LOG_PREFIX + ' Server Response Validation');
+  const validationErrors = [];
+
+  if (!Array.isArray(data)) {
+    validationErrors.push('Data is not an array');
+  } else {
+    data.forEach((result, index) => {
+      if (!result.url) validationErrors.push(`[${index}] Missing URL`);
+      if (!result.grade) validationErrors.push(`[${index}] Missing grade`);
+      if (typeof result.score !== 'number')
+        validationErrors.push(
+            `[${index}] Invalid score type: ${typeof result.score}`);
+      if (!result.url || !result.url.startsWith('http')) {
+        validationErrors.push(`[${index}] Invalid URL format: ${result.url}`);
+      }
+    });
+  }
+
+  if (validationErrors.length > 0) {
+    console.error('❌ Server response validation failed:', validationErrors);
+  } else {
+    console.log('✅ Server response validation passed');
+  }
+
+  // Log detailed comparison
+  console.log('📤 URLs sent to server vs 📥 URLs received:');
+  const receivedUrls = new Set(data.map(r => r.url));
+  const currentDomUrls = getResultHeadings()
+                             .map(h3 => findAnchorForHeading(h3)?.href)
+                             .filter(Boolean);
+
+  console.table({
+    'Sent to server (approx)': currentDomUrls.length,
+    'Received from server': receivedUrls.size,
+    'Missing from response':
+        currentDomUrls.filter(url => !receivedUrls.has(url)).length
+  });
+
+  const missingUrls = currentDomUrls.filter(url => !receivedUrls.has(url));
+  if (missingUrls.length > 0) {
+    console.warn('🔍 URLs in DOM but missing from server response:');
+    missingUrls.forEach((url, index) => {
+      console.log(`[${index}] ${url}`);
+    });
+  }
+
+  console.groupEnd();
+
   // Hide any progress indicators
   hideAnalysisProgress();
 
@@ -257,22 +319,92 @@ api.runtime.onMessage.addListener((msg) => {
 
 // Function to update result badges
 function updateResultBadges(data) {
-  if (!data || data.length === 0) return;
+  if (!data || data.length === 0) {
+    console.warn(LOG_PREFIX, 'updateResultBadges: No data received');
+    return;
+  }
+
+  console.group(LOG_PREFIX + ' Badge Update Debug');
+  console.log('🔍 Server data received:', data.map(r => ({
+                                                     url: r.url,
+                                                     grade: r.grade,
+                                                     score: r.score,
+                                                     urlLength: r.url.length
+                                                   })));
 
   const urlToResult = new Map(data.map((r) => [r.url, r]));
   const containers = new Map();
-  data.forEach((r, idx) => {
-    let h3 = document.querySelector(`h3[data-gradeable-index="${idx}"]`);
-    if (!h3) h3 = getResultHeadings()[idx] || null;
-    if (!h3) return;
-    if (h3.querySelector('.gradeable-badge')) return;
+
+  // Get all current headings and match them by URL instead of index
+  const headings = getResultHeadings();
+  console.log('📋 DOM headings found:', headings.length);
+
+  // Debug: Show what URLs we extract vs what server sent
+  const domUrls = [];
+  headings.forEach((h3, domIndex) => {
+    const anchor = findAnchorForHeading(h3);
+    if (anchor && anchor.href) {
+      domUrls.push({
+        domIndex,
+        url: anchor.href,
+        title: h3.textContent?.substring(0, 60) + '...',
+        hasExistingBadge: !!h3.querySelector('.gradeable-badge')
+      });
+    }
+  });
+
+  console.table(domUrls);
+  console.log('🔗 URL matching status:');
+  domUrls.forEach(({domIndex, url, hasExistingBadge}) => {
+    const serverResult = urlToResult.get(url);
+    console.log(`[${domIndex}] ${hasExistingBadge ? '🏷️ ' : '❌ '}${
+        serverResult ?
+            '✅' :
+            '❌'} ${url.substring(0, 80)}${url.length > 80 ? '...' : ''}`);
+    if (serverResult) {
+      console.log(
+          `     └─ Grade: ${serverResult.grade}, Score: ${serverResult.score}`);
+    }
+  });
+
+  let badgesCreated = 0;
+  let badgesSkipped = 0;
+
+  headings.forEach((h3, domIndex) => {
+    // Skip if badge already exists
+    if (h3.querySelector('.gradeable-badge')) {
+      badgesSkipped++;
+      console.log(`⏭️ [${domIndex}] Badge already exists, skipping`);
+      return;
+    }
+
+    // Find the URL for this heading
+    const anchor = findAnchorForHeading(h3);
+    if (!anchor || !anchor.href) {
+      console.warn(
+          `🔗 [${domIndex}] No anchor found for heading:`,
+          h3.textContent?.substring(0, 50));
+      return;
+    }
+
+    // Look up the result by URL
+    const result = urlToResult.get(anchor.href);
+    if (!result) {
+      console.warn(`📊 [${domIndex}] No server result for URL:`, anchor.href);
+      return;  // No analysis result for this URL
+    }
+
+    console.log(
+        `✅ [${domIndex}] Creating badge - Grade: ${result.grade}, Score: ${
+            result.score}, URL: ${anchor.href.substring(0, 60)}...`);
 
     const badge = document.createElement('span');
     badge.className = 'gradeable-badge has-icon';
-    badge.setAttribute('data-grade', r.grade);
+    badge.setAttribute('data-grade', result.grade);
     badge.setAttribute('role', 'note');
     badge.setAttribute(
-        'aria-label', `Accessibility grade ${r.grade}, score ${r.score}`);
+        'aria-label',
+        `Accessibility grade ${result.grade}, score ${result.score}`);
 
     try {
       const icon = (function iconForGrade(grade) {
@@ -360,26 +492,51 @@ function updateResultBadges(data) {
         }));
         svg.appendChild(g);
         return svg;
-      })(r.grade);
+      })(result.grade);
       if (icon) badge.appendChild(icon);
     } catch {
     }
 
-    badge.appendChild(document.createTextNode(` ${r.grade} (${r.score})`));
+    badge.appendChild(
+        document.createTextNode(` ${result.grade} (${result.score})`));
     h3.appendChild(badge);
+    badgesCreated++;
 
     // Find container and assign score
     const container = findContainer(h3);
     if (container) {
       if (!container.id) {
-        container.id = `gradeable-result-${idx}`;
+        container.id = `gradeable-result-${domIndex}`;
       }
-      // Use the score for this url, but for main, it's the first
-      if (!containers.has(container)) {
-        containers.set(container, r.score);
+      const currentScore = containers.get(container);
+      const newScore = result.score;
+
+      // Use the highest score for containers with multiple results
+      if (!containers.has(container) ||
+          result.score > containers.get(container)) {
+        containers.set(container, result.score);
+        console.log(`📦 [${domIndex}] Container score updated: ${
+            currentScore || 'none'} → ${newScore}`);
+      } else {
+        console.log(`📦 [${domIndex}] Container score kept: ${
+            currentScore} (new: ${newScore})`);
       }
+    } else {
+      console.warn(`📦 [${domIndex}] No container found for heading`);
     }
   });
+
+  console.log(
+      `🏷️ Badge Summary: ${badgesCreated} created, ${badgesSkipped} skipped`);
+  console.log(
+      '📦 Container scores:',
+      Array.from(containers.entries()).map(([container, score]) => ({
+                                             containerId:
+                                                 container.id || 'no-id',
+                                             score: score,
+                                             className: container.className
+                                           })));
+  console.groupEnd();
 
   // Reorder containers by score descending
   const sortedContainers =
@@ -622,22 +779,54 @@ function hideAnalysisProgress() {
 
 // Function to sort results by score
 function sortResultsByScore(data) {
-  if (!data || data.length === 0) return;
+  if (!data || data.length === 0) {
+    console.warn(LOG_PREFIX, 'sortResultsByScore: No data received');
+    return;
+  }
+
+  console.group(LOG_PREFIX + ' Sorting Debug');
+  console.log('🎯 Sorting data received:', data.length, 'results');
 
   const urlToResult = new Map(data.map((r) => [r.url, r]));
   const containers = new Map();
 
-  // Build container map with scores
-  data.forEach((r, idx) => {
-    let h3 = document.querySelector(`h3[data-gradeable-index="${idx}"]`);
-    if (!h3) h3 = getResultHeadings()[idx] || null;
-    if (!h3) return;
+  // Build container map with scores - iterate through DOM headings and match by
+  // URL
+  const headings = getResultHeadings();
+  console.log('📋 DOM headings for sorting:', headings.length);
+
+  headings.forEach((h3, index) => {
+    const anchor = findAnchorForHeading(h3);
+    if (!anchor || !anchor.href) {
+      console.warn(`🔗 [${index}] No anchor for sorting`);
+      return;
+    }
+
+    const result = urlToResult.get(anchor.href);
+    if (!result) {
+      console.warn(
+          `📊 [${index}] No result for URL in sorting:`,
+          anchor.href.substring(0, 60));
+      return;
+    }
 
     const container = findContainer(h3);
     if (container) {
+      const currentScore = containers.get(container);
+      const newScore = result.score;
+
+      // Use the first result's score for the container (main result)
+      // This ensures the main result determines the container's ranking
       if (!containers.has(container)) {
-        containers.set(container, r.score);
+        containers.set(container, result.score);
+        console.log(`📦 [${index}] Sorting container score: ${
+            currentScore || 'none'} → ${newScore} (main result)`);
+      } else {
+        console.log(`📦 [${index}] Container score kept: ${
+            currentScore} (skipping sub-result: ${newScore})`);
       }
+    } else {
+      console.warn(`📦 [${index}] No container found for sorting`);
     }
   });
 
@@ -645,21 +834,148 @@ function sortResultsByScore(data) {
   const sortedContainers =
       Array.from(containers.entries()).sort((a, b) => b[1] - a[1]);
 
-  const parent =
-      document.querySelector('#rso .MjjYud') || document.querySelector('#rso');
+  console.log(
+      '📊 Containers before sorting:',
+      Array.from(containers.entries())
+          .map(([container, score]) => ({
+                 containerId: container.id || container.className || 'unknown',
+                 score: score,
+                 currentOrder: Array.from(container.parentNode?.children || [])
+                                   .indexOf(container)
+               })));
+
+  console.log(
+      '📊 Sorted order (highest to lowest):',
+      sortedContainers.map(
+          ([container, score], index) => ({
+            newPosition: index,
+            containerId: container.id || container.className || 'unknown',
+            score: score
+          })));
+
+  // Find the appropriate parent container for reordering
+  let parent = null;
+  const possibleParents = [
+    '#rso .MjjYud',  // Try specific MjjYud container first
+    '#rso',          // Main search results container
+    '#search',       // Fallback search container
+    '.s'             // Legacy search container
+  ];
+
+  for (const selector of possibleParents) {
+    parent = document.querySelector(selector);
+    if (parent && sortedContainers.length > 0) {
+      // Check if any of our containers are actually children of this parent
+      const hasMatchingChildren = sortedContainers.some(([container]) => {
+        let element = container;
+        let depth = 0;
+        while (element && element !== parent && depth < 10) {
+          element = element.parentNode;
+          depth++;
+        }
+        return element === parent;
+      });
+
+      if (hasMatchingChildren) {
+        console.log(`🏗️ Found valid parent: ${selector}`);
+        break;
+      }
+    }
+    parent = null;  // Reset if not valid
+  }
+
+  // If no standard parent found, try to find the actual parent of our
+  // containers
+  if (!parent && sortedContainers.length > 0) {
+    const firstContainer = sortedContainers[0][0];
+    let testParent = firstContainer.parentNode;
+    let depth = 0;
+
+    while (testParent && depth < 5) {
+      const childContainers = sortedContainers.filter(
+          ([container]) => container.parentNode === testParent);
+      if (childContainers.length > 1) {
+        parent = testParent;
+        console.log(
+            `🏗️ Found common parent via traversal: ${testParent.tagName}${
+                testParent.className ?
+                    '.' + testParent.className.split(' ')[0] :
+                    ''}${testParent.id ? '#' + testParent.id : ''}`);
+        break;
+      }
+      testParent = testParent.parentNode;
+      depth++;
+    }
+  }
+
+  console.log(
+      '🏗️ Parent container found:',
+      parent ? parent.tagName + (parent.id ? '#' + parent.id : '') +
+              (parent.className ? '.' + parent.className.split(' ')[0] : '') :
+               'NONE');
+
   if (parent && sortedContainers.length > 0) {
-    sortedContainers.forEach(([container]) => {
-      parent.appendChild(container);
+    console.log(
+        LOG_PREFIX,
+        `🔄 Sorting ${sortedContainers.length} containers by score`);
+    let reorderedCount = 0;
+
+    sortedContainers.forEach(([container, score], index) => {
+      // More flexible parent checking - allow containers at different nesting
+      // levels
+      let isChildOfParent = false;
+      let element = container;
+      let depth = 0;
+
+      while (element && depth < 10) {
+        if (element.parentNode === parent) {
+          isChildOfParent = true;
+          break;
+        }
+        element = element.parentNode;
+        depth++;
+      }
+
+      if (container && isChildOfParent) {
+        // For nested containers, move the actual direct child of parent
+        let elementToMove = container;
+        while (elementToMove.parentNode !== parent &&
+               elementToMove.parentNode) {
+          elementToMove = elementToMove.parentNode;
+        }
+
+        parent.appendChild(elementToMove);
+        reorderedCount++;
+        console.log(`🔄 [${index}] Moved container (score: ${
+            score}) to position ${index}`);
+      } else {
+        console.warn(`🔄 [${
+            index}] Cannot move container - not a valid child of parent (score: ${
+            score})`);
+        console.warn(`    Container parent: ${container?.parentNode?.tagName}.${
+            container?.parentNode?.className?.split(' ')[0] || 'none'}`);
+        console.warn(`    Target parent: ${parent?.tagName}.${
+            parent?.className?.split(' ')[0] || 'none'}`);
+      }
     });
+    console.log(`✅ Reordered ${reorderedCount} containers`);
+  } else {
+    console.warn(
+        '❌ Cannot sort - no parent container or no containers to sort');
   }
 
   // Sort sub-URLs within containers
+  console.log('🔍 Checking for sub-URL sorting...');
+  let subUrlsProcessed = 0;
   containers.forEach((score, container) => {
     const table = container.querySelector('table');
     if (table) {
       const tbody = table.querySelector('tbody');
       if (tbody) {
         const rows = Array.from(tbody.querySelectorAll('tr'));
+        console.log(`📋 Container ${container.id || 'unknown'} has ${
+            rows.length} sub-rows to sort`);
+
         rows.sort((a, b) => {
           const h3a = a.querySelector('h3');
           const h3b = b.querySelector('h3');
@@ -671,10 +987,15 @@ function sortResultsByScore(data) {
               0;
           return sb - sa;
         });
-        rows.forEach((row) => tbody.appendChild(row));
+        rows.forEach((row, index) => {
+          tbody.appendChild(row);
+          subUrlsProcessed++;
+        });
       }
     }
   });
+  console.log(`📋 Processed ${subUrlsProcessed} sub-URLs`);
+  console.groupEnd();
 }
 
 // Function to show analysis summary
@@ -763,6 +1084,238 @@ if (document.readyState === 'complete' ||
       'DOMContentLoaded',
       () => applyDisplaySettings().finally(() => setTimeout(sendScan, 500)));
 }
+
+// ==== DEBUG UTILITIES ====
+
+// Global debug state
+let debugOverlayEnabled = false;
+
+// Make debug functions globally available immediately
+window.toggleDebugOverlay = function() {
+  debugOverlayEnabled = !debugOverlayEnabled;
+  if (debugOverlayEnabled) {
+    showDebugOverlay();
+  } else {
+    hideDebugOverlay();
+  }
+  console.log(
+      LOG_PREFIX,
+      `Debug overlay ${debugOverlayEnabled ? 'ENABLED' : 'DISABLED'}`);
+};
+
+window.gradeableDebugLog = function() {
+  console.group('🐛 Grade-Able Manual Debug');
+  console.log('Current headings:', getResultHeadings().length);
+  console.log(
+      'Badges found:', document.querySelectorAll('.gradeable-badge').length);
+  console.log('Containers found:', document.querySelectorAll('.A6K0A').length);
+  console.log(
+      'All container classes:',
+      Array
+          .from(document.querySelectorAll(
+              '[class*="container"], [class*="result"], [class*="MjjYud"], [class*="tF2Cxc"], [class*="g"]'))
+          .map(el => el.className));
+  console.groupEnd();
+};
+
+window.gradeableInspectContainers = function() {
+  const containers = document.querySelectorAll('.A6K0A');
+  console.group('📦 Container Inspection');
+  containers.forEach((container, index) => {
+    const h3 = container.querySelector('h3');
+    const badge = h3?.querySelector('.gradeable-badge');
+    console.log(`[${index}] Container:`, {
+      id: container.id,
+      className: container.className,
+      title: h3?.textContent?.substring(0, 50) || 'No title',
+      hasBadge: !!badge,
+      grade: badge?.getAttribute('data-grade') || 'none',
+      score: badge?.getAttribute('aria-label')?.match(/score (\d+)/)?.[1] ||
+          'unknown',
+      position: Array.from(container.parentNode.children).indexOf(container),
+      url: findAnchorForHeading(h3)?.href?.substring(0, 80) || 'No URL',
+      parentId: container.parentNode?.id || 'no-parent-id',
+      parentClass: container.parentNode?.className || 'no-parent-class'
+    });
+  });
+  console.groupEnd();
+};
+
+window.gradeableTestSorting = function() {
+  console.group('🧪 Sorting Algorithm Test');
+  const headings = getResultHeadings();
+  const mockData = headings.map((h3, index) => {
+    const anchor = findAnchorForHeading(h3);
+    return {
+      url: anchor?.href || `https://example.com/${index}`,
+      grade: ['AAA', 'AA', 'A', 'B', 'C'][Math.floor(Math.random() * 5)],
+      score: Math.floor(Math.random() * 100)
+    };
+  });
+
+  console.log('🎲 Generated mock data for sorting test:', mockData);
+  console.log('🔄 Running sortResultsByScore with mock data...');
+  sortResultsByScore(mockData);
+  console.groupEnd();
+};
+
+window.gradeableDebugContainerSearch = function() {
+  console.group('🔎 Container Search Debug');
+
+  // Test different selectors
+  const selectors = [
+    '.A6K0A', '.tF2Cxc', '.g', '.rc', '[data-ved]', '.MjjYud', '.MjjYud > *'
+  ];
+
+  selectors.forEach(selector => {
+    const elements = document.querySelectorAll(selector);
+    console.log(`${selector}: ${elements.length} found`);
+    if (elements.length > 0 && elements.length < 20) {
+      Array.from(elements).slice(0, 3).forEach((el, i) => {
+        console.log(`  [${i}] ${el.tagName}.${
+            el.className.split(' ')[0]} parent: ${el.parentNode?.tagName}.${
+            el.parentNode?.className?.split(' ')[0] || 'none'}`);
+      });
+    }
+  });
+
+  console.groupEnd();
+};
+
+window.gradeableCompareDomToServer = function(serverData) {
+  console.group('🔍 DOM vs Server Data Comparison');
+  const headings = getResultHeadings();
+  const serverUrls = new Map(serverData.map(r => [r.url, r]));
+
+  console.log('📊 Comparison Results:');
+  headings.forEach((h3, index) => {
+    const anchor = findAnchorForHeading(h3);
+    const url = anchor?.href;
+    const serverResult = url ? serverUrls.get(url) : null;
+    const badge = h3.querySelector('.gradeable-badge');
+
+    console.log(`[${index}]`, {
+      domUrl: url?.substring(0, 60) || 'No URL',
+      hasServerData: !!serverResult,
+      serverGrade: serverResult?.grade || 'none',
+      serverScore: serverResult?.score || 'none',
+      hasBadge: !!badge,
+      badgeGrade: badge?.getAttribute('data-grade') || 'none',
+      badgeScore:
+          badge?.getAttribute('aria-label')?.match(/score (\d+)/)?.[1] ||
+          'none',
+      match: serverResult && badge ?
+          (serverResult.grade === badge.getAttribute('data-grade') &&
+           serverResult.score.toString() ===
+               badge.getAttribute('aria-label')?.match(/score (\d+)/)?.[1]) :
+          false
+    });
+  });
+  console.groupEnd();
+};
+
+// Toggle debug overlay
+function toggleDebugOverlay() {
+  debugOverlayEnabled = !debugOverlayEnabled;
+  if (debugOverlayEnabled) {
+    showDebugOverlay();
+  } else {
+    hideDebugOverlay();
+  }
+  console.log(
+      LOG_PREFIX,
+      `Debug overlay ${debugOverlayEnabled ? 'ENABLED' : 'DISABLED'}`);
+}
+
+// Show visual debug overlay
+function showDebugOverlay() {
+  hideDebugOverlay();  // Remove existing overlay first
+
+  const headings = getResultHeadings();
+  const overlay = document.createElement('div');
+  overlay.id = 'gradeable-debug-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 350px;
+    max-height: 80vh;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    font-family: monospace;
+    font-size: 12px;
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 10001;
+    overflow-y: auto;
+    border: 2px solid #14b8a6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  `;
+
+  let html = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 8px;">
+      <strong>🐛 Grade-Able Debug Panel</strong>
+      <button onclick="toggleDebugOverlay()" style="background: #ff4444; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">✕</button>
+    </div>
+    <div style="margin-bottom: 10px;">
+      <strong>📋 Found ${headings.length} headings</strong>
+    </div>
+  `;
+
+  headings.forEach((h3, index) => {
+    const anchor = findAnchorForHeading(h3);
+    const badge = h3.querySelector('.gradeable-badge');
+    const container = findContainer(h3);
+
+    html += `
+      <div style="margin-bottom: 8px; padding: 8px; border-left: 3px solid ${
+        badge ? '#22c55e' : '#ef4444'}; background: rgba(255,255,255,0.05);">
+        <div><strong>[${index}]</strong> ${
+        h3.textContent?.substring(0, 40) || 'No title'}...</div>
+        <div style="font-size: 10px; color: #ccc;">
+          ${
+        anchor ? '🔗 ' + anchor.href.substring(0, 50) + '...' : '❌ No anchor'}
+        </div>
+        ${
+        badge ?
+            `<div style="color: #22c55e;">🏷️ ${
+                badge.getAttribute('data-grade')} (${
+                badge.getAttribute('aria-label')?.match(/score (\d+)/)?.[1] ||
+                '?'})</div>` :
+            '<div style="color: #ef4444;">❌ No badge</div>'}
+        ${
+        container ? `<div style="color: #3b82f6;">📦 Container: ${
+                        container.className.split(' ')[0] || 'unknown'}</div>` :
+                    '<div style="color: #f59e0b;">⚠️ No container</div>'}
+      </div>
+    `;
+  });
+
+  html += `
+    <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #333;">
+      <button onclick="window.gradeableDebugLog()" style="background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">📊 Console Log</button>
+      <button onclick="window.gradeableInspectContainers()" style="background: #8b45c6; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">🔍 Containers</button>
+      <button onclick="window.gradeableTestSorting()" style="background: #f59e0b; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">🧪 Test Sort</button>
+      <button onclick="window.gradeableDebugContainerSearch()" style="background: #ef4444; color: white; border: none; border-radius: 4px; padding: 6px 10px; cursor: pointer; margin: 2px; font-size: 10px;">🔎 Find Containers</button>
+    </div>
+  `;
+
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
+}
+
+function hideDebugOverlay() {
+  const existing = document.getElementById('gradeable-debug-overlay');
+  if (existing) existing.remove();
+}
+
+// Add keyboard shortcut to toggle debug overlay (Ctrl+Shift+D)
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+    e.preventDefault();
+    toggleDebugOverlay();
+  }
+});
 
 // ==== EMAIL MODAL FUNCTIONALITY ====
 
