@@ -180,6 +180,23 @@
   }
 
   api.runtime.onMessage.addListener((msg) => {
+    // Handle debug logs from service worker
+    if (msg?.type === "GRADEABLE_DEBUG_LOG") {
+      const { message, details, timestamp, source } = msg.data || {};
+      console.debug(`${LOG_PREFIX}[${source}]`, message, details);
+      return;
+    }
+
+    // Handle error logs from service worker
+    if (msg?.type === "GRADEABLE_ERROR_LOG") {
+      const { message, error, stack, timestamp, source } = msg.data || {};
+      console.error(`${LOG_PREFIX}[${source}]`, message, error);
+      if (stack) {
+        console.error(`${LOG_PREFIX}[${source}] Stack:`, stack);
+      }
+      return;
+    }
+
     // Handle different message types for progressive updates
     if (msg?.type === "GRADEABLE_ANALYSIS_STARTED") {
       inFlight = true;
@@ -197,6 +214,7 @@
         completed,
         total,
         resultCount: results?.length || 0,
+        result: results,
         isComplete,
       });
 
@@ -260,19 +278,31 @@
 
     const urlToResult = new Map(data.map((r) => [r.url, r]));
     const containers = new Map();
-    data.forEach((r, idx) => {
-      let h3 = document.querySelector(`h3[data-gradeable-index="${idx}"]`);
-      if (!h3) h3 = getResultHeadings()[idx] || null;
+
+    // Find all h3 elements and match them to results by URL
+    const allHeadings = getResultHeadings();
+
+    data.forEach((result) => {
+      // Find the h3 that corresponds to this URL
+      let h3 = null;
+      for (const heading of allHeadings) {
+        const anchor = findAnchorForHeading(heading);
+        if (anchor && anchor.href === result.url) {
+          h3 = heading;
+          break;
+        }
+      }
+
       if (!h3) return;
       if (h3.querySelector(".gradeable-badge")) return;
 
       const badge = document.createElement("span");
       badge.className = "gradeable-badge has-icon";
-      badge.setAttribute("data-grade", r.grade);
+      badge.setAttribute("data-grade", result.grade);
       badge.setAttribute("role", "note");
       badge.setAttribute(
         "aria-label",
-        `Accessibility grade ${r.grade}, score ${r.score}`
+        `Accessibility grade ${result.grade}, score ${result.score}`
       );
 
       try {
@@ -373,22 +403,25 @@
           );
           svg.appendChild(g);
           return svg;
-        })(r.grade);
+        })(result.grade);
         if (icon) badge.appendChild(icon);
       } catch {}
 
-      badge.appendChild(document.createTextNode(` ${r.grade} (${r.score})`));
+      badge.appendChild(
+        document.createTextNode(` ${result.grade} (${result.score})`)
+      );
       h3.appendChild(badge);
 
       // Find container and assign score
       const container = findContainer(h3);
       if (container) {
         if (!container.id) {
-          container.id = `gradeable-result-${idx}`;
+          const index = allHeadings.indexOf(h3);
+          container.id = `gradeable-result-${index}`;
         }
-        // Use the score for this url, but for main, it's the first
+        // Use the score for this url
         if (!containers.has(container)) {
-          containers.set(container, r.score);
+          containers.set(container, result.score);
         }
       }
     });
@@ -494,17 +527,26 @@
 
     const urlToResult = new Map(data.map((r) => [r.url, r]));
     const containers = new Map();
+    const allHeadings = getResultHeadings();
 
     // Build container map with scores
-    data.forEach((r, idx) => {
-      let h3 = document.querySelector(`h3[data-gradeable-index="${idx}"]`);
-      if (!h3) h3 = getResultHeadings()[idx] || null;
+    data.forEach((result) => {
+      // Find the h3 that corresponds to this URL
+      let h3 = null;
+      for (const heading of allHeadings) {
+        const anchor = findAnchorForHeading(heading);
+        if (anchor && anchor.href === result.url) {
+          h3 = heading;
+          break;
+        }
+      }
+
       if (!h3) return;
 
       const container = findContainer(h3);
       if (container) {
         if (!containers.has(container)) {
-          containers.set(container, r.score);
+          containers.set(container, result.score);
         }
       }
     });
