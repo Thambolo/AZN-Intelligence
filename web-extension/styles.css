@@ -18,7 +18,16 @@
   vertical-align: middle;
   text-decoration: none; /* prevent underline when inside an <a> */
   cursor: pointer;
+  /* Button reset styles for when badge is a button element */
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   user-select: none;
+  /* Ensure button captures pointer events */
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
   transition: background-color 120ms ease, border-color 120ms ease,
     color 120ms ease, box-shadow 120ms ease;
   /* default neutral */
@@ -90,6 +99,13 @@
   }
 }
 
+/* Ensure badge button works properly when inside anchor tags */
+a .gradeable-badge {
+  pointer-events: auto;
+  z-index: 10;
+  position: relative;
+}
+
 /* Enhanced hover effect for button-like behavior */
 .gradeable-badge:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
@@ -110,7 +126,7 @@
 }
 
 .gradeable-badge::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -122,7 +138,7 @@
     rgba(255, 255, 255, 0.4),
     transparent
   );
-  animation: gradeable-badge-shimmer 2.0s ease-in-out infinite;
+  animation: gradeable-badge-shimmer 2s ease-in-out infinite;
   pointer-events: none;
 }
 

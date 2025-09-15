@@ -391,7 +391,8 @@ async def send_accessibility_report(request: EmailReportRequest):
         #     )
 
         # Generate a fresh report for the URL
-        analysis_result = await comprehensive_analyse_url(str(request.url), timeout=30)
+        loop = asyncio.get_event_loop()
+        analysis_result = await loop.run_in_executor(None, comprehensive_analyse_url, str(request.url), 30)
         latest_pdf = save_accessibility_report(analysis_result)
         if not latest_pdf:
             raise HTTPException(
