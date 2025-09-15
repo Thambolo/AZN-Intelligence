@@ -4,7 +4,7 @@ from datetime import datetime
 def save_pdf_report(url: str, analysis: dict, ai_result: dict, filename: str = None):
     """Save a comprehensive PDF report for developers with AI analysis and improvement suggestions."""
     if filename is None:
-        safe_url = url.replace('https://', '').replace('http://', '').replace('/', '_').replace(':', '_')
+        safe_url = url.replace('https://', '').replace('http://', '').replace('/', '_').replace(':', '_').replace('.', '_').replace('?', '_').replace('&', '_').replace('=', '_').replace('-', '_').replace('#', '_')
         filename = f"accessibility_report_{safe_url}.pdf"
     
     print(f"🔍 DEBUG: save_pdf_report called with URL: {url}")

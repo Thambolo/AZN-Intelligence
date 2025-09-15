@@ -14,6 +14,7 @@ __pycache__/
 
 # Cache files
 server/cache/accessibility_cache.json
+server/reports/*.pdf
 
 # VS Code settings
 .vscode/
