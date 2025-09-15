@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, EmailStr
-from typing import List
+from pydantic import BaseModel, EmailStr, HttpUrl
+from typing import List, Optional
 import sys
 import os
 import time
@@ -11,6 +11,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
+import asyncio
 
 # Import from meta-agent subdirectory
 sys.path.append(os.path.join(os.path.dirname(__file__), 'meta-agent'))
@@ -18,10 +19,18 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'meta-agent'))
 from agent import analyze_urls_with_agent
 from cache_manager import cache
 
-app = FastAPI()
+sys.path.append(os.path.join(os.path.dirname(__file__), 'auto-analyse'))
+from web_analyser import comprehensive_analyse_url
+
+app = FastAPI(
+    title="WCAG Accessibility Analyzer",
+    description="API for analyzing website accessibility compliance with WCAG 2.2 guidelines",
+    version="1.0.0"
+)
 
 class AuditRequest(BaseModel):
-    urls: List[str]
+    url: HttpUrl
+    timeout: Optional[int] = 30
 
 class EmailReportRequest(BaseModel):
     email: EmailStr
@@ -358,87 +367,100 @@ async def send_accessibility_report(request: EmailReportRequest):
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 @app.post("/audit")
-async def audit_urls(request: AuditRequest):
-    """Audit URLs for accessibility with sequential processing."""
-    urls = request.urls
-
-    if not urls:
-        return {"results": []}
-
-    print(f"📥 Received audit request for {len(urls)} URLs")
-
-    results = []
-
-    # Process URLs sequentially to avoid rate limiting
-    for url in urls:
-        cached_result = cache.get(url)
-        if cached_result:
-            print(f"✅ Cache hit for {url}")
-            results.append(cached_result)
-        else:
-            print(f"🔍 Analyzing {url}")
-            try:
-                agent_results = analyze_urls_with_agent([url])
-                if agent_results and len(agent_results) > 0:
-                    result = agent_results[0]
-                    cache.set(url, result)
-                    results.append(result)
-                    print(f"✅ Analyzed {url}: Grade {result.get('grade', 'Unknown')}, Score {result.get('score', 0)}")
-                else:
-                    error_result = {
-                        "url": url,
-                        "grade": "No Result",
-                        "score": 0,
-                        "issues": [{"component": "Agent", "message": "No result returned from agent", "passed": 0, "total": 1}],
-                        "agent_response": "No result from agent"
-                    }
-                    results.append(error_result)
-                    cache.set(url, error_result)
-                    # Add minimum pause between URL analyses to prevent rate limiting
-                    if url != urls[-1]:  # Don't pause after the last URL
-                        print(f"⏳ Pausing 30 seconds before next URL...")
-                        time.sleep(30)
-            except Exception as e:
-                print(f"❌ Error analyzing {url}: {e}")
-                error_result = {
-                    "url": url,
-                    "grade": "Error",
-                    "score": 0,
-                    "issues": [{"component": "Analysis", "message": f"Analysis failed: {e}", "passed": 0, "total": 1}],
-                    "agent_response": f"Error: {e}"
+async def audit_single_url(request: AuditRequest):
+    """
+    Audit a single URL for WCAG accessibility compliance.
+    
+    This endpoint analyzes a website against WCAG 2.2 Principles 1 (Perceivable) 
+    and 2 (Operable) and returns a comprehensive accessibility report.
+    
+    - **url**: The website URL to analyze
+    - **timeout**: Request timeout in seconds (default: 30)
+    """
+    url = str(request.url)
+    timeout = request.timeout
+    
+    print(f"📥 Received audit request for URL: {url}")
+    
+    try:
+        # Run the analysis asynchronously to support concurrent requests
+        start_time = time.time()
+        
+        # Use asyncio.get_event_loop().run_in_executor to run the sync function in a thread pool
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None, 
+            comprehensive_analyse_url,
+            url, 
+            timeout
+        )
+        
+        end_time = time.time()
+        analysis_time = end_time - start_time
+        
+        print(f"⏱️ WCAG analysis completed for {url} in {analysis_time:.2f} seconds")
+        print(f"📊 Result: Grade {result.get('grade', 'Unknown')}, Score {result.get('score', 0)}/100")
+        
+        # Add timing and URL info to the result
+        result["url"] = url
+        result["analysis_time_seconds"] = round(analysis_time, 2)
+        result["timestamp"] = int(time.time())
+        
+        return {
+            "success": True,
+            "result": result
+        }
+        
+    except Exception as e:
+        print(f"❌ Error analyzing {url}: {e}")
+        
+        error_result = {
+            "url": url,
+            "grade": "Error",
+            "score": 0,
+            "issues": [
+                {
+                    "component": "Analysis Error", 
+                    "message": f"Analysis failed: {str(e)}", 
+                    "passed": 0, 
+                    "total": 1
                 }
-                results.append(error_result)
-                cache.set(url, error_result)
+            ],
+            "error": str(e),
+            "timestamp": int(time.time())
+        }
+        
+        return {
+            "success": False,
+            "result": error_result
+        }
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint to verify the service is running."""
+    return {
+        "status": "healthy",
+        "service": "WCAG Accessibility Analyzer",
+        "version": "1.0.0",
+        "timestamp": int(time.time())
+    }
 
-    print(f"📤 Returning {len(results)} results")
-    return {"results": results}
-
-@app.post("/audit/sync")
-def audit_urls_sync(request: AuditRequest):
-    """Legacy synchronous endpoint for backward compatibility."""
-    results = []
-    for url in request.urls:
-        cached_result = cache.get(url)
-        if cached_result:
-            results.append(cached_result)
-        else:
-            print(f"🔍 Analyzing {url} synchronously")
-            agent_results = analyze_urls_with_agent([url])
-            if agent_results:
-                result = agent_results[0]
-                cache.set(url, result)
-                results.append(result)
-            else:
-                error_result = {
-                    "url": url,
-                    "grade": "Error",
-                    "score": 0,
-                    "issues": [{"component": "Agent", "message": "No result from agent", "passed": 0, "total": 1}]
-                }
-                results.append(error_result)
-
-    return {"results": results}
+@app.get("/")
+async def root():
+    """Root endpoint with API information."""
+    return {
+        "message": "WCAG Accessibility Analyzer API",
+        "description": "Analyze websites for WCAG 2.2 accessibility compliance",
+        "endpoints": {
+            "audit": "POST /audit - Analyze a single URL for accessibility",
+            "health": "GET /health - Health check",
+            "docs": "GET /docs - Interactive API documentation"
+        },
+        "supported_principles": [
+            "WCAG 2.2 Principle 1: Perceivable",
+            "WCAG 2.2 Principle 2: Operable"
+        ]
+    }
 
 if __name__ == "__main__":
     import uvicorn

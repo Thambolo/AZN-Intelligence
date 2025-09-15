@@ -1,7 +1,24 @@
-fastapi
-uvicorn[standard]
-openai
+# AZN-Intelligence WCAG Accessibility Analyzer
+# Core dependencies based on project code analysis
+# Generated on: 2025-09-15 16:16:08
+
+# Web framework and API
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+pydantic==2.11.9
+
+# HTML parsing and web requests
+beautifulsoup4==4.13.5
+requests==2.32.5
+aiohttp==3.12.15
+
+# AI and external services
+openai==1.107.2
+connectonion==0.1.1
+
+# Configuration and environment
+python-dotenv==1.1.1
+
+# PDF generation and document processing
+PyMuPDF==1.26.4
 fpdf2==2.8.4
-beautifulsoup4
-python-dotenv
-connectonion
