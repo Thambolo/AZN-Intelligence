@@ -342,6 +342,10 @@ import json
 import os
 from dotenv import load_dotenv
 import openai
+import litellm
+
+# Fix for O-series models that don't support temperature parameter
+litellm.drop_params = True
 
 load_dotenv()
 def store_result_json(url: str, grade: str, issues: List[str], score: int, filename: str = "results.json") -> str:
@@ -638,100 +642,215 @@ def rerank_results(results: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
     grade_order = {"AAA": 3, "AA": 2, "A": 1, "Not WCAG compliant": 0}
     return sorted(results, key=lambda x: grade_order.get(x[1], 0), reverse=True)
 
+def generate_accessibility_feedback(analysis_result: dict) -> str:
+    """
+    Generate a 150-word max feedback using ConnectOnion's llm_do function for faster execution.
+    Uses a structured template prompt for consistent results.
+    
+    Expected analysis_result format:
+    {
+        "url": "https://example.com",
+        "grade": "AA",
+        "score": 85,
+        "principle_scores": {
+            "principle1_perceivable": 80,
+            "principle2_operable": 85,
+            "principle3_understandable": 90,
+            "principle4_robust": 85
+        },
+        "spa_detected": false
+    }
+    """
+    if not analysis_result or "principle_scores" not in analysis_result:
+        return "Unable to generate feedback: Invalid analysis result provided."
+    
+    from connectonion import llm_do
+    
+    url = analysis_result.get("url", "the website")
+    grade = analysis_result.get("grade", "Unknown")
+    score = analysis_result.get("score", 0)
+    principle_scores = analysis_result.get("principle_scores", {})
+    spa_detected = analysis_result.get("spa_detected", False)
+    
+    # Create structured prompt for consistent feedback generation
+    prompt = f"""Generate a concise accessibility feedback (maximum 150 words) for this WCAG analysis:
+
+URL: {url}
+Overall Grade: {grade}
+Overall Score: {score}/100
+SPA Detected: {spa_detected}
+
+Principle Scores:
+- Perceivable: {principle_scores.get('principle1_perceivable', 0)}/100
+- Operable: {principle_scores.get('principle2_operable', 0)}/100  
+- Understandable: {principle_scores.get('principle3_understandable', 0)}/100
+- Robust: {principle_scores.get('principle4_robust', 0)}/100
+
+Structure your feedback as follows:
+1. Opening: Domain + overall assessment tone based on score
+2. SPA note (if applicable): Mention analysis limitations for SPAs
+3. Principle insights: Group principles by performance (strong 85+, good 70-84, weak <70)
+4. Keep under 150 words total
+
+Focus on being informative yet concise. Use professional accessibility consultant tone."""
+
+    try:
+        feedback = llm_do(prompt)
+        # Ensure word limit
+        words = feedback.split()
+        if len(words) > 150:
+            feedback = " ".join(words[:150]) + "..."
+        return feedback
+    except Exception as e:
+        return f"Error generating feedback: {str(e)}"
+
+
+def generate_accessibility_recommendations(analysis_result: dict) -> str:
+    """
+    Generate up to 5 specific recommendations using ConnectOnion's llm_do function.
+    Uses structured prompting for consistent, actionable recommendations.
+    
+    Expected analysis_result format: Same as generate_accessibility_feedback()
+    """
+    if not analysis_result or "principle_scores" not in analysis_result:
+        return "Unable to generate recommendations: Invalid analysis result provided."
+    
+    from connectonion import llm_do
+    
+    principle_scores = analysis_result.get("principle_scores", {})
+    detailed_results = analysis_result.get("detailed_results", {})
+    overall_score = analysis_result.get("score", 100)
+    
+    # Extract issues for context
+    issues_context = ""
+    for principle, data in detailed_results.items():
+        if isinstance(data, dict) and "issues" in data:
+            issues = data["issues"]
+            if issues:
+                issues_context += f"{principle}: {', '.join(map(str, issues[:3]))}\n"
+    
+    prompt = f"""Generate exactly 5 specific accessibility recommendations based on this WCAG analysis.
+
+ANALYSIS DATA:
+Overall Score: {overall_score}/100
+
+Principle Scores:
+- Principle 1 (Perceivable): {principle_scores.get('principle1_perceivable', 100)}/100
+- Principle 2 (Operable): {principle_scores.get('principle2_operable', 100)}/100
+- Principle 3 (Understandable): {principle_scores.get('principle3_understandable', 100)}/100
+- Principle 4 (Robust): {principle_scores.get('principle4_robust', 100)}/100
+
+Detected Issues:
+{issues_context if issues_context else "No specific issues provided"}
+
+REQUIREMENTS:
+- Generate EXACTLY 5 numbered recommendations (1-5)
+- Focus on lowest scoring principles first
+- Be specific and actionable
+- Include WCAG guideline references where relevant
+- Only use information from the provided analysis data
+- If no issues, provide general best practices
+
+Format: Each recommendation on a new line, numbered 1-5."""
+
+    try:
+        recommendations = llm_do(prompt)
+        return recommendations
+    except Exception as e:
+        return f"Error generating recommendations: {str(e)}"
+
+
 # Agent Definition
 agent = Agent(
-    name="webpage_accessibility_grader",
-    system_prompt="prompts/accessibility_grader.md",
+    name="wcag_feedback_generator",
+    system_prompt="You are an accessibility expert that generates concise feedback and actionable recommendations based strictly on WCAG analysis results. Only use information provided in the analysis data.",
     tools=[
-        scrape_page,
-        analyze_accessibility,
-        ai_accessibility_analysis,
-        format_grade,
-        rerank_results,
-        store_result_json,
-        save_pdf_report
+        generate_accessibility_feedback,
+        generate_accessibility_recommendations
     ],
-    max_iterations=20  # Higher for complex analysis tasks
+    max_iterations=10
 )
 
 def analyze_urls_with_agent(urls: List[str]) -> List[Dict]:
     """
-    Use the ConnectOnion AI agent to analyze a list of URLs for accessibility.
-    The agent will decide which tools to use based on the system prompt.
+    Use the ConnectOnion AI agent to generate feedback and recommendations for accessibility analysis results.
+    This function expects the analysis to be done separately using the auto-analyse tools.
     """
-    results = []
-    for url in urls:
-        try:
-            prompt = f"""
-            Analyze the accessibility of this webpage: {url}
+    # This function is now simplified - it's meant to work with pre-analyzed data
+    # The actual analysis should be done using comprehensive_analyse_url from auto-analyse
+    return []
 
-            Follow these steps:
-            1. Scrape the webpage content
-            2. Run automated WCAG compliance analysis
-            3. Perform AI-powered accessibility analysis
-            4. Generate a comprehensive report with grade, score, and issues
-            5. Store the results in JSON format
+def generate_feedback_and_recommendations(analysis_result: dict) -> dict:
+    """
+    Generate both feedback and recommendations using the ConnectOnion agent with optimized tool calls.
+    Uses direct tool execution instead of agent.input() for much faster performance.
+    
+    Args:
+        analysis_result (dict): The result from comprehensive_analyse_url containing WCAG analysis
+        
+    Returns:
+        dict: Contains both feedback and recommendations
+    """
+    try:
+        # Call the tools directly from the agent's tool map for maximum speed
+        # This bypasses the LLM tool selection overhead
+        feedback = agent.tool_map["generate_accessibility_feedback"](analysis_result)
+        recommendations = agent.tool_map["generate_accessibility_recommendations"](analysis_result)
+        
+        return {
+            "feedback": feedback,
+            "recommendations": recommendations,
+            "url": analysis_result.get("url", "Unknown"),
+            "grade": analysis_result.get("grade", "Unknown"),
+            "score": analysis_result.get("score", 0)
+        }
+        
+    except Exception as e:
+        return {
+            "feedback": f"Error generating feedback: {str(e)}",
+            "recommendations": f"Error generating recommendations: {str(e)}",
+            "url": analysis_result.get("url", "Unknown"),
+            "grade": "Error",
+            "score": 0
+        }
 
-            Return the analysis results in a structured format that includes:
-            - URL
-            - WCAG grade (A, AA, AAA, or Not Compliant)
-            - Compliance score (0-100)
-            - List of accessibility issues found
-            - AI analysis insights and recommendations
-            """
 
-            agent_response = agent.input(prompt, max_iterations=15)
+# Example usage function
+def example_usage():
+    """
+    Example of how to use the new meta-agent with analysis results from auto-analyse.
+    """
+    # This would typically come from comprehensive_analyse_url
+    sample_analysis = {
+        "url": "https://example.com",
+        "grade": "AA",
+        "score": 82,
+        "principle_scores": {
+            "principle1_perceivable": 80,
+            "principle2_operable": 85, 
+            "principle3_understandable": 90,
+            "principle4_robust": 75
+        },
+        "principle_grades": {
+            "principle1_perceivable": "AA",
+            "principle2_operable": "AA",
+            "principle3_understandable": "AAA", 
+            "principle4_robust": "A"
+        },
+        "detailed_results": {
+            "principle1": {"issues": ["Missing alt text on 2 images"], "score": 80},
+            "principle2": {"issues": ["Some buttons lack keyboard focus"], "score": 85},
+            "principle3": {"issues": [], "score": 90},
+            "principle4": {"issues": ["Minor HTML validation errors"], "score": 75}
+        },
+        "spa_detected": False
+    }
+    
+    result = generate_feedback_and_recommendations(sample_analysis)
+    print("Feedback:", result["feedback"])
+    print("Recommendations:", result["recommendations"])
 
-            # Parse the agent response to extract structured data
-            result = {
-                "url": url,
-                "grade": "AA",  # Default grade
-                "score": 85,    # Default score
-                "issues": [],
-                "ai_analysis": {},
-                "agent_response": agent_response
-            }
-
-            if "Grade:" in agent_response:
-                grade_start = agent_response.find("Grade:") + 6
-                grade_end = agent_response.find("\n", grade_start)
-                if grade_end == -1:
-                    grade_end = len(agent_response)
-                result["grade"] = agent_response[grade_start:grade_end].strip()
-
-            if "Score:" in agent_response:
-                score_start = agent_response.find("Score:") + 6
-                score_end = agent_response.find("/", score_start)
-                if score_end != -1:
-                    try:
-                        result["score"] = int(agent_response[score_start:score_end].strip())
-                    except ValueError:
-                        pass
-
-            results.append(result)
-            print(f"✅ Analyzed {url} with agent")
-
-        except Exception as e:
-            print(f"❌ Error analyzing {url}: {e}")
-            results.append({
-                "url": url,
-                "grade": "Error",
-                "score": 0,
-                "issues": [{"component": "Agent", "message": f"Analysis failed: {e}", "passed": 0, "total": 1}],
-                "ai_analysis": {},
-                "agent_response": f"Error: {e}"
-            })
-
-    return results
 
 if __name__ == "__main__":
-    urls = [
-        "https://www.wikipedia.org/",
-        "https://www.example.com/",
-    ]
-    results = analyze_urls_with_agent(urls)
-    for result in results:
-        print(f"URL: {result['url']}")
-        print(f"Grade: {result['grade']}")
-        print(f"Score: {result['score']}")
-        print("---")
+    # Example usage
+    example_usage()

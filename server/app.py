@@ -23,7 +23,7 @@ from html_to_pdf_converter import generate_pdf_from_html_template
 # Import from meta-agent subdirectory
 sys.path.append(os.path.join(os.path.dirname(__file__), 'meta-agent'))
 
-from agent import analyze_urls_with_agent
+from agent import generate_feedback_and_recommendations
 from cache_manager import cache
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'auto-analyse'))
@@ -470,20 +470,6 @@ async def audit_single_url(request: AuditRequest):
         result["analysis_time_seconds"] = round(analysis_time, 2)
         result["timestamp"] = int(time.time())
         
-        # # Generate and save PDF report
-        # try:
-        #     pdf_path = save_accessibility_report(result)
-        #     if pdf_path:
-        #         result["pdf_generated"] = True
-        #         result["pdf_path"] = pdf_path
-        #         print(f"📄 PDF report generated: {pdf_path}")
-        #     else:
-        #         result["pdf_generated"] = False
-        #         print("⚠️ PDF generation failed, but analysis completed successfully")
-        # except Exception as pdf_error:
-        #     print(f"⚠️ PDF generation error: {pdf_error}")
-        #     result["pdf_generated"] = False
-        
         return {
             "success": True,
             "result": result
@@ -512,6 +498,34 @@ async def audit_single_url(request: AuditRequest):
             "success": False,
             "result": error_result
         }
+    
+@app.post("/test-meta-agent")
+async def test_meta_agent(request: AuditRequest):
+    """Test the meta-agent feedback and recommendations generation with a sample analysis result."""
+    # Sample analysis result that matches the format from comprehensive_analyse_url
+    analysis_result = comprehensive_analyse_url(str(request.url), request.timeout)
+    
+    try:
+        result = generate_feedback_and_recommendations(analysis_result)
+        
+        print("✅ FEEDBACK GENERATED:")
+        print(result["feedback"])
+        print("\n" + "-"*50)
+        
+        print("✅ RECOMMENDATIONS GENERATED:")
+        print(result["recommendations"])
+        print("\n" + "="*50)
+        
+        print("✅ Meta-agent test completed successfully!")
+        
+    except Exception as e:
+        print(f"❌ Error testing meta-agent: {e}")
+    
+    return {
+        "success": True,
+        "feedback": result.get("feedback", ""),
+        "recommendations": result.get("recommendations", [])
+    }
 
 @app.get("/health")
 async def health_check():
