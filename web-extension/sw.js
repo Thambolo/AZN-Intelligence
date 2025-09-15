@@ -2,9 +2,46 @@
 // For now we simulate backend scoring so you can test UI fast.
 const api = typeof browser !== 'undefined' ? browser : chrome;
 
+// Helper function to send debug messages to content script for logging
+function sendDebugLog(tabId, message, data = {}) {
+  try {
+    api.tabs.sendMessage(tabId, {
+      type: 'GRADEABLE_DEBUG_LOG',
+      data: {
+        message,
+        details: data,
+        timestamp: new Date().toISOString(),
+        source: 'ServiceWorker',
+      },
+    });
+  } catch (error) {
+    // Fallback to console if tab messaging fails
+    console.log(`[Grade-Able][SW] ${message}`, data);
+  }
+}
+
+// Helper function to send error messages to content script for logging
+function sendErrorLog(tabId, message, error = {}) {
+  try {
+    api.tabs.sendMessage(tabId, {
+      type: 'GRADEABLE_ERROR_LOG',
+      data: {
+        message,
+        error: error.message || error,
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+        source: 'ServiceWorker',
+      },
+    });
+  } catch (err) {
+    // Fallback to console if tab messaging fails
+    console.error(`[Grade-Able][SW] ${message}`, error);
+  }
+}
+
 api.runtime.onMessage.addListener((msg, sender) => {
   if (msg?.type === 'GRADEABLE_SCAN' && sender?.tab?.id) {
-    console.debug('[Grade-Able][SW] GRADEABLE_SCAN received', {
+    sendDebugLog(sender.tab.id, 'GRADEABLE_SCAN received', {
       tabId: sender.tab.id,
       resultCount: (msg.results || []).length,
       sample: (msg.results || []).slice(0, 3),
@@ -28,7 +65,7 @@ api.runtime.onMessage.addListener((msg, sender) => {
       const results = msg.results || [];
       const tabId = sender.tab.id;
 
-      console.debug('[Grade-Able][SW] Starting concurrent analysis', {
+      sendDebugLog(tabId, 'Starting concurrent analysis', {
         tabId,
         urlCount: results.length,
         urls: results.slice(0, 3).map((r) => r.url),
@@ -58,9 +95,8 @@ api.runtime.onMessage.addListener((msg, sender) => {
             const timeoutId = setTimeout(
                 () => controller.abort(), 45000);  // 45 second timeout
 
-            console.debug(
-                `[Grade-Able][SW] Analyzing URL ${index + 1}/${results.length}`,
-                {
+            sendDebugLog(
+                tabId, `Analyzing URL ${index + 1}/${results.length}`, {
                   url: searchResult.url,
                   attempt,
                 });
@@ -83,6 +119,9 @@ api.runtime.onMessage.addListener((msg, sender) => {
             }
 
             const data = await res.json();
+            console.debug(
+                `[Grade-Able][SW] Received analysis for ${searchResult.url}`,
+                {data});
 
             if (data.success && data.result) {
               const analysisResult = {
@@ -99,10 +138,9 @@ api.runtime.onMessage.addListener((msg, sender) => {
               completedAnalyses.set(searchResult.url, analysisResult);
               completedCount++;
 
-              console.debug(
-                  `[Grade-Able][SW] Analysis completed (${completedCount}/${
-                      results.length})`,
-                  {
+              sendDebugLog(
+                  tabId,
+                  `Analysis completed (${completedCount}/${results.length})`, {
                     url: searchResult.url,
                     grade: data.result.grade,
                     score: data.result.score,
@@ -136,9 +174,9 @@ api.runtime.onMessage.addListener((msg, sender) => {
               throw new Error(data.error || 'Unknown analysis error');
             }
           } catch (err) {
-            console.error(
-                `[Grade-Able][SW] Analysis attempt ${attempt} failed for ${
-                    searchResult.url}:`,
+            sendErrorLog(
+                tabId,
+                `Analysis attempt ${attempt} failed for ${searchResult.url}`,
                 err);
 
             if (attempt === maxRetries) {
@@ -164,8 +202,8 @@ api.runtime.onMessage.addListener((msg, sender) => {
               completedAnalyses.set(searchResult.url, errorResult);
               completedCount++;
 
-              console.error(`[Grade-Able][SW] All retries exhausted for ${
-                  searchResult.url}`);
+              sendErrorLog(
+                  tabId, `All retries exhausted for ${searchResult.url}`);
 
               // Send progress update with error result
               const sortedResults =
@@ -216,7 +254,7 @@ api.runtime.onMessage.addListener((msg, sender) => {
               return a.originalIndex - b.originalIndex;
             });
 
-        console.debug('[Grade-Able][SW] All analyses completed', {
+        sendDebugLog(tabId, 'All analyses completed', {
           totalAnalyzed: finalResults.length,
           successfulAnalyses:
               finalResults.filter((r) => r.grade !== 'Error').length,
@@ -241,9 +279,8 @@ api.runtime.onMessage.addListener((msg, sender) => {
           },
         });
       } catch (error) {
-        console.error(
-            '[Grade-Able][SW] Unexpected error during concurrent analysis:',
-            error);
+        sendErrorLog(
+            tabId, 'Unexpected error during concurrent analysis', error);
 
         api.tabs.sendMessage(tabId, {
           type: 'GRADEABLE_RESULTS',
