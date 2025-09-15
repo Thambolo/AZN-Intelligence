@@ -414,63 +414,204 @@ function updateResultBadges(data) {
   });
 }
 
-// Function to show analysis progress
+// Function to show analysis progress - Epic Modern Design (Top-Right)
 function showAnalysisProgress(completed, total, message) {
-  let progressIndicator =
-      document.getElementById('gradeable-progress-indicator');
+  let progressIndicator = document.getElementById('gradeable-progress-indicator');
 
   if (!progressIndicator) {
+    // Create main progress indicator in top-right
     progressIndicator = document.createElement('div');
     progressIndicator.id = 'gradeable-progress-indicator';
     progressIndicator.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: #1a73e8;
-        color: white;
-        padding: 12px 16px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        border: 2px solid transparent;
+        border-radius: 20px;
+        background: 
+          linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)) padding-box,
+          linear-gradient(135deg, #8b45c6 0%, #14b8a6 100%) border-box;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 
+          0 15px 35px rgba(0, 0, 0, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.05);
         z-index: 10000;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 14px;
-        max-width: 300px;
+        color: #f1f5f9;
+        width: 280px;
+        transform: translateX(320px);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: gradeable-pulse-subtle 3s ease-in-out infinite alternate;
       `;
     document.body.appendChild(progressIndicator);
+    
+    // Animate modal in from right
+    requestAnimationFrame(() => {
+      progressIndicator.style.transform = 'translateX(0)';
+    });
   }
 
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  
   progressIndicator.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <div style="width: 16px; height: 16px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-        <div>
-          <div style="font-weight: 500;">${message}</div>
-          <div style="font-size: 12px; opacity: 0.9;">Progress: ${
-      percentage}%</div>
+      <div style="position: relative;">
+        <!-- Floating Particles -->
+        <div class="gradeable-particles" style="position: absolute; width: 100%; height: 100%; overflow: hidden; border-radius: 20px; pointer-events: none;">
+          <div style="position: absolute; top: 15%; left: 10%; width: 3px; height: 3px; background: rgba(20, 184, 166, 0.9); border-radius: 50%; animation: gradeable-float1 3s ease-in-out infinite;"></div>
+          <div style="position: absolute; top: 50%; right: 15%; width: 4px; height: 4px; background: rgba(241, 245, 249, 0.8); border-radius: 50%; animation: gradeable-float2 2.5s ease-in-out infinite;"></div>
+          <div style="position: absolute; bottom: 25%; left: 20%; width: 2px; height: 2px; background: rgba(168, 85, 247, 0.9); border-radius: 50%; animation: gradeable-float3 4s ease-in-out infinite;"></div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <!-- Compact Multi-layered Spinner -->
+          <div class="gradeable-spinner" style="position: relative; width: 48px; height: 48px; flex-shrink: 0;">
+            <div style="position: absolute; width: 48px; height: 48px; border: 2px solid rgba(255, 255, 255, 0.15); border-top: 2px solid #14b8a6; border-radius: 50%; animation: gradeable-spin 1s linear infinite;"></div>
+            <div style="position: absolute; width: 36px; height: 36px; top: 6px; left: 6px; border: 2px solid rgba(255, 255, 255, 0.1); border-right: 2px solid #a855f7; border-radius: 50%; animation: gradeable-spin 1.5s linear infinite reverse;"></div>
+            <div style="position: absolute; width: 24px; height: 24px; top: 12px; left: 12px; border: 2px solid rgba(255, 255, 255, 0.1); border-bottom: 2px solid #ffffff; border-radius: 50%; animation: gradeable-spin 2s linear infinite;"></div>
+            
+            <!-- Center Glow -->
+            <div style="position: absolute; width: 12px; height: 12px; top: 18px; left: 18px; background: radial-gradient(circle, #14b8a6 0%, transparent 70%); border-radius: 50%; animation: gradeable-glow 2s ease-in-out infinite alternate;"></div>
+          </div>
+          
+          <!-- Content -->
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f1f5f9;">${message}</div>
+            <div style="font-size: 12px; opacity: 0.85; color: #cbd5e1;">Analyzing patterns...</div>
+          </div>
+        </div>
+        
+        <!-- Epic Progress Bar -->
+        <div class="gradeable-progress-bar" style="position: relative; width: 100%; height: 6px; background: rgba(71, 85, 105, 0.4); border-radius: 3px; overflow: hidden; margin-bottom: 8px;">
+          <div class="gradeable-progress-fill" style="position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, #14b8a6 0%, #a855f7 50%, #ffffff 100%); border-radius: 3px; width: ${percentage}%; transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1); box-shadow: 0 0 8px rgba(20, 184, 166, 0.5);"></div>
+          <div style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: gradeable-shimmer 1.5s ease-in-out infinite;"></div>
+        </div>
+        
+        <!-- Percentage Display -->
+        <div style="text-align: center;">
+          <span class="gradeable-percentage" style="font-size: 18px; font-weight: 700; background: linear-gradient(45deg, #14b8a6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${percentage}%</span>
         </div>
       </div>
     `;
 
-  // Add CSS animation if not already present
+  // Add epic CSS animations if not already present
   if (!document.getElementById('gradeable-progress-styles')) {
     const style = document.createElement('style');
     style.id = 'gradeable-progress-styles';
     style.textContent = `
-        @keyframes spin {
+        @keyframes gradeable-spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes gradeable-pulse-subtle {
+          0% { 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 
+                        0 0 0 1px rgba(139, 69, 198, 0.3), 
+                        inset 0 1px 0 rgba(241, 245, 249, 0.1), 
+                        0 0 20px rgba(139, 69, 198, 0.15); 
+          }
+          100% { 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 
+                        0 0 0 1px rgba(20, 184, 166, 0.4), 
+                        inset 0 1px 0 rgba(241, 245, 249, 0.15), 
+                        0 0 30px rgba(20, 184, 166, 0.2); 
+          }
+        }
+        
+        @keyframes gradeable-glow {
+          0% { opacity: 0.6; transform: scale(1); }
+          100% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        @keyframes gradeable-float1 {
+          0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.7; }
+          50% { transform: translateY(-12px) translateX(6px); opacity: 1; }
+        }
+        
+        @keyframes gradeable-float2 {
+          0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.5; }
+          50% { transform: translateY(-8px) translateX(-4px); opacity: 0.9; }
+        }
+        
+        @keyframes gradeable-float3 {
+          0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.8; }
+          50% { transform: translateY(-15px) translateX(8px); opacity: 0.6; }
+        }
+        
+        @keyframes gradeable-shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        
+        /* Hover effect for discoverability */
+        #gradeable-progress-indicator:hover {
+          transform: translateX(0) scale(1.02);
+          box-shadow: 
+            0 20px 45px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(20, 184, 166, 0.5),
+            inset 0 1px 0 rgba(241, 245, 249, 0.2),
+            0 0 40px rgba(139, 69, 198, 0.3);
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+          #gradeable-progress-indicator {
+            background: 
+              linear-gradient(rgba(0, 0, 0, 0.98), rgba(0, 0, 0, 0.98)) padding-box,
+              linear-gradient(135deg, #8b45c6 0%, #14b8a6 100%) border-box;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            color: #f1f5f9;
+          }
+          
+          @keyframes gradeable-pulse-subtle {
+            0% { 
+              box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 
+                          0 0 0 1px rgba(139, 69, 198, 0.4), 
+                          inset 0 1px 0 rgba(241, 245, 249, 0.1), 
+                          0 0 20px rgba(139, 69, 198, 0.2); 
+            }
+            100% { 
+              box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+                          0 0 0 1px rgba(20, 184, 166, 0.5), 
+                          inset 0 1px 0 rgba(241, 245, 249, 0.15), 
+                          0 0 30px rgba(20, 184, 166, 0.25); 
+            }
+          }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          #gradeable-progress-indicator {
+            animation: none;
+            transition: transform 0.2s ease;
+          }
+          #gradeable-progress-indicator * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+          }
         }
       `;
     document.head.appendChild(style);
   }
 }
 
-// Function to hide analysis progress
+// Function to hide analysis progress - Epic Slide Out
 function hideAnalysisProgress() {
-  const progressIndicator =
-      document.getElementById('gradeable-progress-indicator');
+  const progressIndicator = document.getElementById('gradeable-progress-indicator');
+  
   if (progressIndicator) {
-    progressIndicator.remove();
+    // Animate out to the right
+    progressIndicator.style.transform = 'translateX(320px)';
+    progressIndicator.style.opacity = '0.8';
+    
+    setTimeout(() => {
+      progressIndicator.remove();
+    }, 400);
   }
 }
 
