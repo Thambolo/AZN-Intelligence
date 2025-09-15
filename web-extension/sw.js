@@ -1,10 +1,10 @@
-// Background service worker for A11ySearchRanker
+// Background service worker for Grade-Able
 // For now we simulate backend scoring so you can test UI fast.
 const api = typeof browser !== "undefined" ? browser : chrome;
 
 api.runtime.onMessage.addListener((msg, sender) => {
-  if (msg?.type === "A11Y_SCAN" && sender?.tab?.id) {
-    console.debug("[A11ySearchRanker][SW] A11Y_SCAN received", {
+  if (msg?.type === "GRADEABLE_SCAN" && sender?.tab?.id) {
+    console.debug("[Grade-Able][SW] GRADEABLE_SCAN received", {
       tabId: sender.tab.id,
       resultCount: (msg.results || []).length,
       sample: (msg.results || []).slice(0, 3),
@@ -18,90 +18,246 @@ api.runtime.onMessage.addListener((msg, sender) => {
     // }));
 
     // api.tabs.sendMessage(sender.tab.id, {
-    //   type: "A11Y_RESULTS",
+    //   type: "GRADEABLE_RESULTS",
     //   data: dummy,
     // });
 
-    // Example backend integration with retry mechanism:
+    // Concurrent processing with individual URL auditing and progressive updates:
     (async () => {
-      const maxRetries = 3;
-      const retryDelay = 2000; // 2 seconds
+      const results = msg.results || [];
+      const tabId = sender.tab.id;
 
-      for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-          const urls = (msg.results || []).map((r) => r.url);
-          console.debug("[A11ySearchRanker][SW] Sending to backend", {
-            attempt,
-            urlCount: urls.length,
-            urls: urls.slice(0, 3),
-          });
+      console.debug("[Grade-Able][SW] Starting concurrent analysis", {
+        tabId,
+        urlCount: results.length,
+        urls: results.slice(0, 3).map((r) => r.url),
+      });
 
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      // Track completed analyses for progressive sorting
+      const completedAnalyses = new Map();
+      let completedCount = 0;
 
-          const res = await fetch("http://localhost:8000/audit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ urls }),
-            signal: controller.signal,
-          });
+      // Send initial loading state
+      api.tabs.sendMessage(tabId, {
+        type: "GRADEABLE_ANALYSIS_STARTED",
+        data: {
+          totalUrls: results.length,
+          message: `Starting analysis of ${results.length} URLs...`,
+        },
+      });
 
-          clearTimeout(timeoutId);
+      // Function to analyze a single URL with retry mechanism
+      const analyzeUrl = async (searchResult, index) => {
+        const maxRetries = 3;
+        const retryDelay = 1000; // 1 second
 
-          if (!res.ok) {
-            throw new Error(
-              `Server responded with ${res.status}: ${res.statusText}`
-            );
-          }
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 45000); // 45 second timeout
 
-          const data = await res.json();
-          console.debug("[A11ySearchRanker][SW] Backend response", {
-            attempt,
-            resultCount: data.results?.length || 0,
-          });
-
-          api.tabs.sendMessage(sender.tab.id, {
-            type: "A11Y_RESULTS",
-            data: data.results || [],
-          });
-          return; // Success, exit retry loop
-        } catch (err) {
-          console.error(
-            `[A11ySearchRanker][SW] Attempt ${attempt} failed:`,
-            err
-          );
-
-          if (attempt === maxRetries) {
-            // All retries exhausted, send error response
-            console.error("[A11ySearchRanker][SW] All retries exhausted");
-
-            const fallbackResults = (msg.results || []).map((r, i) => ({
-              url: r.url,
-              grade: "Error",
-              score: 0,
-              issues: [
-                {
-                  component: "Connection",
-                  message: `Failed to analyze after ${maxRetries} attempts: ${err.message}`,
-                  passed: 0,
-                  total: 1,
-                },
-              ],
-            }));
-
-            api.tabs.sendMessage(sender.tab.id, {
-              type: "A11Y_RESULTS",
-              data: fallbackResults,
-              error: `Failed after ${maxRetries} attempts: ${err.message}`,
-            });
-          } else {
-            // Wait before retrying
             console.debug(
-              `[A11ySearchRanker][SW] Retrying in ${retryDelay}ms...`
+              `[Grade-Able][SW] Analyzing URL ${index + 1}/${results.length}`,
+              {
+                url: searchResult.url,
+                attempt,
+              }
             );
-            await new Promise((resolve) => setTimeout(resolve, retryDelay));
+
+            const res = await fetch("http://localhost:8000/audit", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                url: searchResult.url,
+                timeout: 30,
+              }),
+              signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!res.ok) {
+              throw new Error(
+                `Server responded with ${res.status}: ${res.statusText}`
+              );
+            }
+
+            const data = await res.json();
+
+            if (data.success && data.result) {
+              const analysisResult = {
+                ...searchResult,
+                url: data.result.url,
+                grade: data.result.grade,
+                score: data.result.score,
+                issues: data.result.issues || [],
+                analysis_time: data.result.analysis_time_seconds,
+                timestamp: data.result.timestamp,
+                originalIndex: index,
+              };
+
+              completedAnalyses.set(searchResult.url, analysisResult);
+              completedCount++;
+
+              console.debug(
+                `[Grade-Able][SW] Analysis completed (${completedCount}/${results.length})`,
+                {
+                  url: searchResult.url,
+                  grade: data.result.grade,
+                  score: data.result.score,
+                }
+              );
+
+              // Send progressive update with current completed analyses
+              const sortedResults = Array.from(completedAnalyses.values()).sort(
+                (a, b) => {
+                  // Sort by score (descending), then by grade, then by original index
+                  if (b.score !== a.score) return b.score - a.score;
+                  const gradeOrder = { AAA: 4, AA: 3, A: 2, Fail: 1, Error: 0 };
+                  if (gradeOrder[b.grade] !== gradeOrder[a.grade]) {
+                    return gradeOrder[b.grade] - gradeOrder[a.grade];
+                  }
+                  return a.originalIndex - b.originalIndex;
+                }
+              );
+
+              api.tabs.sendMessage(tabId, {
+                type: "GRADEABLE_PROGRESS_UPDATE",
+                data: {
+                  completed: completedCount,
+                  total: results.length,
+                  results: sortedResults,
+                  isComplete: completedCount === results.length,
+                },
+              });
+
+              return analysisResult;
+            } else {
+              throw new Error(data.error || "Unknown analysis error");
+            }
+          } catch (err) {
+            console.error(
+              `[Grade-Able][SW] Analysis attempt ${attempt} failed for ${searchResult.url}:`,
+              err
+            );
+
+            if (attempt === maxRetries) {
+              // All retries exhausted, create error result
+              const errorResult = {
+                ...searchResult,
+                url: searchResult.url,
+                grade: "Error",
+                score: 0,
+                issues: [
+                  {
+                    component: "Connection",
+                    message: `Failed to analyze after ${maxRetries} attempts: ${err.message}`,
+                    passed: 0,
+                    total: 1,
+                  },
+                ],
+                error: err.message,
+                originalIndex: index,
+              };
+
+              completedAnalyses.set(searchResult.url, errorResult);
+              completedCount++;
+
+              console.error(
+                `[Grade-Able][SW] All retries exhausted for ${searchResult.url}`
+              );
+
+              // Send progress update with error result
+              const sortedResults = Array.from(completedAnalyses.values()).sort(
+                (a, b) => {
+                  if (b.score !== a.score) return b.score - a.score;
+                  const gradeOrder = { AAA: 4, AA: 3, A: 2, Fail: 1, Error: 0 };
+                  if (gradeOrder[b.grade] !== gradeOrder[a.grade]) {
+                    return gradeOrder[b.grade] - gradeOrder[a.grade];
+                  }
+                  return a.originalIndex - b.originalIndex;
+                }
+              );
+
+              api.tabs.sendMessage(tabId, {
+                type: "GRADEABLE_PROGRESS_UPDATE",
+                data: {
+                  completed: completedCount,
+                  total: results.length,
+                  results: sortedResults,
+                  isComplete: completedCount === results.length,
+                },
+              });
+
+              return errorResult;
+            } else {
+              // Wait before retrying
+              await new Promise((resolve) => setTimeout(resolve, retryDelay));
+            }
           }
         }
+      };
+
+      // Start concurrent analysis for all URLs
+      const analysisPromises = results.map((searchResult, index) =>
+        analyzeUrl(searchResult, index)
+      );
+
+      try {
+        // Wait for all analyses to complete
+        await Promise.allSettled(analysisPromises);
+
+        // Send final results with complete sorting
+        const finalResults = Array.from(completedAnalyses.values()).sort(
+          (a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            const gradeOrder = { AAA: 4, AA: 3, A: 2, Fail: 1, Error: 0 };
+            if (gradeOrder[b.grade] !== gradeOrder[a.grade]) {
+              return gradeOrder[b.grade] - gradeOrder[a.grade];
+            }
+            return a.originalIndex - b.originalIndex;
+          }
+        );
+
+        console.debug("[Grade-Able][SW] All analyses completed", {
+          totalAnalyzed: finalResults.length,
+          successfulAnalyses: finalResults.filter((r) => r.grade !== "Error")
+            .length,
+          averageScore:
+            finalResults.length > 0
+              ? Math.round(
+                  finalResults.reduce((sum, r) => sum + r.score, 0) /
+                    finalResults.length
+                )
+              : 0,
+        });
+
+        api.tabs.sendMessage(tabId, {
+          type: "GRADEABLE_RESULTS",
+          data: finalResults,
+          summary: {
+            total: finalResults.length,
+            successful: finalResults.filter((r) => r.grade !== "Error").length,
+            averageScore:
+              finalResults.length > 0
+                ? Math.round(
+                    finalResults.reduce((sum, r) => sum + r.score, 0) /
+                      finalResults.length
+                  )
+                : 0,
+          },
+        });
+      } catch (error) {
+        console.error(
+          "[Grade-Able][SW] Unexpected error during concurrent analysis:",
+          error
+        );
+
+        api.tabs.sendMessage(tabId, {
+          type: "GRADEABLE_RESULTS",
+          data: Array.from(completedAnalyses.values()),
+          error: `Analysis completed with errors: ${error.message}`,
+        });
       }
     })();
   }

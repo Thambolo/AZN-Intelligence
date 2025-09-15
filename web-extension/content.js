@@ -1,7 +1,7 @@
 (function () {
   // Cross-browser API shim
   const api = typeof browser !== "undefined" ? browser : chrome;
-  const LOG_PREFIX = "[A11ySearchRanker]";
+  const LOG_PREFIX = "[Grade-Able]";
 
   // Guard: only run on Google Search result pages
   const { hostname, pathname, search } = window.location;
@@ -26,15 +26,16 @@
   async function applyDisplaySettings() {
     try {
       const data = (await api.storage?.sync?.get?.([
-        "a11yHighContrast",
-        "a11yCbPatterns",
-      ])) || { a11yHighContrast: false, a11yCbPatterns: false };
+        "gradeableHighContrast",
+        "gradeableCbPatterns",
+      ])) || { gradeableHighContrast: false, gradeableCbPatterns: false };
       const root = document.documentElement;
-      if (data.a11yHighContrast)
-        root.setAttribute("data-a11y-high-contrast", "1");
-      else root.removeAttribute("data-a11y-high-contrast");
-      if (data.a11yCbPatterns) root.setAttribute("data-a11y-cb-patterns", "1");
-      else root.removeAttribute("data-a11y-cb-patterns");
+      if (data.gradeableHighContrast)
+        root.setAttribute("data-gradeable-high-contrast", "1");
+      else root.removeAttribute("data-gradeable-high-contrast");
+      if (data.gradeableCbPatterns)
+        root.setAttribute("data-gradeable-cb-patterns", "1");
+      else root.removeAttribute("data-gradeable-cb-patterns");
     } catch {}
   }
 
@@ -77,7 +78,7 @@
     const headings = getResultHeadings();
     const results = [];
     headings.slice(0, 20).forEach((h3, i) => {
-      h3.setAttribute("data-a11y-index", String(i));
+      h3.setAttribute("data-gradeable-index", String(i));
       const a = findAnchorForHeading(h3);
       if (a && a.href)
         results.push({ url: a.href, title: h3.innerText || "", nodeIndex: i });
@@ -114,13 +115,13 @@
     }
     inFlight = true;
     sent = true;
-    console.debug(LOG_PREFIX, "Sending A11Y_SCAN", {
+    console.debug(LOG_PREFIX, "Sending GRADEABLE_SCAN", {
       count: results.length,
       query,
     });
     try {
       const maybePromise = api.runtime.sendMessage({
-        type: "A11Y_SCAN",
+        type: "GRADEABLE_SCAN",
         results,
       });
       if (maybePromise && typeof maybePromise.catch === "function") {
@@ -133,15 +134,14 @@
     }
   }
 
-  function showErrorIndicator(errorMessage) {
-    // Remove any existing error indicators
+  function showTempErrorIndicator(error) {
+    // Remove any existing error indicators first
     document
-      .querySelectorAll(".a11y-error-indicator")
-      .forEach((el) => el.remove());
+      .querySelectorAll(".gradeable-error-indicator")
+      .forEach((n) => n.remove());
 
-    // Create error indicator
     const indicator = document.createElement("div");
-    indicator.className = "a11y-error-indicator";
+    indicator.className = "gradeable-error-indicator";
     indicator.setAttribute("role", "alert");
     indicator.setAttribute("aria-live", "assertive");
     indicator.style.cssText = `
@@ -180,34 +180,94 @@
   }
 
   api.runtime.onMessage.addListener((msg) => {
-    if (msg?.type !== "A11Y_RESULTS") return;
+    // Handle different message types for progressive updates
+    if (msg?.type === "GRADEABLE_ANALYSIS_STARTED") {
+      inFlight = true;
+      console.debug(LOG_PREFIX, "Analysis started", {
+        totalUrls: msg.data?.totalUrls || 0,
+        message: msg.data?.message,
+      });
+      showAnalysisProgress(0, msg.data?.totalUrls || 0, "Starting analysis...");
+      return;
+    }
+
+    if (msg?.type === "GRADEABLE_PROGRESS_UPDATE") {
+      const { completed, total, results, isComplete } = msg.data || {};
+      console.debug(LOG_PREFIX, "Progress update", {
+        completed,
+        total,
+        resultCount: results?.length || 0,
+        isComplete,
+      });
+
+      // Update progress indicator
+      showAnalysisProgress(
+        completed,
+        total,
+        `Analyzing... ${completed}/${total} completed`
+      );
+
+      // Update badges for completed results
+      if (results && results.length > 0) {
+        updateResultBadges(results);
+      }
+
+      // If complete, clean up progress indicator and sort results
+      if (isComplete) {
+        inFlight = false;
+        hideAnalysisProgress();
+        sortResultsByScore(results);
+      }
+      return;
+    }
+
+    if (msg?.type !== "GRADEABLE_RESULTS") return;
+
     const data = msg.data || [];
     const error = msg.error;
+    const summary = msg.summary;
     inFlight = false;
 
-    console.debug(LOG_PREFIX, "Received A11Y_RESULTS", {
+    console.debug(LOG_PREFIX, "Received GRADEABLE_RESULTS", {
       resultCount: data.length,
       hasError: !!error,
       error: error,
+      summary: summary,
     });
+
+    // Hide any progress indicators
+    hideAnalysisProgress();
 
     if (error) {
       console.warn(LOG_PREFIX, "Analysis failed:", error);
-      // Show error indicator on page
       showErrorIndicator(error);
       return;
     }
 
+    // Update all badges and sort results
+    updateResultBadges(data);
+    sortResultsByScore(data);
+
+    // Show summary if available
+    if (summary) {
+      showAnalysisSummary(summary);
+    }
+  });
+
+  // Function to update result badges
+  function updateResultBadges(data) {
+    if (!data || data.length === 0) return;
+
     const urlToResult = new Map(data.map((r) => [r.url, r]));
     const containers = new Map();
     data.forEach((r, idx) => {
-      let h3 = document.querySelector(`h3[data-a11y-index="${idx}"]`);
+      let h3 = document.querySelector(`h3[data-gradeable-index="${idx}"]`);
       if (!h3) h3 = getResultHeadings()[idx] || null;
       if (!h3) return;
-      if (h3.querySelector(".a11y-badge")) return;
+      if (h3.querySelector(".gradeable-badge")) return;
 
       const badge = document.createElement("span");
-      badge.className = "a11y-badge has-icon";
+      badge.className = "gradeable-badge has-icon";
       badge.setAttribute("data-grade", r.grade);
       badge.setAttribute("role", "note");
       badge.setAttribute(
@@ -219,7 +279,7 @@
         const icon = (function iconForGrade(grade) {
           const svgNS = "http://www.w3.org/2000/svg";
           const svg = document.createElementNS(svgNS, "svg");
-          svg.setAttribute("class", "a11y-icon");
+          svg.setAttribute("class", "gradeable-icon");
           svg.setAttribute("width", "14");
           svg.setAttribute("height", "14");
           svg.setAttribute("viewBox", "0 0 24 24");
@@ -324,7 +384,7 @@
       const container = findContainer(h3);
       if (container) {
         if (!container.id) {
-          container.id = `a11y-result-${idx}`;
+          container.id = `gradeable-result-${idx}`;
         }
         // Use the score for this url, but for main, it's the first
         if (!containers.has(container)) {
@@ -365,17 +425,197 @@
         }
       }
     });
-  });
+  }
 
-  window.addEventListener("A11Y_EXTENSION_RESCAN", () => {
+  // Function to show analysis progress
+  function showAnalysisProgress(completed, total, message) {
+    let progressIndicator = document.getElementById(
+      "gradeable-progress-indicator"
+    );
+
+    if (!progressIndicator) {
+      progressIndicator = document.createElement("div");
+      progressIndicator.id = "gradeable-progress-indicator";
+      progressIndicator.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #1a73e8;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 10000;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        max-width: 300px;
+      `;
+      document.body.appendChild(progressIndicator);
+    }
+
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+    progressIndicator.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 16px; height: 16px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <div>
+          <div style="font-weight: 500;">${message}</div>
+          <div style="font-size: 12px; opacity: 0.9;">Progress: ${percentage}%</div>
+        </div>
+      </div>
+    `;
+
+    // Add CSS animation if not already present
+    if (!document.getElementById("gradeable-progress-styles")) {
+      const style = document.createElement("style");
+      style.id = "gradeable-progress-styles";
+      style.textContent = `
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
+  // Function to hide analysis progress
+  function hideAnalysisProgress() {
+    const progressIndicator = document.getElementById(
+      "gradeable-progress-indicator"
+    );
+    if (progressIndicator) {
+      progressIndicator.remove();
+    }
+  }
+
+  // Function to sort results by score
+  function sortResultsByScore(data) {
+    if (!data || data.length === 0) return;
+
+    const urlToResult = new Map(data.map((r) => [r.url, r]));
+    const containers = new Map();
+
+    // Build container map with scores
+    data.forEach((r, idx) => {
+      let h3 = document.querySelector(`h3[data-gradeable-index="${idx}"]`);
+      if (!h3) h3 = getResultHeadings()[idx] || null;
+      if (!h3) return;
+
+      const container = findContainer(h3);
+      if (container) {
+        if (!containers.has(container)) {
+          containers.set(container, r.score);
+        }
+      }
+    });
+
+    // Reorder containers by score descending
+    const sortedContainers = Array.from(containers.entries()).sort(
+      (a, b) => b[1] - a[1]
+    );
+
+    const parent =
+      document.querySelector("#rso .MjjYud") || document.querySelector("#rso");
+    if (parent && sortedContainers.length > 0) {
+      sortedContainers.forEach(([container]) => {
+        parent.appendChild(container);
+      });
+    }
+
+    // Sort sub-URLs within containers
+    containers.forEach((score, container) => {
+      const table = container.querySelector("table");
+      if (table) {
+        const tbody = table.querySelector("tbody");
+        if (tbody) {
+          const rows = Array.from(tbody.querySelectorAll("tr"));
+          rows.sort((a, b) => {
+            const h3a = a.querySelector("h3");
+            const h3b = b.querySelector("h3");
+            const sa = h3a
+              ? urlToResult.get(findAnchorForHeading(h3a)?.href)?.score || 0
+              : 0;
+            const sb = h3b
+              ? urlToResult.get(findAnchorForHeading(h3b)?.href)?.score || 0
+              : 0;
+            return sb - sa;
+          });
+          rows.forEach((row) => tbody.appendChild(row));
+        }
+      }
+    });
+  }
+
+  // Function to show analysis summary
+  function showAnalysisSummary(summary) {
+    const { total, successful, averageScore } = summary;
+
+    console.debug(LOG_PREFIX, "Analysis Summary", {
+      total,
+      successful,
+      averageScore,
+      failureRate:
+        total > 0 ? Math.round(((total - successful) / total) * 100) : 0,
+    });
+
+    // Could add a temporary summary notification here if desired
+    if (total > 0) {
+      const successRate = Math.round((successful / total) * 100);
+      console.info(
+        LOG_PREFIX,
+        `Analysis completed: ${successful}/${total} URLs analyzed successfully (${successRate}%), Average score: ${averageScore}`
+      );
+    }
+  }
+
+  function showErrorIndicator(error) {
+    let errorIndicator = document.getElementById("gradeable-error-indicator");
+
+    if (!errorIndicator) {
+      errorIndicator = document.createElement("div");
+      errorIndicator.id = "gradeable-error-indicator";
+      errorIndicator.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #d32f2f;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        z-index: 10000;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        max-width: 300px;
+        cursor: pointer;
+      `;
+      errorIndicator.onclick = () => errorIndicator.remove();
+      document.body.appendChild(errorIndicator);
+    }
+
+    errorIndicator.innerHTML = `
+      <div style="font-weight: 500; margin-bottom: 4px;">Analysis Error</div>
+      <div style="font-size: 12px; opacity: 0.9;">${error}</div>
+      <div style="font-size: 11px; opacity: 0.7; margin-top: 4px;">Click to dismiss</div>
+    `;
+
+    // Auto-remove after 10 seconds
+    setTimeout(() => {
+      if (errorIndicator.parentNode) {
+        errorIndicator.remove();
+      }
+    }, 10000);
+  }
+
+  window.addEventListener("GRADEABLE_EXTENSION_RESCAN", () => {
     sent = false;
     inFlight = false;
     setTimeout(sendScan, 200);
   });
 
   api.runtime.onMessage.addListener((msg) => {
-    if (msg?.type === "A11Y_RESCAN") {
-      document.querySelectorAll(".a11y-badge").forEach((n) => n.remove());
+    if (msg?.type === "GRADEABLE_RESCAN") {
+      document.querySelectorAll(".gradeable-badge").forEach((n) => n.remove());
       sent = false;
       inFlight = false;
       applyDisplaySettings();

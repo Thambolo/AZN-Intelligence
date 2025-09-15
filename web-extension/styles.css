@@ -4,7 +4,7 @@
   - Respects dark mode via prefers-color-scheme
 */
 
-.a11y-badge {
+.gradeable-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -28,83 +28,80 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .a11y-badge {
+  .gradeable-badge {
     background: rgba(255, 255, 255, 0.07);
     color: #e5e7eb; /* gray-200 */
     border-color: rgba(255, 255, 255, 0.15);
   }
 }
 
-.a11y-badge:focus-visible {
+.gradeable-badge:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
 /* Grade themes (light) */
-.a11y-badge[data-grade="AAA"] {
+.gradeable-badge[data-grade="AAA"] {
   /* Green (trustworthy) — stronger light theme */
   background: #d1fae5; /* emerald-100 */
   color: #065f46;
   border-color: #34d399; /* emerald-400 */
 }
-.a11y-badge[data-grade="AA"] {
-  /* Amber/Yellow (caution) — stronger light theme */
-  background: #fde68a; /* amber-300 */
+.gradeable-badge[data-grade="AA"] {
+  /* Blue (good, common) */
+  background: #dbeafe; /* blue-100 */
+  color: #1e3a8a;
+  border-color: #60a5fa; /* blue-400 */
+}
+.gradeable-badge[data-grade="A"] {
+  /* Yellow (passable) */
+  background: #fef3c7; /* amber-100 */
   color: #92400e;
-  border-color: #f59e0b; /* amber-500 */
+  border-color: #fbbf24; /* amber-400 */
 }
-.a11y-badge[data-grade="A"] {
-  /* Orange (warning) — stronger light theme */
-  background: #fdba74; /* orange-300 */
-  color: #9a3412;
-  border-color: #f97316; /* orange-500 */
-}
-.a11y-badge[data-grade="Not Compliant"] {
-  /* Red (alert) — stronger light theme */
-  background: #fecaca; /* red-200 */
-  color: #7f1d1d;
-  border-color: #ef4444; /* red-500 */
+.gradeable-badge[data-grade="Not Compliant"] {
+  /* Red (problematic) */
+  background: #fee2e2; /* red-100 */
+  color: #991b1b;
+  border-color: #f87171; /* red-400 */
 }
 
+/* Grade themes (dark) */
 @media (prefers-color-scheme: dark) {
-  .a11y-badge[data-grade="AAA"] {
-    /* Green */
-    background: rgba(16, 185, 129, 0.18);
-    color: #a7f3d0;
-    border-color: rgba(16, 185, 129, 0.35);
+  .gradeable-badge[data-grade="AAA"] {
+    background: #064e3b; /* emerald-900 */
+    color: #6ee7b7; /* emerald-300 */
+    border-color: #10b981; /* emerald-500 */
   }
-  .a11y-badge[data-grade="AA"] {
-    /* Amber */
-    background: rgba(245, 158, 11, 0.2);
-    color: #fde68a;
-    border-color: rgba(245, 158, 11, 0.35);
+  .gradeable-badge[data-grade="AA"] {
+    background: #1e3a8a; /* blue-900 */
+    color: #93c5fd; /* blue-300 */
+    border-color: #3b82f6; /* blue-500 */
   }
-  .a11y-badge[data-grade="A"] {
-    /* Orange */
-    background: rgba(249, 115, 22, 0.2);
-    color: #fed7aa;
-    border-color: rgba(249, 115, 22, 0.35);
+  .gradeable-badge[data-grade="A"] {
+    background: #92400e; /* amber-800 */
+    color: #fcd34d; /* amber-300 */
+    border-color: #f59e0b; /* amber-500 */
   }
-  .a11y-badge[data-grade="Not Compliant"] {
-    /* Red */
-    background: rgba(239, 68, 68, 0.22);
-    color: #fca5a5;
-    border-color: rgba(239, 68, 68, 0.4);
+  .gradeable-badge[data-grade="Not Compliant"] {
+    background: #991b1b; /* red-800 */
+    color: #fca5a5; /* red-300 */
+    border-color: #ef4444; /* red-500 */
   }
 }
 
 /* Optional subtle shadow on hover for discoverability */
-.a11y-badge:hover {
+.gradeable-badge:hover {
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 
 /* Compact numbers look consistent */
-.a11y-badge {
+.gradeable-badge {
   font-variant-numeric: tabular-nums;
 }
 
 /* --- Universal icons via SVG mask (decorative; inherits text color) --- */
-.a11y-badge::before {
+.gradeable-badge::before {
   content: "";
   display: inline-block;
   width: 14px;
@@ -120,13 +117,13 @@
 }
 
 /* Inline SVG fallback: when present, hide ::before mask icon */
-.a11y-badge.has-icon::before {
+.gradeable-badge.has-icon::before {
   content: none !important;
   display: none !important;
 }
 
 /* Inline SVG icon sizing */
-.a11y-icon {
+.gradeable-icon {
   width: 14px;
   height: 14px;
   margin-right: 4px;
@@ -134,8 +131,8 @@
 }
 
 /* --- Optional patterns for color vision deficiency (toggle-able) --- */
-/* Enable by setting data-a11y-cb-patterns="1" on :root (html) */
-:root[data-a11y-cb-patterns="1"] .a11y-badge[data-grade="AAA"] {
+/* Enable by setting data-gradeable-cb-patterns="1" on :root (html) */
+:root[data-gradeable-cb-patterns="1"] .gradeable-badge[data-grade="AAA"] {
   background-image: repeating-linear-gradient(
     45deg,
     rgba(6, 95, 70, 0.15) 0,
@@ -145,7 +142,7 @@
   );
   background-blend-mode: multiply;
 }
-:root[data-a11y-cb-patterns="1"] .a11y-badge[data-grade="AA"] {
+:root[data-gradeable-cb-patterns="1"] .gradeable-badge[data-grade="AA"] {
   background-image: repeating-linear-gradient(
     135deg,
     rgba(146, 64, 14, 0.15) 0,
@@ -155,7 +152,7 @@
   );
   background-blend-mode: multiply;
 }
-:root[data-a11y-cb-patterns="1"] .a11y-badge[data-grade="A"] {
+:root[data-gradeable-cb-patterns="1"] .gradeable-badge[data-grade="A"] {
   background-image: repeating-linear-gradient(
     0deg,
     rgba(154, 52, 18, 0.15) 0,
@@ -165,7 +162,8 @@
   );
   background-blend-mode: multiply;
 }
-:root[data-a11y-cb-patterns="1"] .a11y-badge[data-grade="Not Compliant"] {
+:root[data-gradeable-cb-patterns="1"]
+  .gradeable-badge[data-grade="Not Compliant"] {
   background-image: repeating-linear-gradient(
     -45deg,
     rgba(127, 29, 29, 0.18) 0,
@@ -177,45 +175,47 @@
 }
 
 /* --- High-contrast mode (toggle-able) --- */
-/* Enable by setting data-a11y-high-contrast="1" on :root */
-:root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="AAA"] {
+/* Enable by setting data-gradeable-high-contrast="1" on :root */
+:root[data-gradeable-high-contrast="1"] .gradeable-badge[data-grade="AAA"] {
   background: #059669; /* emerald-600 */
   color: #ffffff;
   border-color: #047857;
 }
-:root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="AA"] {
-  background: #d97706; /* amber-600 */
-  color: #ffffff;
-  border-color: #b45309;
+:root[data-gradeable-high-contrast="1"] .gradeable-badge[data-grade="AA"] {
+  background: #60a5fa;
+  color: #1e3a8a;
+  border-color: #3b82f6;
 }
-:root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="A"] {
-  background: #ea580c; /* orange-600 */
-  color: #ffffff;
-  border-color: #c2410c;
+:root[data-gradeable-high-contrast="1"] .gradeable-badge[data-grade="A"] {
+  background: #fbbf24;
+  color: #92400e;
+  border-color: #f59e0b;
 }
-:root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="Not Compliant"] {
-  background: #dc2626; /* red-600 */
-  color: #ffffff;
-  border-color: #b91c1c;
+:root[data-gradeable-high-contrast="1"]
+  .gradeable-badge[data-grade="Not Compliant"] {
+  background: #f87171;
+  color: #991b1b;
+  border-color: #ef4444;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="AAA"] {
+  :root[data-gradeable-high-contrast="1"] .gradeable-badge[data-grade="AAA"] {
     background: #10b981;
     color: #083344;
     border-color: #34d399;
   }
-  :root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="AA"] {
+  :root[data-gradeable-high-contrast="1"] .gradeable-badge[data-grade="AA"] {
     background: #f59e0b;
     color: #111827;
     border-color: #fbbf24;
   }
-  :root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="A"] {
+  :root[data-gradeable-high-contrast="1"] .gradeable-badge[data-grade="A"] {
     background: #f97316;
     color: #111827;
     border-color: #fb923c;
   }
-  :root[data-a11y-high-contrast="1"] .a11y-badge[data-grade="Not Compliant"] {
+  :root[data-gradeable-high-contrast="1"]
+    .gradeable-badge[data-grade="Not Compliant"] {
     background: #ef4444;
     color: #111827;
     border-color: #f87171;
