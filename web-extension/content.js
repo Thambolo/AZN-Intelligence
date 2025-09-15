@@ -416,7 +416,8 @@ function updateResultBadges(data) {
 
 // Function to show analysis progress - Epic Modern Design (Top-Right)
 function showAnalysisProgress(completed, total, message) {
-  let progressIndicator = document.getElementById('gradeable-progress-indicator');
+  let progressIndicator =
+      document.getElementById('gradeable-progress-indicator');
 
   if (!progressIndicator) {
     // Create main progress indicator in top-right
@@ -448,7 +449,7 @@ function showAnalysisProgress(completed, total, message) {
         animation: gradeable-pulse-subtle 3s ease-in-out infinite alternate;
       `;
     document.body.appendChild(progressIndicator);
-    
+
     // Animate modal in from right
     requestAnimationFrame(() => {
       progressIndicator.style.transform = 'translateX(0)';
@@ -456,7 +457,7 @@ function showAnalysisProgress(completed, total, message) {
   }
 
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-  
+
   progressIndicator.innerHTML = `
       <div style="position: relative;">
         <!-- Floating Particles -->
@@ -479,20 +480,23 @@ function showAnalysisProgress(completed, total, message) {
           
           <!-- Content -->
           <div style="flex: 1; min-width: 0;">
-            <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f1f5f9;">${message}</div>
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f1f5f9;">${
+      message}</div>
             <div style="font-size: 12px; opacity: 0.85; color: #cbd5e1;">Analyzing patterns...</div>
           </div>
         </div>
         
         <!-- Epic Progress Bar -->
         <div class="gradeable-progress-bar" style="position: relative; width: 100%; height: 6px; background: rgba(71, 85, 105, 0.4); border-radius: 3px; overflow: hidden; margin-bottom: 8px;">
-          <div class="gradeable-progress-fill" style="position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, #14b8a6 0%, #a855f7 50%, #ffffff 100%); border-radius: 3px; width: ${percentage}%; transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1); box-shadow: 0 0 8px rgba(20, 184, 166, 0.5);"></div>
+          <div class="gradeable-progress-fill" style="position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, #14b8a6 0%, #a855f7 50%, #ffffff 100%); border-radius: 3px; width: ${
+      percentage}%; transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1); box-shadow: 0 0 8px rgba(20, 184, 166, 0.5);"></div>
           <div style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: gradeable-shimmer 1.5s ease-in-out infinite;"></div>
         </div>
         
         <!-- Percentage Display -->
         <div style="text-align: center;">
-          <span class="gradeable-percentage" style="font-size: 18px; font-weight: 700; background: linear-gradient(45deg, #14b8a6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${percentage}%</span>
+          <span class="gradeable-percentage" style="font-size: 18px; font-weight: 700; background: linear-gradient(45deg, #14b8a6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">${
+      percentage}%</span>
         </div>
       </div>
     `;
@@ -602,13 +606,14 @@ function showAnalysisProgress(completed, total, message) {
 
 // Function to hide analysis progress - Epic Slide Out
 function hideAnalysisProgress() {
-  const progressIndicator = document.getElementById('gradeable-progress-indicator');
-  
+  const progressIndicator =
+      document.getElementById('gradeable-progress-indicator');
+
   if (progressIndicator) {
     // Animate out to the right
     progressIndicator.style.transform = 'translateX(320px)';
     progressIndicator.style.opacity = '0.8';
-    
+
     setTimeout(() => {
       progressIndicator.remove();
     }, 400);
