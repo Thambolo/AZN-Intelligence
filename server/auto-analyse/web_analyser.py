@@ -144,15 +144,11 @@ def comprehensive_analyse_url(url: str, timeout: int = 10) -> Dict[str, Any]:
                 all_issues.extend(result["issues"])
         
         analysis_time = round(time.time() - start_time, 2)
-        print("Issues", all_issues)
         
         return {
             "url": url,
             "grade": overall_grade,
             "score": int(weighted_score),
-            "overall_grade": overall_grade, # Remove
-            "overall_score": int(weighted_score), # Remove
-            "is_spa": is_spa, # Remove
             "spa_detected": is_spa,
             "principle_scores": {
                 "principle1_perceivable": p1_score,
@@ -172,9 +168,9 @@ def comprehensive_analyse_url(url: str, timeout: int = 10) -> Dict[str, Any]:
                 "principle3": principle3_result,
                 "principle4": principle4_result
             },
-            "all_issues": all_issues,
             "analysis_time_seconds": analysis_time,
-            "scoring_note": f"{'SPA-adjusted scoring (85% factor)' if is_spa else 'Standard weighted scoring'}: Principles 1&2 (70% total), Principles 3&4 (30% total) due to HTML analysis limitations"
+            "scoring_note": f"{'SPA-adjusted scoring (85% factor)' if is_spa else 'Standard weighted scoring'}: Principles 1&2 (70% total), Principles 3&4 (30% total) due to HTML analysis limitations",
+            "timestamp": time.time()
         }
         
     except Exception as e:

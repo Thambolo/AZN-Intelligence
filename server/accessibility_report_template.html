@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessibility Report - WCAG Compliance</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        line-height: 1.6;
+        color: #2d3748;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        background: white;
+        padding: 25mm;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        page-break-after: always;
+        position: relative;
+      }
+
+      .page:last-child {
+        page-break-after: avoid;
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          background: white;
+        }
+        .page {
+          box-shadow: none;
+          margin: 0;
+          page-break-after: always;
+        }
+      }
+
+      /* Headers and Typography */
+      .main-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        text-align: center;
+        color: #1a202c;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        font-weight: 500;
+        text-align: center;
+        color: #718096;
+        margin-bottom: 3rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 2.5rem 0 1.5rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #667eea;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .principle-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin: 2rem 0 1rem 0;
+        padding: 1rem;
+        border-radius: 12px;
+        color: white;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .principle1 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .principle2 {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+      .principle3 {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+      .principle4 {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      /* Site Info Grid */
+      .site-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin: 2rem 0;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        border: 2px solid #e2e8f0;
+      }
+
+      .info-item {
+        text-align: center;
+      }
+
+      .info-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+      }
+
+      .info-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #2d3748;
+      }
+
+      .url-value {
+        font-size: 1rem;
+        word-break: break-all;
+        font-family: "SF Mono", Monaco, Consolas, monospace;
+        background: #667eea;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 8px;
+      }
+
+      /* Score styling */
+      .score-high {
+        color: #38a169;
+      }
+      .score-medium {
+        color: #ed8936;
+      }
+      .score-low {
+        color: #e53e3e;
+      }
+
+      .grade-aaa {
+        background: linear-gradient(135deg, #38a169 0%, #48bb78 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+      .grade-aa {
+        background: linear-gradient(135deg, #3182ce 0%, #4299e1 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+      .grade-a {
+        background: linear-gradient(135deg, #ed8936 0%, #f6ad55 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+      .grade-fail {
+        background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 700;
+      }
+
+      /* Content sections */
+      .content-section {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: #f8fafc;
+        border-radius: 12px;
+        border-left: 5px solid #667eea;
+      }
+
+      .ai-feedback {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #4a5568;
+        text-align: justify;
+      }
+
+      .recommendations {
+        list-style: none;
+      }
+
+      .recommendations li {
+        margin: 1rem 0;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        border-left: 4px solid #667eea;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .recommendations li::before {
+        content: "💡";
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      /* Chart placeholder */
+      .chart-container {
+        margin: 2rem 0;
+        padding: 2rem;
+        background: white;
+        border-radius: 12px;
+        border: 2px dashed #cbd5e0;
+        text-align: center;
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #718096;
+      }
+
+      .chart-placeholder {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Tables */
+      .table-container {
+        margin: 2rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 0.95rem;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f8fafc;
+      }
+
+      tr:hover {
+        background-color: #edf2f7;
+      }
+
+      .status-cell {
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .status-pass {
+        color: #38a169;
+      }
+
+      .status-fail {
+        color: #e53e3e;
+      }
+
+      /* Footer */
+      .footer {
+        position: absolute;
+        bottom: 20mm;
+        left: 25mm;
+        right: 25mm;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #718096;
+        padding-top: 1rem;
+        border-top: 2px solid #e2e8f0;
+        font-weight: 500;
+      }
+
+      .footer-logo {
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Page breaks */
+      .page-break {
+        page-break-before: always;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Page 1: Overview -->
+    <div class="page">
+      <h1 class="main-title">🔍 Accessibility Report</h1>
+      <p class="subtitle">WCAG Compliance Analysis</p>
+
+      <div class="site-info">
+        <div class="info-item">
+          <div class="info-label">🌐 Website URL</div>
+          <div class="info-value url-value">{{URL}}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">🏆 Overall Grade</div>
+          <div class="info-value">
+            <span class="grade-{{GRADE_CLASS}}">{{OVERALL_GRADE}}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">📊 Overall Score</div>
+          <div class="info-value score-{{SCORE_CLASS}}">
+            {{OVERALL_SCORE}}/100
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">📅 Analysis Date</div>
+          <div class="info-value">{{TIMESTAMP}}</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">📝 AI-Powered Analysis Feedback</h2>
+      <div class="content-section">
+        <p class="ai-feedback">
+          Our AI accessibility analyzer evaluated your website against WCAG 2.1
+          standards. The assessment covers four principles: Perceivable,
+          Operable, Understandable, and Robust. Automated checks reviewed key
+          accessibility criteria such as color contrast, keyboard navigation,
+          form labels, and semantic structure to determine your site’s
+          compliance.
+        </p>
+        <p class="ai-feedback">
+          Scoring weights: Perceivable and Operable (35% each), Understandable
+          and Robust (15% each). Your site shows {{OVERALL_SCORE}}% compliance,
+          indicating {{COMPLIANCE_LEVEL}} accessibility.
+        </p>
+      </div>
+
+      <h2 class="section-title">💡 AI-Generated Recommendations</h2>
+      <div class="content-section">
+        <ul class="recommendations">
+          <li>
+            Enhance color contrast ratios to meet WCAG AA standards for better
+            text readability
+          </li>
+          <li>
+            Implement proper heading hierarchy (H1-H6) to improve content
+            structure and navigation
+          </li>
+          <li>
+            Add descriptive alt text to all images for screen reader
+            compatibility
+          </li>
+          <li>
+            Validate HTML markup and fix semantic errors to improve robustness
+          </li>
+        </ul>
+      </div>
+
+      <h2 class="section-title">📈 Score History Trend</h2>
+      <div class="chart-container">
+        <div class="chart-placeholder">📊</div>
+        <h3>Accessibility Score Over Time</h3>
+        <p>Chart showing historical accessibility scores and improvements</p>
+        <p>
+          <em>Note: Chart will be populated with actual data in production</em>
+        </p>
+      </div>
+
+      <div class="footer">
+        Generated by <span class="footer-logo">Grade-Abled</span> powered by AZN
+        Intelligence & connectOnion
+      </div>
+    </div>
+
+    <!-- Page 2: Principles 1 & 2 -->
+    <div class="page page-break">
+      <h2 class="principle-title principle1">
+        📖 Principle 1: Perceivable
+        <span style="margin-left: auto; font-size: 1.2rem">
+          Grade: <span class="grade-{{P1_GRADE_CLASS}}">{{P1_GRADE}}</span> |
+          Score: {{P1_SCORE}}/100
+        </span>
+      </h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 25%">Component</th>
+              <th style="width: 55%">Assessment Message</th>
+              <th style="width: 20%">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Principle 1 data will be populated here -->
+            {{P1_ISSUES_HTML}}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="principle-title principle2">
+        🎛️ Principle 2: Operable
+        <span style="margin-left: auto; font-size: 1.2rem">
+          Grade: <span class="grade-{{P2_GRADE_CLASS}}">{{P2_GRADE}}</span> |
+          Score: {{P2_SCORE}}/100
+        </span>
+      </h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 25%">Component</th>
+              <th style="width: 55%">Assessment Message</th>
+              <th style="width: 20%">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Principle 2 data will be populated here -->
+            {{P2_ISSUES_HTML}}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Page 3: Principles 3 & 4 -->
+      <h2 class="principle-title principle3">
+        🧠 Principle 3: Understandable
+        <span style="margin-left: auto; font-size: 1.2rem">
+          Grade: <span class="grade-{{P3_GRADE_CLASS}}">{{P3_GRADE}}</span> |
+          Score: {{P3_SCORE}}/100
+        </span>
+      </h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 25%">Component</th>
+              <th style="width: 55%">Assessment Message</th>
+              <th style="width: 20%">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Principle 3 data will be populated here -->
+            {{P3_ISSUES_HTML}}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="principle-title principle4">
+        🛠️ Principle 4: Robust
+        <span style="margin-left: auto; font-size: 1.2rem">
+          Grade: <span class="grade-{{P4_GRADE_CLASS}}">{{P4_GRADE}}</span> |
+          Score: {{P4_SCORE}}/100
+        </span>
+      </h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 25%">Component</th>
+              <th style="width: 55%">Assessment Message</th>
+              <th style="width: 20%">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Principle 4 data will be populated here -->
+            {{P4_ISSUES_HTML}}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        Generated by <span class="footer-logo">Grade-Abled</span> powered by AZN
+        Intelligence & connectOnion
+      </div>
+    </div>
+  </body>
+</html>

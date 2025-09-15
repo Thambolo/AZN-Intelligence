@@ -13,6 +13,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 import asyncio
+import tempfile
+import fitz  # PyMuPDF
+from bs4 import BeautifulSoup
+
+# Import template PDF generator
+from html_to_pdf_converter import generate_pdf_from_html_template
 
 # Import from meta-agent subdirectory
 sys.path.append(os.path.join(os.path.dirname(__file__), 'meta-agent'))
@@ -51,6 +57,36 @@ class AuditRequest(BaseModel):
 class EmailReportRequest(BaseModel):
     email: EmailStr
     url: str
+
+def save_accessibility_report(analysis_result, reports_dir="reports"):
+    """Save accessibility report as PDF and return the file path."""
+    # Ensure reports directory exists
+    os.makedirs(reports_dir, exist_ok=True)
+    
+    # Generate safe filename from URL
+    url = analysis_result.get('url', 'unknown')
+    safe_url = url.replace('https://', '').replace('http://', '')
+    safe_url = safe_url.replace('.', '_').replace('/', '_').replace(':', '_').replace('?', '_').replace('&', '_').replace('=', '_').replace('-', '_')
+    
+    # Add timestamp to filename
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    filename = f"accessibility_report_{safe_url}_{timestamp}.pdf"
+    pdf_path = os.path.join(reports_dir, filename)
+    
+    try:
+        # Generate PDF directly from template with proper CSS styling
+        template_path = os.path.join(os.path.dirname(__file__), 'accessibility_report_template.html')
+        
+        if generate_pdf_from_html_template(analysis_result, template_path, pdf_path):
+            print(f"✅ PDF report saved: {pdf_path}")
+            return pdf_path
+        else:
+            print(f"❌ Failed to generate PDF: {pdf_path}")
+            return None
+            
+    except Exception as e:
+        print(f"❌ Error saving report: {e}")
+        return None
 
 def find_latest_report(url: str) -> str:
     """Find the latest PDF report for a given URL."""
@@ -345,14 +381,23 @@ def send_email_with_pdf(email: str, url: str, pdf_path: str):
 async def send_accessibility_report(request: EmailReportRequest):
     """Send the latest accessibility report for a URL to the specified email."""
     try:
-        # Find the latest PDF report for the URL
-        latest_pdf = find_latest_report(request.url)
+        # # Find the latest PDF report for the URL
+        # latest_pdf = find_latest_report(request.url)
         
+        # if not latest_pdf:
+        #     raise HTTPException(
+        #         status_code=404, 
+        #         detail=f"No accessibility report found for URL: {request.url}"
+        #     )
+
+        # Generate a fresh report for the URL
+        analysis_result = await comprehensive_analyse_url(str(request.url), timeout=30)
+        latest_pdf = save_accessibility_report(analysis_result)
         if not latest_pdf:
             raise HTTPException(
-                status_code=404, 
-                detail=f"No accessibility report found for URL: {request.url}"
-            )
+                status_code=500, 
+                detail=f"Failed to generate accessibility report for URL: {request.url}"
+            ) 
         
         # Send email with PDF
         send_email_with_pdf(request.email, request.url, latest_pdf)
@@ -413,7 +458,9 @@ async def audit_single_url(request: AuditRequest):
         
         end_time = time.time()
         analysis_time = end_time - start_time
-        
+        print("🚀 Analysis finished", result)
+
+
         print(f"⏱️ WCAG analysis completed for {url} in {analysis_time:.2f} seconds")
         print(f"📊 Result: Grade {result.get('grade', 'Unknown')}, Score {result.get('score', 0)}/100")
         
@@ -421,6 +468,20 @@ async def audit_single_url(request: AuditRequest):
         result["url"] = url
         result["analysis_time_seconds"] = round(analysis_time, 2)
         result["timestamp"] = int(time.time())
+        
+        # # Generate and save PDF report
+        # try:
+        #     pdf_path = save_accessibility_report(result)
+        #     if pdf_path:
+        #         result["pdf_generated"] = True
+        #         result["pdf_path"] = pdf_path
+        #         print(f"📄 PDF report generated: {pdf_path}")
+        #     else:
+        #         result["pdf_generated"] = False
+        #         print("⚠️ PDF generation failed, but analysis completed successfully")
+        # except Exception as pdf_error:
+        #     print(f"⚠️ PDF generation error: {pdf_error}")
+        #     result["pdf_generated"] = False
         
         return {
             "success": True,

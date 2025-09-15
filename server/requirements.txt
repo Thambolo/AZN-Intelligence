@@ -21,4 +21,9 @@ python-dotenv==1.1.1
 
 # PDF generation and document processing
 PyMuPDF==1.26.4
-fpdf2==2.8.4
+beautifulsoup4==4.13.5  # Already listed above but needed for PDF generation
+weasyprint==62.1  # Optional - for advanced HTML to PDF conversion
+
+# Email functionality
+smtplib  # Built-in Python module
+email  # Built-in Python module
