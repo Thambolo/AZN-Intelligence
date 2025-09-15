@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, HttpUrl
 from typing import List, Optional
 import sys
@@ -26,6 +27,21 @@ app = FastAPI(
     title="WCAG Accessibility Analyzer",
     description="API for analyzing website accessibility compliance with WCAG 2.2 guidelines",
     version="1.0.0"
+)
+
+# Add CORS middleware to handle cross-origin requests from Chrome extension
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for now (Chrome extensions need this)
+    allow_credentials=False,  # Set to False when using allow_origins=["*"]
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=[
+        "Accept",
+        "Accept-Language", 
+        "Content-Language",
+        "Content-Type",
+        "Authorization",
+    ],
 )
 
 class AuditRequest(BaseModel):
