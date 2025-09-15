@@ -782,7 +782,7 @@ function showEmailModal(url, grade, score) {
       <div class="gradeable-modal-backdrop">
         <div class="gradeable-modal-container">
           <div class="gradeable-modal-header">
-            <h3>📧 Email Accessibility Report</h3>
+            <h3>Email Accessibility Report</h3>
             <button class="gradeable-modal-close">&times;</button>
           </div>
           <div class="gradeable-modal-body">
@@ -827,102 +827,158 @@ function showEmailModal(url, grade, score) {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
         justify-content: center;
-        animation: gradeable-fade-in 0.2s ease-out;
+        animation: gradeable-fade-in 0.3s ease-out;
       }
       
       .gradeable-modal-container {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        background: 
+          linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)) padding-box,
+          linear-gradient(135deg, #8b45c6 0%, #14b8a6 100%) border-box;
+        border: 2px solid transparent;
+        border-radius: 20px;
+        backdrop-filter: blur(20px);
+        box-shadow: 
+          0 25px 50px rgba(0, 0, 0, 0.5),
+          0 0 0 1px rgba(255, 255, 255, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
         max-width: 480px;
         width: 90%;
         max-height: 90vh;
         overflow: hidden;
-        animation: gradeable-slide-up 0.3s ease-out;
+        animation: gradeable-slide-up 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
       }
       
       .gradeable-modal-header {
-        padding: 20px 24px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        padding: 24px;
+        background: transparent;
+        color: #f1f5f9;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       }
       
       .gradeable-modal-header h3 {
         margin: 0;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 600;
+        color: #f1f5f9;
       }
       
       .gradeable-modal-close {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 24px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #f1f5f9;
+        font-size: 20px;
         cursor: pointer;
         padding: 0;
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 6px;
-        transition: background-color 0.2s;
+        border-radius: 8px;
+        transition: all 0.2s;
       }
       
       .gradeable-modal-close:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(168, 85, 247, 0.5);
+        transform: scale(1.05);
       }
       
       .gradeable-modal-body {
         padding: 24px;
+        color: #f1f5f9;
       }
       
       .gradeable-report-info {
-        background: #f8fafc;
-        border-radius: 8px;
-        padding: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
         margin-bottom: 24px;
-        border-left: 4px solid #667eea;
+        border-left: 4px solid transparent;
+        border-image: linear-gradient(135deg, #14b8a6 0%, #a855f7 100%) 1;
+        border-image-slice: 1;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .gradeable-report-info::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+        pointer-events: none;
       }
       
       .gradeable-report-url {
-        font-weight: 500;
-        color: #1e293b;
-        margin-bottom: 8px;
+        font-weight: 600;
+        color: #f1f5f9;
+        margin-bottom: 12px;
         word-break: break-all;
+        position: relative;
+        z-index: 1;
       }
       
       .gradeable-report-grade {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
       }
       
       .gradeable-grade-badge {
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 6px 12px;
+        border-radius: 8px;
         font-weight: 600;
-        font-size: 12px;
+        font-size: 13px;
         text-transform: uppercase;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
       }
       
-      .gradeable-grade-badge.grade-aaa { background: #22c55e; color: white; }
-      .gradeable-grade-badge.grade-aa { background: #3b82f6; color: white; }
-      .gradeable-grade-badge.grade-a { background: #f59e0b; color: white; }
-      .gradeable-grade-badge.grade-b { background: #ef4444; color: white; }
-      .gradeable-grade-badge.grade-c { background: #7c2d12; color: white; }
+      .gradeable-grade-badge.grade-aaa { 
+        background: rgba(34, 197, 94, 0.2); 
+        color: #22c55e; 
+        border-color: rgba(34, 197, 94, 0.3);
+      }
+      .gradeable-grade-badge.grade-aa { 
+        background: rgba(59, 130, 246, 0.2); 
+        color: #3b82f6; 
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+      .gradeable-grade-badge.grade-a { 
+        background: rgba(245, 158, 11, 0.2); 
+        color: #f59e0b; 
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .gradeable-grade-badge.grade-b { 
+        background: rgba(239, 68, 68, 0.2); 
+        color: #ef4444; 
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+      .gradeable-grade-badge.grade-c { 
+        background: rgba(124, 45, 18, 0.3); 
+        color: #f87171; 
+        border-color: rgba(124, 45, 18, 0.4);
+      }
       
       .gradeable-score {
-        font-weight: 500;
-        color: #64748b;
+        font-weight: 600;
+        color: #cbd5e1;
+        font-size: 16px;
       }
       
       .gradeable-form-group {
@@ -931,26 +987,35 @@ function showEmailModal(url, grade, score) {
       
       .gradeable-form-group label {
         display: block;
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 8px;
-        font-size: 14px;
+        font-weight: 600;
+        color: #f1f5f9;
+        margin-bottom: 10px;
+        font-size: 15px;
       }
       
       #gradeable-email-input {
         width: 100%;
-        padding: 12px;
-        border: 2px solid #e5e7eb;
-        border-radius: 8px;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
         font-size: 16px;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        color: #f1f5f9;
+        transition: all 0.2s;
         box-sizing: border-box;
+      }
+      
+      #gradeable-email-input::placeholder {
+        color: #94a3b8;
       }
       
       #gradeable-email-input:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #14b8a6;
+        box-shadow: 
+          0 0 0 3px rgba(20, 184, 166, 0.2),
+          0 0 20px rgba(20, 184, 166, 0.1);
+        background: rgba(255, 255, 255, 0.08);
       }
       
       .gradeable-modal-actions {
@@ -960,33 +1025,46 @@ function showEmailModal(url, grade, score) {
       }
       
       .gradeable-btn-primary, .gradeable-btn-secondary {
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-weight: 500;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 600;
         cursor: pointer;
-        border: none;
-        font-size: 14px;
-        transition: all 0.2s;
+        border: 2px solid transparent;
+        font-size: 15px;
+        transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
       }
       
       .gradeable-btn-primary {
-        background: #667eea;
+        background: 
+          linear-gradient(rgba(20, 184, 166, 1), rgba(20, 184, 166, 1)) padding-box,
+          linear-gradient(135deg, #14b8a6 0%, #a855f7 100%) border-box;
         color: white;
+        border: 2px solid transparent;
       }
       
-      .gradeable-btn-primary:hover {
-        background: #5a6fd8;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      .gradeable-btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 
+          0 10px 25px rgba(20, 184, 166, 0.3),
+          0 0 20px rgba(20, 184, 166, 0.2);
+        background: 
+          linear-gradient(rgba(16, 163, 150, 1), rgba(16, 163, 150, 1)) padding-box,
+          linear-gradient(135deg, #14b8a6 0%, #a855f7 100%) border-box;
       }
       
       .gradeable-btn-secondary {
-        background: #f1f5f9;
-        color: #64748b;
+        background: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+        border: 2px solid rgba(255, 255, 255, 0.1);
       }
       
       .gradeable-btn-secondary:hover {
-        background: #e2e8f0;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+        color: #f1f5f9;
       }
       
       @keyframes gradeable-fade-in {
