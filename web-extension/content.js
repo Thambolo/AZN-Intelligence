@@ -133,11 +133,71 @@
     }
   }
 
+  function showErrorIndicator(errorMessage) {
+    // Remove any existing error indicators
+    document
+      .querySelectorAll(".a11y-error-indicator")
+      .forEach((el) => el.remove());
+
+    // Create error indicator
+    const indicator = document.createElement("div");
+    indicator.className = "a11y-error-indicator";
+    indicator.setAttribute("role", "alert");
+    indicator.setAttribute("aria-live", "assertive");
+    indicator.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ff4444;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      z-index: 10000;
+      max-width: 300px;
+      cursor: pointer;
+    `;
+
+    indicator.innerHTML = `
+      <div style="font-weight: bold; margin-bottom: 4px;">⚠️ Accessibility Analysis Failed</div>
+      <div style="font-size: 12px; opacity: 0.9;">${errorMessage}</div>
+      <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">Click to dismiss</div>
+    `;
+
+    // Auto-hide after 10 seconds
+    setTimeout(() => {
+      if (indicator.parentNode) {
+        indicator.remove();
+      }
+    }, 10000);
+
+    // Click to dismiss
+    indicator.addEventListener("click", () => indicator.remove());
+
+    document.body.appendChild(indicator);
+  }
+
   api.runtime.onMessage.addListener((msg) => {
-    if (msg?.type !== "GA_RESULTS") return;
+    if (msg?.type !== "A11Y_RESULTS") return;
     const data = msg.data || [];
+    const error = msg.error;
     inFlight = false;
-    console.debug(LOG_PREFIX, "Received A11Y_RESULTS", data);
+
+    console.debug(LOG_PREFIX, "Received A11Y_RESULTS", {
+      resultCount: data.length,
+      hasError: !!error,
+      error: error,
+    });
+
+    if (error) {
+      console.warn(LOG_PREFIX, "Analysis failed:", error);
+      // Show error indicator on page
+      showErrorIndicator(error);
+      return;
+    }
+
     const urlToResult = new Map(data.map((r) => [r.url, r]));
     const containers = new Map();
     data.forEach((r, idx) => {
