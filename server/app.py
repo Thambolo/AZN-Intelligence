@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, HttpUrl
-from typing import List, Optional
+from typing import Optional
 import sys
 import os
 import time
@@ -13,9 +13,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 import asyncio
-import tempfile
-import fitz  # PyMuPDF
-from bs4 import BeautifulSoup
 
 # Import template PDF generator
 from html_to_pdf_converter import generate_pdf_from_html_template

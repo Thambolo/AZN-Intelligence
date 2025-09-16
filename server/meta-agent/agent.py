@@ -1,4 +1,4 @@
-import fitz  # PyMuPDF
+
 from datetime import datetime
 
 def save_pdf_report(url: str, analysis: dict, ai_result: dict, filename: str = None):

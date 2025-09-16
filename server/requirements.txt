@@ -20,7 +20,10 @@ litellm>=1.0.0
 python-dotenv==1.1.1
 
 # PDF generation (simplified for Render compatibility)
-PyMuPDF==1.26.4
+weasyprint==66.0
+pdfkit==1.0.0
+playwright==1.55.0
+
 # Removing weasyprint and pdfkit as they require system dependencies
 # that may not be available on Render
 
