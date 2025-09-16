@@ -832,7 +832,7 @@
     // Remove existing progress indicators
     hideAnalysisProgress();
     hideReportGenerationProgress();
-    
+
     const progressIndicator = document.createElement("div");
     progressIndicator.id = "gradeable-report-progress-indicator";
     progressIndicator.style.cssText = `
@@ -1539,7 +1539,8 @@
   // ==== EMAIL MODAL FUNCTIONALITY ====
 
   // Server configuration
-  const SERVER_URL = "http://localhost:8000";
+  // const SERVER_URL = "http://localhost:8000";
+  const SERVER_URL = "https://azn-intelligence-grade-abled.onrender.com";
 
   // Create and show email modal
   function showEmailModal(url, grade, score) {
