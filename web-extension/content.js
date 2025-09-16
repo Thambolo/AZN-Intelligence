@@ -827,6 +827,115 @@
     }
   }
 
+  // Function to show report generation progress - Similar design to analysis progress
+  function showReportGenerationProgress(message = "Generating report...") {
+    // Remove existing progress indicators
+    hideAnalysisProgress();
+    hideReportGenerationProgress();
+    
+    const progressIndicator = document.createElement("div");
+    progressIndicator.id = "gradeable-report-progress-indicator";
+    progressIndicator.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      border: 2px solid transparent;
+      border-radius: 20px;
+      background: 
+        linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)) padding-box,
+        linear-gradient(135deg, #8b45c6 0%, #14b8a6 100%) border-box;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      z-index: 10000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #f1f5f9;
+      width: 280px;
+      transform: translateX(320px);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: gradeable-pulse-subtle 3s ease-in-out infinite alternate;
+    `;
+
+    progressIndicator.innerHTML = `
+      <div style="position: relative;">
+        <!-- Floating Particles -->
+        <div class="gradeable-particles" style="position: absolute; width: 100%; height: 100%; overflow: hidden; border-radius: 20px; pointer-events: none;">
+          <div style="position: absolute; top: 15%; left: 10%; width: 3px; height: 3px; background: rgba(20, 184, 166, 0.9); border-radius: 50%; animation: gradeable-float1 3s ease-in-out infinite;"></div>
+          <div style="position: absolute; top: 50%; right: 15%; width: 4px; height: 4px; background: rgba(241, 245, 249, 0.8); border-radius: 50%; animation: gradeable-float2 2.5s ease-in-out infinite;"></div>
+          <div style="position: absolute; bottom: 25%; left: 20%; width: 2px; height: 2px; background: rgba(168, 85, 247, 0.9); border-radius: 50%; animation: gradeable-float3 4s ease-in-out infinite;"></div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <!-- Document generation spinner -->
+          <div class="gradeable-spinner" style="position: relative; width: 48px; height: 48px; flex-shrink: 0;">
+            <div style="position: absolute; width: 48px; height: 48px; border: 2px solid rgba(255, 255, 255, 0.15); border-top: 2px solid #14b8a6; border-radius: 50%; animation: gradeable-spin 1s linear infinite;"></div>
+            <div style="position: absolute; width: 36px; height: 36px; top: 6px; left: 6px; border: 2px solid rgba(255, 255, 255, 0.1); border-right: 2px solid #a855f7; border-radius: 50%; animation: gradeable-spin 1.5s linear infinite reverse;"></div>
+            <div style="position: absolute; width: 24px; height: 24px; top: 12px; left: 12px; border: 2px solid rgba(255, 255, 255, 0.1); border-bottom: 2px solid #ffffff; border-radius: 50%; animation: gradeable-spin 2s linear infinite;"></div>
+            
+            <!-- Document icon in center -->
+            <div style="position: absolute; width: 12px; height: 12px; top: 18px; left: 18px; background: radial-gradient(circle, #14b8a6 0%, transparent 70%); border-radius: 50%; animation: gradeable-glow 2s ease-in-out infinite alternate;"></div>
+          </div>
+          
+          <!-- Content -->
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f1f5f9;">${message}</div>
+            <div style="font-size: 12px; opacity: 0.85; color: #cbd5e1;">Creating PDF report...</div>
+          </div>
+        </div>
+        
+        <!-- Animated progress indicator -->
+        <div class="gradeable-progress-bar" style="position: relative; width: 100%; height: 6px; background: rgba(71, 85, 105, 0.4); border-radius: 3px; overflow: hidden; margin-bottom: 8px;">
+          <div class="gradeable-progress-fill" style="position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, #14b8a6 0%, #a855f7 50%, #ffffff 100%); border-radius: 3px; width: 100%; animation: gradeable-report-progress 3s ease-in-out infinite; box-shadow: 0 0 8px rgba(20, 184, 166, 0.5);"></div>
+          <div style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%); animation: gradeable-shimmer 1.5s ease-in-out infinite;"></div>
+        </div>
+        
+        <!-- Report icon -->
+        <div style="text-align: center;">
+          <span style="font-size: 18px; font-weight: 700; background: linear-gradient(45deg, #14b8a6, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">📄</span>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(progressIndicator);
+
+    // Animate modal in from right
+    requestAnimationFrame(() => {
+      progressIndicator.style.transform = "translateX(0)";
+    });
+
+    // Add report generation animation keyframe if not exists
+    if (!document.getElementById("gradeable-report-progress-styles")) {
+      const style = document.createElement("style");
+      style.id = "gradeable-report-progress-styles";
+      style.textContent = `
+        @keyframes gradeable-report-progress {
+          0% { width: 20%; }
+          50% { width: 80%; }
+          100% { width: 20%; }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+
+  // Function to hide report generation progress
+  function hideReportGenerationProgress() {
+    const progressIndicator = document.getElementById(
+      "gradeable-report-progress-indicator"
+    );
+    if (progressIndicator) {
+      progressIndicator.style.transform = "translateX(320px)";
+      setTimeout(() => {
+        progressIndicator.remove();
+      }, 400);
+    }
+  }
+
   // Function to sort results by score
   function sortResultsByScore(data) {
     if (!data || data.length === 0) {
@@ -1782,8 +1891,9 @@
         return;
       }
 
-      sendBtn.textContent = "Sending...";
-      sendBtn.disabled = true;
+      // Close modal immediately and show report generation progress
+      closeModal();
+      showReportGenerationProgress("Generating report...");
 
       try {
         const response = await fetch(`${SERVER_URL}/send-report`, {
@@ -1794,24 +1904,24 @@
           body: JSON.stringify({ email: email, url: url }),
         });
 
+        // Hide report generation progress
+        hideReportGenerationProgress();
+
         if (response.ok) {
           const result = await response.json();
           showNotification("Report sent successfully! 📧", "success");
-          closeModal();
         } else {
           const error = await response.text();
           showNotification(`Failed to send report: ${error}`, "error");
         }
       } catch (error) {
         console.error("Send report error:", error);
+        hideReportGenerationProgress();
         showNotification(
           "Network error. Please check if the server is running.",
           "error"
         );
       }
-
-      sendBtn.textContent = "Send Report";
-      sendBtn.disabled = false;
     });
 
     // Focus email input

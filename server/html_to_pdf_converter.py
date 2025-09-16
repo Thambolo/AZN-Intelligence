@@ -31,18 +31,18 @@ def generate_pdf_from_html_template(analysis_result, template_path, output_path)
         # Substitute placeholders in template
         html_content = substitute_template_placeholders(html_template, template_data)
         
-        # Try multiple PDF conversion methods
+        # Try multiple PDF conversion methods - Playwright priority
         success = False
         
-        # Method 1: Try weasyprint (best CSS support)
-        if not success:
-            success = convert_with_weasyprint(html_content, output_path)
-        
-        # Method 2: Try playwright (good CSS support)
+        # Method 1: Try playwright (excellent CSS support, handles async properly)
         if not success:
             success = convert_with_playwright(html_content, output_path)
         
-        # Method 3: Try pdfkit (wkhtmltopdf wrapper)
+        # Method 2: Try weasyprint (good CSS support, fallback)
+        if not success:
+            success = convert_with_weasyprint(html_content, output_path)
+        
+        # Method 3: Try pdfkit (wkhtmltopdf wrapper, last resort)
         if not success:
             success = convert_with_pdfkit(html_content, output_path)
         
@@ -189,14 +189,29 @@ def convert_with_weasyprint(html_content, output_path):
             
             /* Section spacing */
             .section-title {
-                margin-top: 3rem !important;
+                margin-top: 4rem !important;
                 margin-bottom: 2rem !important;
                 font-size: 1.8rem !important;
+                page-break-before: avoid !important;
+                clear: both !important;
+            }
+            
+            /* Special spacing for AI sections to prevent overlap */
+            .section-title:contains("AI-Generated") {
+                margin-top: 5rem !important;
+                padding-top: 2rem !important;
             }
             
             .content-section {
-                margin: 2rem 0 3rem 0 !important;
+                margin: 2rem 0 4rem 0 !important;
                 padding: 2rem !important;
+                page-break-inside: avoid !important;
+            }
+            
+            /* AI feedback section specific spacing */
+            .ai-feedback-section {
+                margin-bottom: 4rem !important;
+                padding-bottom: 3rem !important;
             }
             
             /* Table styling */
@@ -302,7 +317,36 @@ def convert_with_weasyprint(html_content, output_path):
 def convert_with_playwright(html_content, output_path):
     """Convert HTML to PDF using Playwright (good CSS support)."""
     try:
-        from playwright.sync_api import sync_playwright
+        import asyncio
+        
+        # Run the async playwright function in a new event loop
+        try:
+            # Try to get existing loop
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # If we're in an async context, run in a thread
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(asyncio.run, _playwright_convert_async(html_content, output_path))
+                    return future.result()
+            else:
+                # Safe to run directly
+                return asyncio.run(_playwright_convert_async(html_content, output_path))
+        except RuntimeError:
+            # No event loop, safe to create one
+            return asyncio.run(_playwright_convert_async(html_content, output_path))
+        
+    except ImportError:
+        print("⚠️ Playwright not available")
+        return False
+    except Exception as e:
+        print(f"❌ Playwright conversion failed: {e}")
+        return False
+
+async def _playwright_convert_async(html_content, output_path):
+    """Async helper for Playwright PDF conversion."""
+    try:
+        from playwright.async_api import async_playwright
         
         print("🔄 Trying Playwright conversion...")
         
@@ -322,13 +366,14 @@ def convert_with_playwright(html_content, output_path):
                 word-spacing: -5px !important;
             }
             .subtitle { margin-bottom: 4rem !important; }
-            .section-title { margin-top: 3rem !important; margin-bottom: 2rem !important; }
+            .section-title { margin-top: 4rem !important; margin-bottom: 2rem !important; page-break-before: avoid !important; }
             .content-section { 
                 margin-top: 2rem !important; 
-                margin-bottom: 3rem !important; 
+                margin-bottom: 4rem !important; 
                 padding: 2rem !important; 
+                page-break-inside: avoid !important;
             }
-            .ai-feedback { margin-bottom: 1.5rem !important; }
+            .ai-feedback { margin-bottom: 3rem !important; padding-bottom: 2rem !important; }
             .recommendations li { margin: 1.5rem 0 !important; padding: 1.5rem !important; }
             .chart-container { margin-top: 2rem !important; margin-bottom: 3rem !important; padding: 2rem !important; }
         </style>
@@ -337,15 +382,15 @@ def convert_with_playwright(html_content, output_path):
         # Inject custom CSS into HTML
         html_with_fixes = html_content.replace('<head>', f'<head>{custom_css}')
         
-        with sync_playwright() as p:
-            browser = p.chromium.launch()
-            page = browser.new_page()
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
+            page = await browser.new_page()
             
             # Set content
-            page.set_content(html_with_fixes)
+            await page.set_content(html_with_fixes)
             
             # Generate PDF with proper settings
-            page.pdf(
+            await page.pdf(
                 path=output_path,
                 format='A4',
                 margin={
@@ -394,13 +439,14 @@ def convert_with_pdfkit(html_content, output_path):
                 margin-bottom: 2rem !important;
             }
             .subtitle { margin-bottom: 4rem !important; }
-            .section-title { margin-top: 3rem !important; margin-bottom: 2rem !important; }
+            .section-title { margin-top: 4rem !important; margin-bottom: 2rem !important; page-break-before: avoid !important; }
             .content-section { 
                 margin-top: 2rem !important; 
-                margin-bottom: 3rem !important; 
+                margin-bottom: 4rem !important; 
                 padding: 2rem !important; 
+                page-break-inside: avoid !important;
             }
-            .ai-feedback { margin-bottom: 1.5rem !important; }
+            .ai-feedback { margin-bottom: 3rem !important; padding-bottom: 2rem !important; }
             .recommendations li { margin: 1.5rem 0 !important; padding: 1.5rem !important; }
             .chart-container { margin-top: 2rem !important; margin-bottom: 3rem !important; padding: 2rem !important; }
         </style>
