@@ -1,13 +1,12 @@
-# AZN-Intelligence WCAG Accessibility Analyzer
-# Core dependencies based on comprehensive project code analysis
-# Generated on: 2025-09-16 - Updated with all required packages
+# AZN-Intelligence WCAG Accessibility Analyzer - Render Optimized
+# Core dependencies for production deployment
 
 # Web framework and API
 fastapi==0.116.1
 uvicorn[standard]==0.35.0
 pydantic==2.11.9
 
-# HTML parsing and web requests
+# HTML parsing and web requests  
 beautifulsoup4==4.13.5
 requests==2.32.5
 aiohttp==3.12.15
@@ -15,19 +14,16 @@ aiohttp==3.12.15
 # AI and external services
 openai==1.107.2
 connectonion==0.1.1
-litellm>=1.0.0  # Required for ConnectOnion O-series model compatibility
+litellm>=1.0.0
 
 # Configuration and environment
 python-dotenv==1.1.1
 
-# PDF generation and document processing
+# PDF generation (simplified for Render compatibility)
 PyMuPDF==1.26.4
-weasyprint==62.1  # Primary PDF generation library
-pdfkit>=1.0.0    # Fallback PDF generation with wkhtmltopdf
+# Removing weasyprint and pdfkit as they require system dependencies
+# that may not be available on Render
 
-# Email functionality (built-in Python modules - no installation needed)
-# smtplib, email.mime.* are built-in
-
-# Additional utilities and dependencies
-email-validator>=2.0.0  # For pydantic EmailStr validation
-typing-extensions>=4.0.0  # For enhanced type hints
+# Additional utilities
+email-validator>=2.0.0
+typing-extensions>=4.0.0

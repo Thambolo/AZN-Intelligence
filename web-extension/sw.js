@@ -103,19 +103,24 @@ api.runtime.onMessage.addListener((msg, sender) => {
               }
             );
 
-            const res = await fetch("http://localhost:8000/audit", {
-              // const res = await fetch(
-              //   "https://azn-intelligence-grade-abled.onrender.com/audit",
-              //   {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                url: searchResult.url,
-                timeout: 30,
-              }),
-              signal: controller.signal,
-            });
-
+            // const res = await fetch("http://localhost:8000/audit", {
+            const res = await fetch(
+              "https://azn-intelligence-grade-abled.onrender.com/audit",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+                body: JSON.stringify({
+                  url: searchResult.url,
+                  timeout: 30,
+                }),
+                signal: controller.signal,
+                mode: "cors",
+                credentials: "omit",
+              }
+            );
             clearTimeout(timeoutId);
 
             // ADD THIS DEBUG LOGGING
