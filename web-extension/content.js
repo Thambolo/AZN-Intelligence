@@ -1539,8 +1539,8 @@
   // ==== EMAIL MODAL FUNCTIONALITY ====
 
   // Server configuration
-  // const SERVER_URL = "http://localhost:8000";
-  const SERVER_URL = "https://azn-intelligence-grade-abled.onrender.com";
+  const SERVER_URL = "http://localhost:8000";
+  // const SERVER_URL = "https://azn-intelligence-grade-abled.onrender.com";
 
   // Create and show email modal
   function showEmailModal(url, grade, score) {
